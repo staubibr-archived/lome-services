@@ -1,0 +1,40 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "Adding project_id column to simulation_results",
+        "comment": "Adding project_id column to simulation_results",
+        "author": "hamzaqassoud",
+        "changes": [
+          {
+            "addColumn": {
+              "columns": [
+                {
+                  "column": {
+                    "name": "project_id",
+                    "type": "varchar(255)"
+                  }
+                }
+              ],
+              "tableName": "simulation_results"
+            }
+          },
+          {
+            "addForeignKeyConstraint": {
+              "baseColumnNames": "project_id",
+              "baseTableName": "simulation_results",
+              "constraintName": "project_id_FK",
+              "deferrable": false,
+              "initiallyDeferred": false,
+              "onDelete": "SET NULL",
+              "onUpdate": "RESTRICT",
+              "referencedColumnNames": "id",
+              "referencedTableName": "projects",
+              "validate": true
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
