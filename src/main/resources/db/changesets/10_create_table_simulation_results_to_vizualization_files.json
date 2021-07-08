@@ -1,0 +1,45 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "Create simulation_results_to_visualization_files table",
+        "comment": "Create simulation_results_to_visualization_files table",
+        "author": "hamzaqassoud",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN",
+            "not": {
+              "tableExists": {
+                "tableName": "simulation_results_to_visualization_files"
+              }
+            }
+          }
+        ],
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "constraints": {
+                      "primaryKey": true
+                    },
+                    "name": "simulationId",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "visualizationId",
+                    "type": "VARCHAR(255)"
+                  }
+                }
+              ],
+              "tableName": "simulation_results_to_visualization_files"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

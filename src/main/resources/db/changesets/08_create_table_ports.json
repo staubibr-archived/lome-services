@@ -1,0 +1,51 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "Create ports table",
+        "comment": "Create ports  table",
+        "author": "hamzaqassoud",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN",
+            "not": {
+              "tableExists": {
+                "tableName": "ports"
+              }
+            }
+          }
+        ],
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "constraints": {
+                      "primaryKey": true
+                    },
+                    "name": "id",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "name",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "type",
+                    "type": "VARCHAR(255)"
+                  }
+                }
+              ],
+              "tableName": "ports"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

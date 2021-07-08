@@ -10,7 +10,7 @@ import static com.models.lib.libraryofmodels.services.db.Table.DbColumn;
 @Data
 public class DbWhereClause {
 
-    private final Integer pageSize;
+    private Integer pageSize;
     private Integer pageNumber;
     private Integer offset;
     private final List<Condition> conditions = new ArrayList<>();

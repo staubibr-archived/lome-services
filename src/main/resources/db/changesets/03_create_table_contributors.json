@@ -1,0 +1,54 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "Create contributors table",
+        "comment": "Create contributors table",
+        "author": "hamzaqassoud",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN",
+            "not": {
+              "tableExists": {
+                "tableName": "contributors"
+              }
+            }
+          }
+        ],
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "constraints": {
+                      "primaryKey": true
+                    },
+                    "name": "id",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "constraints": {
+                      "nullable": false
+                    },
+                    "name": "name",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "email",
+                    "type": "VARCHAR(255)"
+                  }
+                }
+              ],
+              "tableName": "contributors"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
