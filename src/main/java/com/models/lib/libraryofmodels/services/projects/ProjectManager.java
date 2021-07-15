@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import com.models.lib.libraryofmodels.services.db.DbWhereClause;
 import com.models.lib.libraryofmodels.services.db.Page;
+import com.models.lib.libraryofmodels.services.models.ModelManager;
+import com.models.lib.libraryofmodels.services.models.model.ModelQuery;
 import com.models.lib.libraryofmodels.services.projects.dao.ProjectsDao;
 import com.models.lib.libraryofmodels.services.projects.model.Project;
 import com.models.lib.libraryofmodels.services.projects.model.ProjectQuery;
@@ -24,12 +26,15 @@ public class ProjectManager {
 
     private ProjectsDao projectsDao;
     private ResultsManager resultsManager;
+    private ModelManager modelManager;
 
     @Autowired
     public ProjectManager(ProjectsDao projectsDao,
-                          ResultsManager resultsManager){
+                          ResultsManager resultsManager,
+                          ModelManager modelManager){
         this.projectsDao = projectsDao;
         this.resultsManager = resultsManager;
+        this.modelManager = modelManager;
     }
 
     public Project get(String id) {
@@ -39,8 +44,13 @@ public class ProjectManager {
     public Page<Project> search(ProjectQuery query) {
         Page<Project> data = projectsDao.search(map(query));
         data.getData().forEach(project -> {
+            // get results files
             ResultQuery q = ResultQuery.builder().projectId(project.getId()).build();
             project.setResults(resultsManager.search(q).getData());
+
+            // now get models
+            ModelQuery modelQuery = ModelQuery.builder().projectId(project.getId()).build();
+            project.setModels(modelManager.search(modelQuery).getData());
         });
         return data;
     }
