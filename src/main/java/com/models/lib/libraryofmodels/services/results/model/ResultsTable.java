@@ -29,7 +29,7 @@ public class ResultsTable implements Table<Results> {
             res.setName(resultSet.getString(ResultsDbColumn.name.name()));
             res.setPath(resultSet.getString(ResultsDbColumn.path.name()));
             res.setType(resultSet.getString(ResultsDbColumn.type.name()));
-            res.setProjectId(resultSet.getString(ResultsDbColumn.project_id.name()));
+            res.setExperimentId(resultSet.getString(ResultsDbColumn.project_id.name()));
             return res;
         }
     }

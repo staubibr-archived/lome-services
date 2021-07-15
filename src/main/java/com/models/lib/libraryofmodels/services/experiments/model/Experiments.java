@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import org.apache.maven.model.Contributor;
+
 import com.models.lib.libraryofmodels.services.db.Persistable;
 import com.models.lib.libraryofmodels.services.results.model.Results;
 
@@ -21,5 +23,7 @@ public class Experiments implements Persistable {
     private String inputs;
     private String date;
     private List<Results> results;
+    private List<Contributor> contributors;
+    private List<String> visualizationFiles;
 
 }
