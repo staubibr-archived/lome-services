@@ -18,9 +18,8 @@ public class Project implements Persistable {
     private String description;
     private String creationDate;
     private List<Model> models;
-    private List<Results> results;
+    private List<ResultsWrapper> results;
 
-    // private Models models; private
 }
 
 
