@@ -1,14 +1,14 @@
-package com.models.lib.libraryofmodels.services.projects;
+package com.models.lib.libraryofmodels.services.projects.model;
 
 import java.util.List;
 
 import lombok.Data;
 
+import com.models.lib.libraryofmodels.services.db.Persistable;
 import com.models.lib.libraryofmodels.services.models.model.Model;
-import com.models.lib.libraryofmodels.services.results.model.Results;
 
 @Data
-public class Project {
+public class Project implements Persistable {
 
     private String id;
     private String name;
