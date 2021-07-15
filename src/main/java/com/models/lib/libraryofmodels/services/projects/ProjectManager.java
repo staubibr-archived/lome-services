@@ -14,6 +14,7 @@ import com.models.lib.libraryofmodels.services.db.Page;
 import com.models.lib.libraryofmodels.services.projects.dao.ProjectsDao;
 import com.models.lib.libraryofmodels.services.projects.model.Project;
 import com.models.lib.libraryofmodels.services.projects.model.ProjectQuery;
+import com.models.lib.libraryofmodels.services.results.ResultsManager;
 import com.models.lib.libraryofmodels.services.results.dao.ResultsDao;
 import com.models.lib.libraryofmodels.services.results.model.ResultQuery;
 import com.models.lib.libraryofmodels.services.results.model.Results;
@@ -22,10 +23,13 @@ import com.models.lib.libraryofmodels.services.results.model.Results;
 public class ProjectManager {
 
     private ProjectsDao projectsDao;
+    private ResultsManager resultsManager;
 
     @Autowired
-    public ProjectManager(ProjectsDao projectsDao){
+    public ProjectManager(ProjectsDao projectsDao,
+                          ResultsManager resultsManager){
         this.projectsDao = projectsDao;
+        this.resultsManager = resultsManager;
     }
 
     public Project get(String id) {
@@ -33,7 +37,12 @@ public class ProjectManager {
     }
 
     public Page<Project> search(ProjectQuery query) {
-        return projectsDao.search(map(query));
+        Page<Project> data = projectsDao.search(map(query));
+        data.getData().forEach(project -> {
+            ResultQuery q = ResultQuery.builder().projectId(project.getId()).build();
+            project.setResults(resultsManager.search(q).getData());
+        });
+        return data;
     }
 
     private DbWhereClause map(ProjectQuery projectQuery) {
