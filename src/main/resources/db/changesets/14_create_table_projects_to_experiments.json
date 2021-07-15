@@ -1,0 +1,45 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "Create projects_to_experiments table",
+        "comment": "Create projects_to_experiments  table",
+        "author": "hamzaqassoud",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN",
+            "not": {
+              "tableExists": {
+                "tableName": "projects_to_experiments"
+              }
+            }
+          }
+        ],
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "constraints": {
+                      "primaryKey": true
+                    },
+                    "name": "projectId",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "experimentId",
+                    "type": "VARCHAR(255)"
+                  }
+                }
+              ],
+              "tableName": "projects_to_experiments"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

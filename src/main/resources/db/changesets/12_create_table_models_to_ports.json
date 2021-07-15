@@ -1,0 +1,45 @@
+{
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "Create models_to_ports table",
+        "comment": "Create models_to_ports  table",
+        "author": "hamzaqassoud",
+        "preConditions": [
+          {
+            "onFail": "MARK_RAN",
+            "not": {
+              "tableExists": {
+                "tableName": "models_to_ports"
+              }
+            }
+          }
+        ],
+        "changes": [
+          {
+            "createTable": {
+              "columns": [
+                {
+                  "column": {
+                    "constraints": {
+                      "primaryKey": true
+                    },
+                    "name": "modelId",
+                    "type": "VARCHAR(255)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "portId",
+                    "type": "VARCHAR(255)"
+                  }
+                }
+              ],
+              "tableName": "models_to_ports"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
