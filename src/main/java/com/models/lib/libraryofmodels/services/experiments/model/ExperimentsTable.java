@@ -1,4 +1,4 @@
-package com.models.lib.libraryofmodels.services.results.model;
+package com.models.lib.libraryofmodels.services.experiments.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,34 +9,35 @@ import org.springframework.stereotype.Component;
 import com.models.lib.libraryofmodels.services.db.Table;
 
 @Component
-public class ResultsTable implements Table<Results> {
+public class ExperimentsTable implements Table<Experiments> {
 
     @Override
     public String name() {
-        return "simulation_results";
+        return "experiments";
     }
 
     @Override
-    public RowMapper<Results> rowMapper() {
+    public RowMapper<Experiments> rowMapper() {
         return new ResultsEntityMapper();
     }
 
-    private static class ResultsEntityMapper implements RowMapper<Results> {
+    private static class ResultsEntityMapper implements RowMapper<Experiments> {
         @Override
-        public Results mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-            Results res = new Results();
+        public Experiments mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+            Experiments res = new Experiments();
             res.setId(resultSet.getString(ResultsDbColumn.id.name()));
             res.setName(resultSet.getString(ResultsDbColumn.name.name()));
-            res.setPath(resultSet.getString(ResultsDbColumn.path.name()));
-            res.setType(resultSet.getString(ResultsDbColumn.type.name()));
-            res.setExperimentId(resultSet.getString(ResultsDbColumn.project_id.name()));
+            res.setDescription(resultSet.getString(ResultsDbColumn.description.name()));
+            res.setState(resultSet.getString(ResultsDbColumn.state.name()));
+            res.setInputs(resultSet.getString(ResultsDbColumn.inputs.name()));
+            res.setDate(resultSet.getString(ResultsDbColumn.date.name()));
             return res;
         }
     }
 
     public enum ResultsDbColumn implements DbColumn {
 
-        id(true), name(false), type(false), path(false), project_id(false);
+        id(true), name(false), description(false), state(false), inputs(false), date(false);
 
         private final boolean pkCol;
 

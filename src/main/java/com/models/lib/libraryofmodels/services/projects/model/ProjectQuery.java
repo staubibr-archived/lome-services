@@ -1,4 +1,4 @@
-package com.models.lib.libraryofmodels.services.results.model;
+package com.models.lib.libraryofmodels.services.projects.model;
 
 import java.util.List;
 
@@ -7,11 +7,10 @@ import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder
-public class ResultQuery {
+public class ProjectQuery {
 
     private List<String> ids;
     private List<String> names;
     private Integer pageSize;
     private Integer pageNumber;
-    private String projectId;
 }

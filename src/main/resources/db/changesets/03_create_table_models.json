@@ -1,0 +1,97 @@
+{
+    "databaseChangeLog": [{
+            "changeSet": {
+                "id": "model_types_table",
+                "comment": "Create model types table",
+                "author": "Bruno St-Aubin",
+                "preConditions": [{
+                        "onFail": "MARK_RAN",
+                        "not": {
+                            "tableExists": {
+                                "tableName": "model_types"
+                            }
+                        }
+                    }
+                ],
+                "changes": [{
+                        "createTable": {
+                            "columns": [{
+                                    "column": {
+                                        "constraints": {
+                                            "primaryKey": true
+                                        },
+                                        "name": "id",
+                                        "type": "BIGINT",
+                                        "autoIncrement": true
+                                    }
+                                }, {
+                                    "column": {
+                                        "constraints": {
+                                            "nullable": false
+                                        },
+                                        "name": "name",
+                                        "type": "VARCHAR(255)"
+                                    }
+                                }, {
+                                    "column": {
+                                        "constraints": {
+                                            "nullable": false
+                                        },
+                                        "name": "type",
+                                        "type": "ENUM('Atomic', 'Coupled', 'Top')"
+                                    }
+                                }, {
+                                    "column": {
+                                        "constraints": {
+                                            "nullable": false
+                                        },
+                                        "name": "formalism",
+                                        "type": "ENUM('DEVS', 'Cell-DEVS', 'GIS-DEVS')"
+                                    }
+                                }, {
+                                    "column": {
+                                        "constraints": {
+                                            "nullable": false
+                                        },
+                                        "name": "simulator",
+                                        "type": "ENUM('Cadmium')"
+                                    }
+                                }, {
+                                    "column": {
+                                        "constraints": {
+                                            "nullable": false
+                                        },
+                                        "name": "description",
+                                        "type": "VARCHAR(4096)"
+                                    }
+                                }, {
+                                    "column": {
+                                        "constraints": {
+                                            "nullable": false
+                                        },
+                                        "name": "date_created",
+                                        "type": "DATE"
+                                    }
+                                }, {
+                                    "column": {
+                                        "name": "author",
+                                        "type": "BIGINT"
+                                    }
+                                }, {
+                                    "column": {
+                                        "constraints": {
+                                            "nullable": false
+                                        },
+                                        "name": "file",
+                                        "type": "BIGINT"
+                                    }
+                                }
+                            ],
+                            "tableName": "model_types"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

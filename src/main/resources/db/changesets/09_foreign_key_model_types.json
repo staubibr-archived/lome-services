@@ -1,0 +1,24 @@
+{
+    "databaseChangeLog": [{
+            "changeSet": {
+                "id": "model_type_foreign_key",
+                "author": "Bruno St-Aubin",
+                "changes": [{
+                        "addForeignKeyConstraint": {
+                            "baseTableName": "model_types",
+                            "baseColumnNames": "author",
+                            "constraintName": "fk_model_type_author",
+                            "deferrable": false,
+                            "initiallyDeferred": false,
+                            "onDelete": "CASCADE",
+                            "onUpdate": "RESTRICT",
+                            "referencedColumnNames": "id",
+                            "referencedTableName": "contributors",
+                            "validate": true
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

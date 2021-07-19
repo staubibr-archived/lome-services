@@ -1,4 +1,4 @@
-package com.models.lib.libraryofmodels.services.results.model;
+package com.models.lib.libraryofmodels.services.models.model;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import lombok.experimental.SuperBuilder;
 
 @Data
 @SuperBuilder
-public class ResultQuery {
+public class ModelQuery {
 
     private List<String> ids;
     private List<String> names;

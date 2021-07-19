@@ -46,11 +46,11 @@
             "from": ["Network", "outp_2"],
             "to": ["Sender", "ackIn"]
         }, {
-            "from": ["Receiver", "out"],
+            "from": ["Receiver", "out_port"],
             "to": ["Network", "inp_2"]
         }, {
             "from": ["Network", "outp_1"],
-            "to": ["Receiver", "in"]
+            "to": ["Receiver", "in_port"]
         }
     ],
     "message_types": [{
