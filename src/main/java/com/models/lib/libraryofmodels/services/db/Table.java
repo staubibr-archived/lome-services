@@ -1,10 +1,12 @@
 package com.models.lib.libraryofmodels.services.db;
 
+import org.apache.catalina.util.ParameterMap;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public interface Table<K> {
@@ -22,6 +24,8 @@ public interface Table<K> {
     Class<? extends DbColumn> getTableColumnClass();
 
     RowMapper<K> rowMapper();
+
+    Map<String, String> getParamMap(K entity);
 
     default Collection<DbColumn> getTableColumns() {
         return Arrays.asList(getTableColumnClass().getEnumConstants());

@@ -2,11 +2,15 @@ package com.models.lib.libraryofmodels.services.projects.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import com.models.lib.libraryofmodels.services.db.Table;
+import com.models.lib.libraryofmodels.services.models.model.Model;
+import com.models.lib.libraryofmodels.services.models.model.ModelsTable;
 import com.models.lib.libraryofmodels.services.results.model.Results;
 
 @Component
@@ -20,6 +24,16 @@ public class ProjectsTable implements Table<Project> {
     @Override
     public RowMapper<Project> rowMapper() {
         return new ResultsEntityMapper();
+    }
+
+    @Override
+    public Map<String, String> getParamMap(Project entity) {
+        return new HashMap<String, String>() {{
+            put(ProjectDbColumn.id.name(), entity.getId());
+            put(ProjectDbColumn.name.name(), entity.getName());
+            put(ProjectDbColumn.description.name(), entity.getDescription());
+            put(ProjectDbColumn.creation_date.name(), entity.getCreationDate());
+        }};
     }
 
     private static class ResultsEntityMapper implements RowMapper<Project> {

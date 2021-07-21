@@ -2,11 +2,15 @@ package com.models.lib.libraryofmodels.services.results.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import com.models.lib.libraryofmodels.services.db.Table;
+import com.models.lib.libraryofmodels.services.experiments.model.Experiments;
+import com.models.lib.libraryofmodels.services.experiments.model.ExperimentsTable;
 
 @Component
 public class ResultsTable implements Table<Results> {
@@ -19,6 +23,17 @@ public class ResultsTable implements Table<Results> {
     @Override
     public RowMapper<Results> rowMapper() {
         return new ResultsEntityMapper();
+    }
+
+    @Override
+    public Map<String, String> getParamMap(Results entity) {
+        return new HashMap<String, String>() {{
+            put(ResultsDbColumn.id.name(), entity.getId());
+            put(ResultsDbColumn.name.name(), entity.getName());
+            put(ResultsDbColumn.type.name(), entity.getType());
+            put(ResultsDbColumn.path.name(), entity.getPath());
+            put(ResultsDbColumn.project_id.name(), entity.getExperimentId());
+        }};
     }
 
     private static class ResultsEntityMapper implements RowMapper<Results> {

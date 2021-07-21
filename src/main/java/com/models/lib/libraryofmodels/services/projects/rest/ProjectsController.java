@@ -33,13 +33,13 @@ public class ProjectsController {
         this.projectManager = projectManager;
     }
 
-    @GetMapping("/api/v0/projects/{id}")
+    @GetMapping("/api/projects/{id}")
     public Project get(@PathVariable(value = "id") String id) {
         log.info("Getting projects file with id {}", id);
         return projectManager.get(id);
     }
 
-    @GetMapping("/api/v0/projects")
+    @GetMapping("/api/projects")
     public RESTResponse list(@RequestParam(value = "names", required = false) String names,
                              @RequestParam(value = "ids", required = false) String ids,
                              @RequestParam(value = "pageSize", defaultValue = "20", required = false) Integer pageSize,

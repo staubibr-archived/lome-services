@@ -23,13 +23,23 @@ public abstract class AbstractDao<T extends Persistable> implements Dao<T> {
     public static final String EQ_PARAMETER = "%s=:%s";
     public static final String IN_PARAMETER = "%s IN (:%s)";
     public static final String NOT_IN_PARAMETER = "%s NOT IN (:%s)";
-
+    public static final String INSERT = "INSERT INTO %s VALUES(%s)";
     protected final NamedParameterJdbcTemplate jdbcTemplate;
     protected final Table<T> table;
 
     public AbstractDao(NamedParameterJdbcTemplate jdbcTemplate, Table<T> table) {
         this.jdbcTemplate = jdbcTemplate;
         this.table = table;
+    }
+
+    @Override
+    public void create(T entity) {
+        String query = String.format(INSERT, table.name(), getTableColsForInsert());
+        jdbcTemplate.update(query, table.getParamMap(entity));
+    }
+
+    private String getTableColsForInsert() {
+        return table.allCols().stream().map(col -> ":" + col).collect(Collectors.joining(","));
     }
 
     @Override

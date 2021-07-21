@@ -25,6 +25,10 @@ public class ResultsManager {
         this.resultsDao = resultsDao;
     }
 
+    public void create(Results entity) {
+        resultsDao.create(entity);
+    }
+
     public Results get(String id) {
         return resultsDao.get(Collections.singletonList(id)).get(0);
     }

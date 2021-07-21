@@ -33,13 +33,13 @@ public class ExperimentsController {
         this.experimentsManager = experimentsManager;
     }
 
-    @GetMapping("/api/v0/experiments/{id}")
+    @GetMapping("/api/experiments/{id}")
     public Experiments get(@PathVariable(value = "id") String id) {
         log.info("Getting results file with id {}", id);
         return experimentsManager.get(id);
     }
 
-    @GetMapping("/api/v0/experiments")
+    @GetMapping("/api/experiments")
     public RESTResponse list(@RequestParam(value = "names", required = false) String names,
                              @RequestParam(value = "ids", required = false) String ids,
                              @RequestParam(value = "pageSize", defaultValue = "20", required = false) Integer pageSize,
