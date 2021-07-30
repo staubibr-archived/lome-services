@@ -1,14 +1,14 @@
 {
     "databaseChangeLog": [{
             "changeSet": {
-                "id": "experiments_table",
-                "comment": "Create experiments table",
+                "id": "model_types_table",
+                "comment": "Create model types table",
                 "author": "Bruno St-Aubin",
                 "preConditions": [{
                         "onFail": "MARK_RAN",
                         "not": {
                             "tableExists": {
-                                "tableName": "experiments"
+                                "tableName": "model_types"
                             }
                         }
                     }
@@ -29,7 +29,7 @@
                                         "constraints": {
                                             "nullable": false
                                         },
-                                        "name": "project_name",
+                                        "name": "name",
                                         "type": "VARCHAR(255)"
                                     }
                                 }, {
@@ -37,8 +37,24 @@
                                         "constraints": {
                                             "nullable": false
                                         },
-                                        "name": "name",
-                                        "type": "VARCHAR(255)"
+                                        "name": "type",
+                                        "type": "ENUM('Atomic', 'Coupled', 'Top')"
+                                    }
+                                }, {
+                                    "column": {
+                                        "constraints": {
+                                            "nullable": false
+                                        },
+                                        "name": "formalism",
+                                        "type": "ENUM('DEVS', 'Cell-DEVS', 'GIS-DEVS')"
+                                    }
+                                }, {
+                                    "column": {
+                                        "constraints": {
+                                            "nullable": false
+                                        },
+                                        "name": "simulator",
+                                        "type": "ENUM('Cadmium')"
                                     }
                                 }, {
                                     "column": {
@@ -63,12 +79,15 @@
                                     }
                                 }, {
                                     "column": {
-                                        "name": "top_model_type",
+                                        "constraints": {
+                                            "nullable": false
+                                        },
+                                        "name": "file",
                                         "type": "BIGINT"
                                     }
                                 }
                             ],
-                            "tableName": "experiments"
+                            "tableName": "model_types"
                         }
                     }
                 ]

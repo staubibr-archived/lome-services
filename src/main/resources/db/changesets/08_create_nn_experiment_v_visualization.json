@@ -1,0 +1,43 @@
+{
+    "databaseChangeLog": [{
+            "changeSet": {
+                "id": "nn_experiment_v_visualization_table",
+                "comment": "Create experiment v visualization",
+                "author": "Bruno St-Aubin",
+                "preConditions": [{
+                        "onFail": "MARK_RAN",
+                        "not": {
+                            "tableExists": {
+                                "tableName": "nn_experiment_v_visualization"
+                            }
+                        }
+                    }
+                ],
+                "changes": [{
+                        "createTable": {
+                            "columns": [{
+                                    "column": {
+                                        "constraints": {
+                                            "nullable": false
+                                        },
+                                        "name": "experiment_id",
+                                        "type": "BIGINT"
+                                    }
+                                }, {
+                                    "column": {
+                                        "constraints": {
+                                            "nullable": false
+                                        },
+                                        "name": "visualization_id",
+                                        "type": "BIGINT"
+                                    }
+                                }
+                            ],
+                            "tableName": "nn_experiment_v_visualization"
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

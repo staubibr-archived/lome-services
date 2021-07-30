@@ -1,14 +1,14 @@
 {
     "databaseChangeLog": [{
             "changeSet": {
-                "id": "experiments_table",
-                "comment": "Create experiments table",
-                "author": "Bruno St-Aubin",
+                "id": "contributors_table",
+                "comment": "Create contributors table",
+                "author": "Hamza Qassoud",
                 "preConditions": [{
                         "onFail": "MARK_RAN",
                         "not": {
                             "tableExists": {
-                                "tableName": "experiments"
+                                "tableName": "contributors"
                             }
                         }
                     }
@@ -29,7 +29,7 @@
                                         "constraints": {
                                             "nullable": false
                                         },
-                                        "name": "project_name",
+                                        "name": "first_name",
                                         "type": "VARCHAR(255)"
                                     }
                                 }, {
@@ -37,7 +37,12 @@
                                         "constraints": {
                                             "nullable": false
                                         },
-                                        "name": "name",
+                                        "name": "last_name",
+                                        "type": "VARCHAR(255)"
+                                    }
+                                }, {
+                                    "column": {
+                                        "name": "middle_name",
                                         "type": "VARCHAR(255)"
                                     }
                                 }, {
@@ -45,30 +50,25 @@
                                         "constraints": {
                                             "nullable": false
                                         },
-                                        "name": "description",
-                                        "type": "VARCHAR(4096)"
+                                        "name": "email",
+                                        "type": "VARCHAR(255)"
+                                    }
+                                }, {
+                                    "column": {
+                                        "name": "affiliation",
+                                        "type": "VARCHAR(255)"
                                     }
                                 }, {
                                     "column": {
                                         "constraints": {
                                             "nullable": false
                                         },
-                                        "name": "date_created",
+                                        "name": "creation_date",
                                         "type": "DATE"
-                                    }
-                                }, {
-                                    "column": {
-                                        "name": "author",
-                                        "type": "BIGINT"
-                                    }
-                                }, {
-                                    "column": {
-                                        "name": "top_model_type",
-                                        "type": "BIGINT"
                                     }
                                 }
                             ],
-                            "tableName": "experiments"
+                            "tableName": "contributors"
                         }
                     }
                 ]

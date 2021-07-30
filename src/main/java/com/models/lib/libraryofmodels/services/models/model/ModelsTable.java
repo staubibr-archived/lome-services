@@ -12,6 +12,7 @@ import com.models.lib.libraryofmodels.services.db.Table;
 import com.models.lib.libraryofmodels.services.experiments.model.Experiments;
 import com.models.lib.libraryofmodels.services.projects.model.Project;
 import com.models.lib.libraryofmodels.services.results.model.ResultsTable;
+import com.models.lib.libraryofmodels.services.projects.model.Project;
 
 @Component
 public class ModelsTable implements Table<Model> {

@@ -1,14 +1,14 @@
 {
     "databaseChangeLog": [{
             "changeSet": {
-                "id": "experiments_table",
-                "comment": "Create experiments table",
+                "id": "files_table",
+                "comment": "Create files table",
                 "author": "Bruno St-Aubin",
                 "preConditions": [{
                         "onFail": "MARK_RAN",
                         "not": {
                             "tableExists": {
-                                "tableName": "experiments"
+                                "tableName": "files"
                             }
                         }
                     }
@@ -29,14 +29,6 @@
                                         "constraints": {
                                             "nullable": false
                                         },
-                                        "name": "project_name",
-                                        "type": "VARCHAR(255)"
-                                    }
-                                }, {
-                                    "column": {
-                                        "constraints": {
-                                            "nullable": false
-                                        },
                                         "name": "name",
                                         "type": "VARCHAR(255)"
                                     }
@@ -45,30 +37,63 @@
                                         "constraints": {
                                             "nullable": false
                                         },
-                                        "name": "description",
-                                        "type": "VARCHAR(4096)"
+                                        "name": "file_type_id",
+                                        "type": "BIGINT"
                                     }
                                 }, {
                                     "column": {
                                         "constraints": {
                                             "nullable": false
                                         },
-                                        "name": "date_created",
+                                        "name": "last_modification",
                                         "type": "DATE"
                                     }
                                 }, {
                                     "column": {
-                                        "name": "author",
+                                        "name": "last_author",
                                         "type": "BIGINT"
                                     }
                                 }, {
                                     "column": {
-                                        "name": "top_model_type",
+                                        "constraints": {
+                                            "nullable": false
+                                        },
+                                        "name": "path",
+                                        "type": "VARCHAR(255)"
+                                    }
+                                }, {
+                                    "column": {
+                                        "name": "model_type_id",
+                                        "type": "BIGINT"
+                                    }
+                                }, {
+                                    "column": {
+                                        "name": "document_id",
+                                        "type": "BIGINT"
+                                    }
+                                }, {
+                                    "column": {
+                                        "name": "experiment_id",
+                                        "type": "BIGINT"
+                                    }
+                                }, {
+                                    "column": {
+                                        "name": "raw_result_id",
+                                        "type": "BIGINT"
+                                    }
+                                }, {
+                                    "column": {
+                                        "name": "converted_result_id",
+                                        "type": "BIGINT"
+                                    }
+                                }, {
+                                    "column": {
+                                        "name": "visualization_id",
                                         "type": "BIGINT"
                                     }
                                 }
                             ],
-                            "tableName": "experiments"
+                            "tableName": "files"
                         }
                     }
                 ]

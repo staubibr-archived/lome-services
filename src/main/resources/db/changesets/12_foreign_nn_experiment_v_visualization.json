@@ -1,0 +1,37 @@
+{
+    "databaseChangeLog": [{
+            "changeSet": {
+                "id": "model_type_foreign_key",
+                "author": "Bruno St-Aubin",
+                "changes": [{
+                        "addForeignKeyConstraint": {
+                            "baseTableName": "nn_experiment_v_visualization",
+                            "baseColumnNames": "experiment_id",
+                            "constraintName": "fk_nn_experiment_v_visualization_experiment",
+                            "deferrable": false,
+                            "initiallyDeferred": false,
+                            "onDelete": "CASCADE",
+                            "onUpdate": "RESTRICT",
+                            "referencedColumnNames": "id",
+                            "referencedTableName": "experiments",
+                            "validate": true
+                        }
+                    },{
+                        "addForeignKeyConstraint": {
+                            "baseTableName": "nn_experiment_v_visualization",
+                            "baseColumnNames": "visualization_id",
+                            "constraintName": "fk_nn_experiment_v_visualization_visualization",
+                            "deferrable": false,
+                            "initiallyDeferred": false,
+                            "onDelete": "CASCADE",
+                            "onUpdate": "RESTRICT",
+                            "referencedColumnNames": "id",
+                            "referencedTableName": "files",
+                            "validate": true
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

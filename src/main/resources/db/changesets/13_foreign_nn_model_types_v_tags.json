@@ -1,0 +1,37 @@
+{
+    "databaseChangeLog": [{
+            "changeSet": {
+                "id": "model_type_foreign_key",
+                "author": "Bruno St-Aubin",
+                "changes": [{
+                        "addForeignKeyConstraint": {
+                            "baseTableName": "nn_model_types_v_tags",
+                            "baseColumnNames": "model_type_id",
+                            "constraintName": "fk_nn_model_types_v_tags_model_type",
+                            "deferrable": false,
+                            "initiallyDeferred": false,
+                            "onDelete": "CASCADE",
+                            "onUpdate": "RESTRICT",
+                            "referencedColumnNames": "id",
+                            "referencedTableName": "model_types",
+                            "validate": true
+                        }
+                    },{
+                        "addForeignKeyConstraint": {
+                            "baseTableName": "nn_model_types_v_tags",
+                            "baseColumnNames": "tag_id",
+                            "constraintName": "fk_nn_model_types_v_tags_tag",
+                            "deferrable": false,
+                            "initiallyDeferred": false,
+                            "onDelete": "CASCADE",
+                            "onUpdate": "RESTRICT",
+                            "referencedColumnNames": "id",
+                            "referencedTableName": "tags",
+                            "validate": true
+                        }
+                    }
+                ]
+            }
+        }
+    ]
+}

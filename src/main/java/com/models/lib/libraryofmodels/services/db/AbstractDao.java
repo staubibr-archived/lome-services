@@ -24,6 +24,8 @@ public abstract class AbstractDao<T extends Persistable> implements Dao<T> {
     public static final String IN_PARAMETER = "%s IN (:%s)";
     public static final String NOT_IN_PARAMETER = "%s NOT IN (:%s)";
     public static final String INSERT = "INSERT INTO %s VALUES(%s)";
+    public static final String NN_QUERY = "SELECT %s FROM %s WHERE %s IN (SELECT %s FROM %s WHERE %s in (SELECT %s FROM %s WHERE %s))";
+
     protected final NamedParameterJdbcTemplate jdbcTemplate;
     protected final Table<T> table;
 
