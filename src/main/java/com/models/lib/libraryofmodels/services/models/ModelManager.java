@@ -47,9 +47,9 @@ public class ModelManager {
         if (modelQuery.getNames() != null) {
             ret.addCondition(new Condition(ResultsDbColumn.name, Comparator.in, modelQuery.getNames()));
         }
-        if (modelQuery.getProjectId() != null) {
-            ret.addCondition(new Condition(ResultsDbColumn.project_id, Comparator.in, modelQuery.getProjectId()));
-        }
+//        if (modelQuery.getProjectId() != null) {
+//            ret.addCondition(new Condition(ResultsDbColumn.project_id, Comparator.in, modelQuery.getProjectId()));
+//        }
         ret.setPageNumber(0);
         ret.setOffset(0);
         ret.setPageSize(100);

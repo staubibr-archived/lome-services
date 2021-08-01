@@ -51,16 +51,16 @@ public class ProjectManager {
             // get results files
             ResultQuery q = ResultQuery.builder().projectId(project.getId()).build();
             List<Results> results = resultsManager.search(q).getData();
-            List<ResultsWrapper> resultsWrappers = new ArrayList<>();
-            resultsWrappers.add(ResultsWrapper.builder()
-                    .type("raw")
-                    .files(results.stream().filter(res -> res.getType().equals("raw")).collect(Collectors.toList()))
-                    .build());
-            resultsWrappers.add(ResultsWrapper.builder()
-                    .type("converted")
-                    .files(results.stream().filter(res -> res.getType().equals("converted")).collect(Collectors.toList()))
-                    .build());
-            project.setResults(resultsWrappers);
+//            List<ResultsWrapper> resultsWrappers = new ArrayList<>();
+//            resultsWrappers.add(ResultsWrapper.builder()
+//                    .type("raw")
+//                    .files(results.stream().filter(res -> res.getType().equals("raw")).collect(Collectors.toList()))
+//                    .build());
+//            resultsWrappers.add(ResultsWrapper.builder()
+//                    .type("converted")
+//                    .files(results.stream().filter(res -> res.getType().equals("converted")).collect(Collectors.toList()))
+//                    .build());
+//            project.setResults(resultsWrappers);
 
             // now get models
             ModelQuery modelQuery = ModelQuery.builder().projectId(project.getId()).build();

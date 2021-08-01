@@ -45,9 +45,9 @@ public class ResultsManager {
         if (resultQuery.getNames() != null) {
             ret.addCondition(new Condition(ResultsDbColumn.name, Comparator.in, resultQuery.getNames()));
         }
-        if (resultQuery.getProjectId() != null) {
-            ret.addCondition(new Condition(ResultsDbColumn.project_id, Comparator.eq, resultQuery.getProjectId()));
-        }
+//        if (resultQuery.getProjectId() != null) {
+//            ret.addCondition(new Condition(ResultsDbColumn.project_id, Comparator.eq, resultQuery.getProjectId()));
+//        }
         ret.setPageNumber(0);
         ret.setOffset(0);
         ret.setPageSize(100);

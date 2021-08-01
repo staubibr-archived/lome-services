@@ -17,7 +17,7 @@ public class ResultsTable implements Table<Results> {
 
     @Override
     public String name() {
-        return "simulation_results";
+        return "files";
     }
 
     @Override
@@ -30,9 +30,9 @@ public class ResultsTable implements Table<Results> {
         return new HashMap<String, String>() {{
             put(ResultsDbColumn.id.name(), entity.getId());
             put(ResultsDbColumn.name.name(), entity.getName());
-            put(ResultsDbColumn.type.name(), entity.getType());
+//            put(ResultsDbColumn.type.name(), entity.getType());
             put(ResultsDbColumn.path.name(), entity.getPath());
-            put(ResultsDbColumn.project_id.name(), entity.getExperimentId());
+//            put(ResultsDbColumn.project_id.name(), entity.getExperimentId());
         }};
     }
 
@@ -43,15 +43,17 @@ public class ResultsTable implements Table<Results> {
             res.setId(resultSet.getString(ResultsDbColumn.id.name()));
             res.setName(resultSet.getString(ResultsDbColumn.name.name()));
             res.setPath(resultSet.getString(ResultsDbColumn.path.name()));
-            res.setType(resultSet.getString(ResultsDbColumn.type.name()));
-            res.setExperimentId(resultSet.getString(ResultsDbColumn.project_id.name()));
+//            res.setType(resultSet.getString(ResultsDbColumn.type.name()));
+//            res.setExperimentId(resultSet.getString(ResultsDbColumn.project_id.name()));
             return res;
         }
     }
 
     public enum ResultsDbColumn implements DbColumn {
 
-        id(true), name(false), type(false), path(false), project_id(false);
+        id(true), name(false), file_type_id(false), last_modification(false), last_author(false),
+        path(true), model_type_id(false), document_id(false), experiment_id(false), raw_result_id(false),
+        converted_result_id(false), visualization_id(false);
 
         private final boolean pkCol;
 

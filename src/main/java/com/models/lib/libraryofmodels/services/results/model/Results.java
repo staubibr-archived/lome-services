@@ -13,8 +13,8 @@ public class Results implements Persistable {
 
     private String id;
     private String name;
-    private String type;
+//    private String type;
     private String path;
-    private String experimentId;
+//    private String experimentId;
 
 }

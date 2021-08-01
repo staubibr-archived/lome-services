@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.tomcat.websocket.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,9 +47,6 @@ public class ResultsController {
                              @RequestHeader(value = "Authorization", required = false) String auth,
                              @RequestParam(value = "pageSize", defaultValue = "20", required = false) Integer pageSize,
                              @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber) throws AuthenticationException {
-        if (Strings.isNotBlank(auth)) {
-            throw new AuthenticationException("Invalid authorization token.");
-        }
         log.info("Getting results file");
         ResultQuery searchQuery = ResultQuery.builder()
                 .pageSize(pageSize)
