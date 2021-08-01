@@ -1,6 +1,5 @@
 package com.models.lib.libraryofmodels.services.db;
 
-import org.apache.catalina.util.ParameterMap;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.util.Arrays;
@@ -19,6 +18,10 @@ public interface Table<K> {
 
     default List<DbColumn> pkColumns() {
         return getTableColumns().stream().filter(DbColumn::isPkColumn).collect(Collectors.toList());
+    }
+
+    default Collection<DbColumn> allColsExceptPk() {
+        return getTableColumns().stream().filter(col -> !col.isPkColumn()).collect(Collectors.toList());
     }
 
     Class<? extends DbColumn> getTableColumnClass();

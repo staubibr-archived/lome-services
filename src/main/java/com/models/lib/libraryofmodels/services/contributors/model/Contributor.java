@@ -19,5 +19,5 @@ public class Contributor implements Persistable {
     private String middle_name;
     private String email;
     private String affiliation;
-    private Date creation_date;
+    private String creation_date;
 }

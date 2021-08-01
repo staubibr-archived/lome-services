@@ -28,10 +28,13 @@ public class ContributorsTable implements Table<Contributor> {
     @Override
     public Map<String, String> getParamMap(Contributor entity) {
         return new HashMap<String, String>() {{
+            put(ContributorsDbColumn.id.name(), entity.getId().toString());
             put(ContributorsDbColumn.first_name.name(), entity.getFirst_name());
             put(ContributorsDbColumn.last_name.name(), entity.getLast_name());
             put(ContributorsDbColumn.middle_name.name(), entity.getMiddle_name());
             put(ContributorsDbColumn.email.name(), entity.getEmail());
+            put(ContributorsDbColumn.affiliation.name(), entity.getAffiliation());
+            put(ContributorsDbColumn.creation_date.name(), entity.getCreation_date());
         }};
     }
 
@@ -45,14 +48,15 @@ public class ContributorsTable implements Table<Contributor> {
             res.setMiddle_name(resultSet.getString(ContributorsDbColumn.middle_name.name()));
             res.setEmail(resultSet.getString(ContributorsDbColumn.email.name()));
             res.setAffiliation(resultSet.getString(ContributorsDbColumn.affiliation.name()));
-            res.setCreation_date(resultSet.getDate(ContributorsDbColumn.creation_date.name()));
+            res.setCreation_date(resultSet.getDate(ContributorsDbColumn.creation_date.name()).toString());
             return res;
         }
     }
 
     public enum ContributorsDbColumn implements DbColumn {
 
-        id(true), first_name(true), last_name(true), middle_name(false), email(true), affiliation(false), creation_date(false);
+        id(true), first_name(false), last_name(false),
+        middle_name(false), email(false), affiliation(false), creation_date(false);
 
         private final boolean pkCol;
 

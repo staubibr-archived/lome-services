@@ -1,10 +1,16 @@
 package com.models.lib.libraryofmodels.services.db;
 
+import static java.util.stream.Collectors.toList;
+
 import lombok.extern.slf4j.Slf4j;
+
+import com.google.common.collect.ImmutableMap;
+import com.models.lib.libraryofmodels.services.db.Table.DbColumn;
 
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +31,8 @@ public abstract class AbstractDao<T extends Persistable> implements Dao<T> {
     public static final String NOT_IN_PARAMETER = "%s NOT IN (:%s)";
     public static final String INSERT = "INSERT INTO %s VALUES(%s)";
     public static final String NN_QUERY = "SELECT %s FROM %s WHERE %s IN (SELECT %s FROM %s WHERE %s in (SELECT %s FROM %s WHERE %s))";
+    public static final String UPDATE = "UPDATE %s SET %s WHERE %s";
+    public static final String DELETE_WHERE = "DELETE FROM %s WHERE %s";
 
     protected final NamedParameterJdbcTemplate jdbcTemplate;
     protected final Table<T> table;
@@ -38,6 +46,28 @@ public abstract class AbstractDao<T extends Persistable> implements Dao<T> {
     public void create(T entity) {
         String query = String.format(INSERT, table.name(), getTableColsForInsert());
         jdbcTemplate.update(query, table.getParamMap(entity));
+    }
+
+    @Override
+    public void update(List<T> entities) {
+        if (!CollectionUtils.isEmpty(entities)) {
+            String query = String.format(UPDATE,
+                    table.name(),
+                    table.allColsExceptPk().stream().map(col -> String.format(EQ_PARAMETER, col, col)).collect(Collectors.joining(",")),
+                    String.format(EQ_PARAMETER, table.pkColumns().get(0), table.pkColumns().get(0)));
+            entities.forEach(entity -> jdbcTemplate.update(query, table.getParamMap(entity)));
+        }
+    }
+
+    @Override
+    public void delete(List<String> keys) {
+        if (!CollectionUtils.isEmpty(keys)) {
+            String pkColumn = table.pkColumns().get(0).name();
+            String query = String.format(DELETE_WHERE,
+                    table.name(),
+                    String.format(IN_PARAMETER, pkColumn, pkColumn));
+            jdbcTemplate.update(query, ImmutableMap.of(pkColumn, keys));
+        }
     }
 
     private String getTableColsForInsert() {

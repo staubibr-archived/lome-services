@@ -1,6 +1,7 @@
 package com.models.lib.libraryofmodels.services.contributors;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,14 @@ public class ContributorsManager {
 
     public Page<Contributor> search(ContributorsQuery query) {
         return contributorsDao.search(map(query));
+    }
+
+    public void update(List<Contributor> contributors) {
+        contributorsDao.update(contributors);
+    }
+
+    public void delete(List<String> keys) {
+        contributorsDao.delete(keys);
     }
 
     private DbWhereClause map(ContributorsQuery contributorsQuery) {
