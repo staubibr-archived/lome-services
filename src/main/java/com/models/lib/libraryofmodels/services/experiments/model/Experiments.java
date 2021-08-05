@@ -6,8 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import org.apache.maven.model.Contributor;
 
+import com.models.lib.libraryofmodels.services.contributors.model.Contributor;
 import com.models.lib.libraryofmodels.services.db.Persistable;
 import com.models.lib.libraryofmodels.services.results.model.Results;
 

@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 public class ContributorsQuery {
 
     private List<Long> ids;
+    private String experimentId;
     private Integer pageSize;
     private Integer pageNumber;
 }

@@ -13,6 +13,7 @@ import com.models.lib.libraryofmodels.services.db.DbWhereClause;
 import com.models.lib.libraryofmodels.services.db.DbWhereClause.Comparator;
 import com.models.lib.libraryofmodels.services.db.DbWhereClause.Condition;
 import com.models.lib.libraryofmodels.services.db.Page;
+import com.models.lib.libraryofmodels.services.experiments.model.ExperimentsTable;
 import com.models.lib.libraryofmodels.services.results.model.ResultQuery;
 import com.models.lib.libraryofmodels.services.results.model.Results;
 import com.models.lib.libraryofmodels.services.results.model.ResultsTable.ResultsDbColumn;
@@ -49,7 +50,9 @@ public class ContributorsManager {
         if (contributorsQuery.getIds() != null) {
             ret.addCondition(new Condition(ResultsDbColumn.id, Comparator.in, contributorsQuery.getIds()));
         }
-
+        if (contributorsQuery.getExperimentId() != null) {
+            ret.addCondition(new Condition(ExperimentsTable.ExperimentsDbColumn.id, Comparator.in, contributorsQuery.getExperimentId()));
+        }
         ret.setPageNumber(0);
         ret.setOffset(0);
         ret.setPageSize(100);

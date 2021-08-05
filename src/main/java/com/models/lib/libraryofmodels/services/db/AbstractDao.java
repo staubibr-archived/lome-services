@@ -1,12 +1,8 @@
 package com.models.lib.libraryofmodels.services.db;
 
-import static java.util.stream.Collectors.toList;
-
 import lombok.extern.slf4j.Slf4j;
 
 import com.google.common.collect.ImmutableMap;
-import com.models.lib.libraryofmodels.services.db.Table.DbColumn;
-
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.jdbc.core.SingleColumnRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -79,7 +75,12 @@ public abstract class AbstractDao<T extends Persistable> implements Dao<T> {
         String pkCol = table.pkColumns().get(0).name();
         String query = String.format(SELECT_WHERE, String.join(",", table.allCols()), table.name(), String.format(IN_PARAMETER, pkCol, pkCol));
         Map<String, Object> namedParamsMap = new HashMap<String, Object>() {{ put(pkCol, keys); }};
-        return jdbcTemplate.query(query, namedParamsMap, table.rowMapper());
+        List<T> entities = jdbcTemplate.query(query, namedParamsMap, table.rowMapper());
+        entities.forEach(entity -> setRelated(entity));
+        return entities;
+    }
+
+    public void setRelated(T entity) {
     }
 
     @Override
