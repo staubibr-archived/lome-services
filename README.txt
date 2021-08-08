@@ -15,3 +15,4 @@ If you are using Eclipse, this link is strongly recommended if you see issues wi
 
 If for whatever reason you still can't run the project from your IDE, you can press the "Ctrl" key twice on intelIJ and run the maven commands above to build/run. (this way it will be ran from maven directly).
 
+Hello this is Bruno
