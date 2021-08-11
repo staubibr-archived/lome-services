@@ -87,17 +87,13 @@ public abstract class AbstractDao<T extends Persistable> implements Dao<T> {
     public Page<T> search(DbWhereClause query) {
         Map<String, Object> namedParams = getNamedParams(query);
         String whereClause = getWhereClause(query);
-        String q = Strings.isNotBlank(whereClause) ? String.format(SELECT_COUNT_WHERE, table.name(), whereClause) : String.format(SELECT_COUNT, table.name());
-        Long count = jdbcTemplate.query(q, namedParams, new SingleColumnRowMapper<Long>()).get(0);
-        List<T> data = new ArrayList<>();
-        if (count > 0) {
-            String cols = String.join(",", table.allCols());
-            String selectClause = Strings.isNotBlank(whereClause) ? String.format(SELECT_WHERE, cols, table.name(), whereClause) : String.format(SELECT, cols, table.name());
-            int offset = query.getOffset() != null ? query.getOffset() : (query.getPageNumber() - 1) * query.getPageSize();
-            String sqlFetch = selectClause + " " + String.format(PAGINATION, query.getPageSize(), offset);
-            data = jdbcTemplate.query(sqlFetch, namedParams, table.rowMapper());
-        }
-        return Page.<T>builder().data(data).currentPage(query.getPageNumber()).pageSize(query.getPageSize()).count(count.intValue()).build();
+        String cols = String.join(",", table.allCols());
+        String selectClause = Strings.isNotBlank(whereClause) ? String.format(SELECT_WHERE, cols, table.name(), whereClause) : String.format(SELECT, cols, table.name());
+        int offset = query.getOffset() != null ? query.getOffset() : (query.getPageNumber() - 1) * query.getPageSize();
+        String sqlFetch = selectClause + " " + String.format(PAGINATION, query.getPageSize(), offset);
+        List<T> data = jdbcTemplate.query(sqlFetch, namedParams, table.rowMapper());
+            
+        return Page.<T>builder().data(data).currentPage(query.getPageNumber()).pageSize(query.getPageSize()).count(data.size()).build();
     }
 
     private String getWhereClause(DbWhereClause query) {
