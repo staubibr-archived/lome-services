@@ -58,7 +58,7 @@ public class ContributorsTable implements Table<Contributor> {
     }
 }
 */
-package com.models.lib.libraryofmodels.services.contributors.model;
+package com.models.lib.libraryofmodels.services.file_types.model;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -72,54 +72,45 @@ import com.models.lib.libraryofmodels.services.db.Table;
 
 
 @Component
-public class ContributorsTable implements Table<Contributor> {
+public class FileTypesTable implements Table<FileTypes> {
 
     @Override
     public String name() {
-        return "contributors";
+        return "file_types";
     }
 
     @Override
-    public RowMapper<Contributor> rowMapper() {
-        return new ContributorsEntityMapper();
+    public RowMapper<FileTypes> rowMapper() {
+        return new FileTypesEntityMapper();
     }
 
     @Override
-    public Map<String, String> getParamMap(Contributor entity) {
+    public Map<String, String> getParamMap(FileTypes entity) {
         return new HashMap<String, String>() {{
-            put(ContributorsDbColumn.id.name(), entity.getId().toString());
-            put(ContributorsDbColumn.first_name.name(), entity.getFirst_name());
-            put(ContributorsDbColumn.last_name.name(), entity.getLast_name());
-            put(ContributorsDbColumn.middle_name.name(), entity.getMiddle_name());
-            put(ContributorsDbColumn.email.name(), entity.getEmail());
-            put(ContributorsDbColumn.affiliation.name(), entity.getAffiliation());
-            put(ContributorsDbColumn.creation_date.name(), entity.getCreation_date().toString());
+            put(FileTypesDbColumn.id.name(), entity.getId().toString());
+            put(FileTypesDbColumn.description.name(), entity.getDescription());
+            put(FileTypesDbColumn.extension.name(), entity.getExtension());
         }};
     }
 
-    private static class ContributorsEntityMapper implements RowMapper<Contributor> {
+    private static class FileTypesEntityMapper implements RowMapper<FileTypes> {
         @Override
-        public Contributor mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-            Contributor res = new Contributor();
-            res.setId(resultSet.getLong(ContributorsDbColumn.id.name()));
-            res.setFirst_name(resultSet.getString(ContributorsDbColumn.first_name.name()));
-            res.setLast_name(resultSet.getString(ContributorsDbColumn.last_name.name()));
-            res.setMiddle_name(resultSet.getString(ContributorsDbColumn.middle_name.name()));
-            res.setEmail(resultSet.getString(ContributorsDbColumn.email.name()));
-            res.setAffiliation(resultSet.getString(ContributorsDbColumn.affiliation.name()));
-            res.setCreation_date(resultSet.getDate(ContributorsDbColumn.creation_date.name()));
+        public FileTypes mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+        	FileTypes res = new FileTypes();
+            res.setId(resultSet.getLong(FileTypesDbColumn.id.name()));
+            res.setDescription(resultSet.getString(FileTypesDbColumn.description.name()));
+            res.setExtension(resultSet.getString(FileTypesDbColumn.extension.name()));
             return res;
         }
     }
 
-    public enum ContributorsDbColumn implements DbColumn {
+    public enum FileTypesDbColumn implements DbColumn {
 
-        id(true), first_name(false), last_name(false),
-        middle_name(false), email(false), affiliation(false), creation_date(false);
+        id(true), description(false), extension(false);
 
         private final boolean pkCol;
 
-        ContributorsDbColumn(boolean pkCol) {
+        FileTypesDbColumn(boolean pkCol) {
             this.pkCol = pkCol;
         }
 
@@ -131,6 +122,6 @@ public class ContributorsTable implements Table<Contributor> {
 
     @Override
     public Class<? extends DbColumn> getTableColumnClass() {
-        return ContributorsDbColumn.class;
+        return FileTypesDbColumn.class;
     }
 }

@@ -1,29 +1,23 @@
 package com.models.lib.libraryofmodels.services.experiments.model;
 
-import java.util.List;
-
+import java.sql.Date;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-
-import com.models.lib.libraryofmodels.services.contributors.model.Contributor;
 import com.models.lib.libraryofmodels.services.db.Persistable;
-import com.models.lib.libraryofmodels.services.results.model.Results;
 
 @Data
 @SuperBuilder
 @NoArgsConstructor
 public class Experiments implements Persistable {
 
-    private String id;
+    private Long id;
+    private String project_name;
     private String name;
-    private String description;
-    private String state;
-    private String inputs;
-    private String date;
-    private List<Results> results;
-    private List<Contributor> contributors;
-    private List<String> visualizationFiles;
+    private String descriptor;
+    private Date date_Created;
+    private Long author;
+    private Long top_model_type;
 
 }

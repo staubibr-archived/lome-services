@@ -51,13 +51,10 @@ public class ContributorsController {
     }
 }*/
 
-package com.models.lib.libraryofmodels.services.contributors.rest;
+package com.models.lib.libraryofmodels.services.file_types.rest;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,61 +69,64 @@ import com.models.lib.libraryofmodels.services.contributors.ContributorsManager;
 import com.models.lib.libraryofmodels.services.contributors.model.Contributor;
 import com.models.lib.libraryofmodels.services.contributors.model.ContributorsQuery;
 import com.models.lib.libraryofmodels.services.db.Page;
+import com.models.lib.libraryofmodels.services.file_types.FileTypesManager;
+import com.models.lib.libraryofmodels.services.file_types.model.FileTypes;
+import com.models.lib.libraryofmodels.services.file_types.model.FileTypesQuery;
 import com.models.lib.libraryofmodels.utils.RESTResponse;
 
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @Slf4j
-public class ContributorsController {
+public class FIleTypesController {
 
-    private final ContributorsManager contributorsManager;
+    private final FileTypesManager fileTypesManager;
 
     @Autowired
-    public ContributorsController(ContributorsManager contributorsManager) {
-        this.contributorsManager = contributorsManager;
+    public FIleTypesController(FileTypesManager fileTypesManager) {
+        this.fileTypesManager = fileTypesManager;
     }
 
-    @GetMapping("/api/contributors/{id}")
-    public Contributor get(@PathVariable(value = "id") Long id) {
-        log.info("Getting contributors object with id {}", id);
-        return contributorsManager.get(id);
+    @GetMapping("/api/fileTypes/{id}")
+    public FileTypes get(@PathVariable(value = "id") Long id) {
+        log.info("Getting file_types object with id {}", id);
+        return fileTypesManager.get(id);
     }
 
-    @GetMapping("/api/contributors")
+    @GetMapping("/api/fileTypes")
     public RESTResponse list(@RequestParam(value = "pageSize", defaultValue = "20", required = false) Integer pageSize,
                              @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber) {
     	
-        log.info("Getting contributors object");
+        log.info("Getting file_types object");
         
-        ContributorsQuery searchQuery = ContributorsQuery.builder()
+        FileTypesQuery searchQuery = FileTypesQuery.builder()
 										                 .pageSize(pageSize)
 										                 .pageNumber(pageNumber)
 										                 .build();
         
-        Page<Contributor> results = contributorsManager.search(searchQuery);
+        Page<FileTypes> results = fileTypesManager.search(searchQuery);
         
         return RESTResponse.builder().data(results.getData()).pagination(results.getPagination()).build();
     }
 
-    @PutMapping("/api/contributors")
-    public RESTResponse update(@RequestBody List<Contributor> contributors) {
-        log.info("Updating contributors");
-        contributorsManager.update(contributors);
-        return RESTResponse.builder().data(contributors).build();
+    @PutMapping("/api/fileTypes")
+    public RESTResponse update(@RequestBody List<FileTypes> fileTypes) {
+        log.info("Updating file_types");
+        fileTypesManager.update(fileTypes);
+        return RESTResponse.builder().data(fileTypes).build();
     }
 
-    @DeleteMapping("/api/contributors")
-    public RESTResponse delete(@RequestBody List<String> contributorIds) {
-        log.info("Deleting contributors");
-        contributorsManager.delete(contributorIds);
+    @DeleteMapping("/api/fileTypes")
+    public RESTResponse delete(@RequestBody List<String> fileTypesIds) {
+        log.info("Deleting file_types");
+        fileTypesManager.delete(fileTypesIds);
         return RESTResponse.builder().build();
     }
     
-    @PostMapping("/api/contributors")
-    public RESTResponse create(@RequestBody Contributor entity) {
-        log.info("Creating a contributor");
-    	contributorsManager.create(entity);
+    @PostMapping("/api/fileTypes")
+    public RESTResponse create(@RequestBody FileTypes entity) {
+        log.info("Creating a file_type");
+        fileTypesManager.create(entity);
         return RESTResponse.builder().data(Collections.singletonList(entity)).build();
     }
 }

@@ -5,10 +5,12 @@ import static com.models.lib.libraryofmodels.services.db.DbWhereClause.Condition
 import static com.models.lib.libraryofmodels.services.results.model.ResultsTable.ResultsDbColumn;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.models.lib.libraryofmodels.services.contributors.model.Contributor;
 import com.models.lib.libraryofmodels.services.db.DbWhereClause;
 import com.models.lib.libraryofmodels.services.db.Page;
 import com.models.lib.libraryofmodels.services.experiments.dao.ExperimentsDao;
@@ -23,26 +25,37 @@ import com.models.lib.libraryofmodels.services.results.model.Results;
 public class ExperimentsManager {
 
     private ExperimentsDao experimentsDao;
-    private ResultsManager resultsManager;
 
     @Autowired
     public ExperimentsManager(ExperimentsDao experimentsDao,
                               ResultsManager resultsManager){
         this.experimentsDao = experimentsDao;
-        this.resultsManager = resultsManager;
     }
 
-    public Experiments get(String id) {
-        return experimentsDao.get(Collections.singletonList(id)).get(0);
+    public Experiments get(Long id) {
+        return experimentsDao.get(Collections.singletonList(id.toString())).get(0);
     }
 
     public Page<Experiments> search(ExperimentQuery query) {
         Page<Experiments> data = experimentsDao.search(map(query));
-        data.getData().forEach(experiment -> {
+        /* data.getData().forEach(experiment -> {
             ResultQuery q = ResultQuery.builder().projectId(experiment.getId()).build();
             experiment.setResults(resultsManager.search(q).getData());
         });
+        
+        */
         return data;
+    }
+    
+    public void create(Experiments entity) {
+    	experimentsDao.create(entity);
+    }
+    public void update(List<Experiments> experiments) {
+        experimentsDao.update(experiments);
+    }
+
+    public void delete(List<String> keys) {
+    	experimentsDao.delete(keys);
     }
 
     private DbWhereClause map(ExperimentQuery query) {
@@ -55,4 +68,6 @@ public class ExperimentsManager {
         }
         return ret;
     }
+    
+    
 }

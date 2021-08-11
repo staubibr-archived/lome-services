@@ -8,6 +8,8 @@ import java.util.Map;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import com.models.lib.libraryofmodels.services.contributors.model.Contributor;
+import com.models.lib.libraryofmodels.services.contributors.model.ContributorsTable.ContributorsDbColumn;
 import com.models.lib.libraryofmodels.services.db.Table;
 
 @Component
@@ -20,37 +22,39 @@ public class ExperimentsTable implements Table<Experiments> {
 
     @Override
     public RowMapper<Experiments> rowMapper() {
-        return new ResultsEntityMapper();
+        return new ExperimentsEntityMapper();
     }
 
     @Override
     public Map<String, String> getParamMap(Experiments entity) {
         return new HashMap<String, String>() {{
-            put(ExperimentsDbColumn.id.name(), entity.getId());
-            put(ExperimentsDbColumn.description.name(), entity.getDescription());
-            put(ExperimentsDbColumn.state.name(), entity.getState());
-            put(ExperimentsDbColumn.inputs.name(), entity.getInputs());
-            put(ExperimentsDbColumn.date.name(), entity.getDate());
+            put(ExperimentsDbColumn.id.name(), entity.getId().toString());
+            put(ExperimentsDbColumn.project_name.name(), entity.getProject_name());
+            put(ExperimentsDbColumn.name.name(), entity.getName());
+            put(ExperimentsDbColumn.description.name(), entity.getDescriptor());
+            put(ExperimentsDbColumn.date_created.name(), entity.getDate_Created().toString());
+            put(ExperimentsDbColumn.author.name(), entity.getAuthor().toString());
+            put(ExperimentsDbColumn.top_model_type.name(), entity.getTop_model_type().toString());
         }};
     }
-
-    private static class ResultsEntityMapper implements RowMapper<Experiments> {
+    private static class ExperimentsEntityMapper implements RowMapper<Experiments> {
         @Override
         public Experiments mapRow(ResultSet resultSet, int rowNum) throws SQLException {
             Experiments res = new Experiments();
-            res.setId(resultSet.getString(ExperimentsDbColumn.id.name()));
-            res.setName(resultSet.getString(ExperimentsDbColumn.name.name()));
-            res.setDescription(resultSet.getString(ExperimentsDbColumn.description.name()));
-            res.setState(resultSet.getString(ExperimentsDbColumn.state.name()));
-            res.setInputs(resultSet.getString(ExperimentsDbColumn.inputs.name()));
-            res.setDate(resultSet.getString(ExperimentsDbColumn.date.name()));
+            res.setId(resultSet.getLong(ExperimentsDbColumn.id.name()));
+            res.setProject_name(resultSet.getString(ExperimentsDbColumn.project_name.name()));
+            res.setProject_name(resultSet.getString(ExperimentsDbColumn.name.name()));
+            res.setDescriptor(resultSet.getString(ExperimentsDbColumn.description.name()));
+            res.setDate_Created(resultSet.getDate(ExperimentsDbColumn.date_created.name()));
+            res.setAuthor(resultSet.getLong(ExperimentsDbColumn.author.name()));
+            res.setTop_model_type(resultSet.getLong(ExperimentsDbColumn.top_model_type.name()));
             return res;
         }
     }
 
     public enum ExperimentsDbColumn implements DbColumn {
 
-        id(true), name(false), description(false), state(false), inputs(false), date(false);
+        id(true), project_name(false), name(false), description(false), date_created(false), author(false), top_model_type(false);
 
         private final boolean pkCol;
 
@@ -68,4 +72,6 @@ public class ExperimentsTable implements Table<Experiments> {
     public Class<? extends DbColumn> getTableColumnClass() {
         return ExperimentsDbColumn.class;
     }
+
+	
 }

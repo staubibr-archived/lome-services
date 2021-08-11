@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Date;
+import java.sql.Date;
 
 import com.models.lib.libraryofmodels.services.db.Persistable;
 
@@ -19,5 +19,5 @@ public class Contributor implements Persistable {
     private String middle_name;
     private String email;
     private String affiliation;
-    private String creation_date;
+    private Date creation_date;
 }
