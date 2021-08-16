@@ -26,6 +26,7 @@ public abstract class AbstractDao<T extends Persistable> implements Dao<T> {
     public static final String IN_PARAMETER = "%s IN (:%s)";
     public static final String NOT_IN_PARAMETER = "%s NOT IN (:%s)";
     public static final String INSERT = "INSERT INTO %s VALUES(%s)";
+    public static final String INSERT_IN_COLUMNS= "INSERT INTO %s (%s) VALUES(%s)";
     public static final String NN_QUERY = "SELECT %s FROM %s WHERE %s IN (SELECT %s FROM %s WHERE %s in (SELECT %s FROM %s WHERE %s))";
     public static final String UPDATE = "UPDATE %s SET %s WHERE %s";
     public static final String DELETE_WHERE = "DELETE FROM %s WHERE %s";
@@ -40,9 +41,14 @@ public abstract class AbstractDao<T extends Persistable> implements Dao<T> {
 
     @Override
     public void create(T entity) {
-        String query = String.format(INSERT, table.name(), getTableColsForInsert());
-        jdbcTemplate.update(query, table.getParamMap(entity));
+    	Map<String,String> paramMap= table.getParamMap(entity);
+        String query = String.format(INSERT_IN_COLUMNS, table.name(),getColumns(paramMap), getTableColumnsForInsertFromParamMap(paramMap));
+        String query2 = String.format(INSERT, table.name(),getTableColsForInsert());
+    	String query3=getTableColsForInsert();
+    	String query4= getTableColumnsForInsertFromParamMap(paramMap);
+        jdbcTemplate.update(query, paramMap);
     }
+   
 
     @Override
     public void update(List<T> entities) {
@@ -70,6 +76,14 @@ public abstract class AbstractDao<T extends Persistable> implements Dao<T> {
         return table.allCols().stream().map(col -> ":" + col).collect(Collectors.joining(","));
     }
 
+    private String getTableColumnsForInsertFromParamMap(Map<String,String> paramMap) {
+    	return paramMap.keySet().stream().map(col -> ":" + col).collect(Collectors.joining(","));	
+    	
+    }
+    
+    private String getColumns(Map<String,String> paramMap) {
+    	return paramMap.keySet().stream().map(col -> col).collect(Collectors.joining(","));
+    }
     @Override
     public List<T> get(List<String> keys) {
         String pkCol = table.pkColumns().get(0).name();

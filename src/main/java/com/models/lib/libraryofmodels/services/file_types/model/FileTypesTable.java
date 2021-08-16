@@ -60,6 +60,7 @@ public class ContributorsTable implements Table<Contributor> {
 */
 package com.models.lib.libraryofmodels.services.file_types.model;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -69,6 +70,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import com.models.lib.libraryofmodels.services.db.Table;
+import com.models.lib.libraryofmodels.services.db.Table.DbColumn;
 
 
 @Component
@@ -86,13 +88,41 @@ public class FileTypesTable implements Table<FileTypes> {
 
     @Override
     public Map<String, String> getParamMap(FileTypes entity) {
-        return new HashMap<String, String>() {{
-            put(FileTypesDbColumn.id.name(), entity.getId().toString());
-            put(FileTypesDbColumn.description.name(), entity.getDescription());
-            put(FileTypesDbColumn.extension.name(), entity.getExtension());
-        }};
+        Map<String,String> paramMap= new HashMap<String, String>();
+        
+        insertIntoParamMap(FileTypesDbColumn.id, entity.getId(), paramMap);
+        insertIntoParamMap(FileTypesDbColumn.description, entity.getDescription(), paramMap);
+        insertIntoParamMap(FileTypesDbColumn.extension, entity.getExtension(), paramMap);
+//            put(FileTypesDbColumn.id.name(), entity.getId().toString());
+//            put(FileTypesDbColumn.description.name(), entity.getDescription());
+//            put(FileTypesDbColumn.extension.name(), entity.getExtension());
+       return paramMap;
     }
 
+    private void insertIntoParamMap(DbColumn key, Long value, Map<String, String> paramMap) {
+
+		if (value != null) {
+			paramMap.put(key.name(), value.toString());
+		}
+
+	}
+
+	private void insertIntoParamMap(DbColumn key, Date value, Map<String, String> paramMap) {
+
+		if (value != null) {
+			paramMap.put(key.name(), value.toString());
+		}
+
+	}
+	
+	private void insertIntoParamMap(DbColumn key, String value, Map<String, String> paramMap) {
+
+		if (value != null) {
+			paramMap.put(key.name(), value);
+		}
+
+	}
+	
     private static class FileTypesEntityMapper implements RowMapper<FileTypes> {
         @Override
         public FileTypes mapRow(ResultSet resultSet, int rowNum) throws SQLException {

@@ -60,6 +60,7 @@ public class ContributorsTable implements Table<Contributor> {
 */
 package com.models.lib.libraryofmodels.services.files.model;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -69,6 +70,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import com.models.lib.libraryofmodels.services.db.Table;
+import com.models.lib.libraryofmodels.services.db.Table.DbColumn;
 
 
 @Component
@@ -86,21 +88,58 @@ public class FilesTable implements Table<Files> {
 
     @Override
     public Map<String, String> getParamMap(Files entity) {
-        return new HashMap<String, String>() {{
-            put(FilesDbColumn.id.name(), entity.getId().toString());
-            put(FilesDbColumn.name.name(), entity.getName());
-            put(FilesDbColumn.file_type_id.name(), entity.getFile_type_id().toString());
-            put(FilesDbColumn.last_modification.name(), entity.getLast_modifications().toString());
-            put(FilesDbColumn.last_author.name(), entity.getLast_author().toString());
-            put(FilesDbColumn.path.name(), entity.getPath());
-            put(FilesDbColumn.model_type_id.name(), entity.getModel_type_id().toString());
-            put(FilesDbColumn.document_id.name(), entity.getDocument_id().toString());
-            put(FilesDbColumn.experiment_id.name(), entity.getExperiment_id().toString());
-            put(FilesDbColumn.raw_result_id.name(), entity.getRaw_result_id().toString());
-            put(FilesDbColumn.converted_result_id.name(), entity.getConverted_result_id().toString());
-            put(FilesDbColumn.visualization_id.name(), entity.getVisualization_id().toString());
-        }};
+        Map<String,String> paramMap= new HashMap<String, String>();
+        insertIntoParamMap(FilesDbColumn.id, entity.getId(), paramMap);
+        insertIntoParamMap(FilesDbColumn.name,entity.getName(),paramMap);
+        insertIntoParamMap(FilesDbColumn.file_type_id, entity.getFile_type_id(), paramMap);
+        insertIntoParamMap(FilesDbColumn.last_modification, entity.getLast_modifications(), paramMap);
+        insertIntoParamMap(FilesDbColumn.last_author, entity.getLast_author(), paramMap);
+        insertIntoParamMap(FilesDbColumn.path,entity.getPath(),paramMap);
+        insertIntoParamMap(FilesDbColumn.model_type_id,entity.getModel_type_id(),paramMap);
+        insertIntoParamMap(FilesDbColumn.document_id, entity.getDocument_id(), paramMap);
+        insertIntoParamMap(FilesDbColumn.experiment_id, entity.getExperiment_id(), paramMap);
+        insertIntoParamMap(FilesDbColumn.raw_result_id, entity.getRaw_result_id(), paramMap);
+        insertIntoParamMap(FilesDbColumn.converted_result_id,entity.getConverted_result_id(),paramMap);
+        insertIntoParamMap(FilesDbColumn.visualization_id, entity.getVisualization_id(), paramMap);
+//            put(FilesDbColumn.id.name(), entity.getId().toString());
+//            put(FilesDbColumn.name.name(), entity.getName());
+//            put(FilesDbColumn.file_type_id.name(), entity.getFile_type_id().toString());
+//            put(FilesDbColumn.last_modification.name(), entity.getLast_modifications().toString());
+//            put(FilesDbColumn.last_author.name(), entity.getLast_author().toString());
+//            put(FilesDbColumn.path.name(), entity.getPath());
+//            put(FilesDbColumn.model_type_id.name(), entity.getModel_type_id().toString());
+//            put(FilesDbColumn.document_id.name(), entity.getDocument_id().toString());
+//            put(FilesDbColumn.experiment_id.name(), entity.getExperiment_id().toString());
+//            put(FilesDbColumn.raw_result_id.name(), entity.getRaw_result_id().toString());
+//            put(FilesDbColumn.converted_result_id.name(), entity.getConverted_result_id().toString());
+//            put(FilesDbColumn.visualization_id.name(), entity.getVisualization_id().toString());
+       
+         return paramMap;
     }
+    
+    private void insertIntoParamMap(DbColumn key, Long value, Map<String, String> paramMap) {
+
+		if (value != null) {
+			paramMap.put(key.name(), value.toString());
+		}
+
+	}
+
+	private void insertIntoParamMap(DbColumn key, Date value, Map<String, String> paramMap) {
+
+		if (value != null) {
+			paramMap.put(key.name(), value.toString());
+		}
+
+	}
+	
+	private void insertIntoParamMap(DbColumn key, String value, Map<String, String> paramMap) {
+
+		if (value != null) {
+			paramMap.put(key.name(), value);
+		}
+
+	}
 
     private static class FilesEntityMapper implements RowMapper<Files> {
         @Override
@@ -110,6 +149,7 @@ public class FilesTable implements Table<Files> {
             res.setName(resultSet.getString(FilesDbColumn.name.name()));
             res.setFile_type_id(resultSet.getLong(FilesDbColumn.file_type_id.name()));
             res.setLast_modifications(resultSet.getDate(FilesDbColumn.last_modification.name()));
+            res.setPath(resultSet.getString(FilesDbColumn.path.name()));
             res.setLast_author(resultSet.getLong(FilesDbColumn.last_author.name()));
             res.setModel_type_id(resultSet.getLong(FilesDbColumn.model_type_id.name()));
             res.setDocument_id(resultSet.getLong(FilesDbColumn.document_id.name()));

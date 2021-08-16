@@ -1,5 +1,6 @@
 package com.models.lib.libraryofmodels.services.model_types.model;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -9,8 +10,6 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
 import com.models.lib.libraryofmodels.services.db.Table;
-import com.models.lib.libraryofmodels.services.experiments.model.Experiments;
-import com.models.lib.libraryofmodels.services.experiments.model.ExperimentsTable.ExperimentsDbColumn;
 
 @Component
 public class ModelTypesTable implements Table<ModelTypes> {
@@ -27,18 +26,55 @@ public class ModelTypesTable implements Table<ModelTypes> {
     
     @Override
     public Map<String, String> getParamMap(ModelTypes entity) {
-        return new HashMap<String, String>() {{
-            put(ModelTypesDbColumn.id.name(), entity.getId().toString());
-            put(ModelTypesDbColumn.name.name(), entity.getName());
-            put(ModelTypesDbColumn.type.name(), entity.getType());
-            put(ModelTypesDbColumn.formalism.name(), entity.getFormalism());
-            put(ModelTypesDbColumn.simulator.name(), entity.getSimulator());
-            put(ModelTypesDbColumn.description.name(), entity.getDescription());
-            put(ModelTypesDbColumn.date_created.name(),entity.getDate_created().toString());
-            put(ModelTypesDbColumn.author.name(),entity.getAuthor().toString());
-            put(ModelTypesDbColumn.file.name(),entity.getFile().toString());
-        }};
+         
+    	Map<String, String> paramMap = new HashMap<String, String>();
+
+		insertIntoParamMap(ModelTypesDbColumn.id, entity.getId(), paramMap);
+		insertIntoParamMap(ModelTypesDbColumn.name, entity.getName(), paramMap);
+		insertIntoParamMap(ModelTypesDbColumn.type, entity.getType(), paramMap);
+		insertIntoParamMap(ModelTypesDbColumn.formalism,entity.getFormalism(),paramMap);
+		insertIntoParamMap(ModelTypesDbColumn.simulator,entity.getSimulator(),paramMap);
+		insertIntoParamMap(ModelTypesDbColumn.description,entity.getDescription(),paramMap);
+		insertIntoParamMap(ModelTypesDbColumn.date_created,entity.getDate_created(),paramMap);
+		insertIntoParamMap(ModelTypesDbColumn.author,entity.getAuthor(),paramMap);
+		insertIntoParamMap(ModelTypesDbColumn.file,entity.getFile(),paramMap);
+		
+//            put(ModelTypesDbColumn.id.name(), entity.getId().toString());
+//            put(ModelTypesDbColumn.name.name(), entity.getName());
+//            put(ModelTypesDbColumn.type.name(), entity.getType());
+//            put(ModelTypesDbColumn.formalism.name(), entity.getFormalism());
+//            put(ModelTypesDbColumn.simulator.name(), entity.getSimulator());
+//            put(ModelTypesDbColumn.description.name(), entity.getDescription());
+//            put(ModelTypesDbColumn.date_created.name(),entity.getDate_created().toString());
+//            put(ModelTypesDbColumn.author.name(),entity.getAuthor().toString());
+//            put(ModelTypesDbColumn.file.name(),entity.getFile().toString());
+		return paramMap;
+        
     }
+    
+    private void insertIntoParamMap(DbColumn key, Long value, Map<String, String> paramMap) {
+
+		if (value != null) {
+			paramMap.put(key.name(), value.toString());
+		}
+
+	}
+
+	private void insertIntoParamMap(DbColumn key, Date value, Map<String, String> paramMap) {
+
+		if (value != null) {
+			paramMap.put(key.name(), value.toString());
+		}
+
+	}
+	
+	private void insertIntoParamMap(DbColumn key, String value, Map<String, String> paramMap) {
+
+		if (value != null) {
+			paramMap.put(key.name(), value);
+		}
+
+	}
     
 
     private static class ModelTypesEntityMapper implements RowMapper<ModelTypes> {
@@ -57,6 +93,8 @@ public class ModelTypesTable implements Table<ModelTypes> {
             return res;
         }
     }
+    
+    
 
     public enum ModelTypesDbColumn implements DbColumn {
 

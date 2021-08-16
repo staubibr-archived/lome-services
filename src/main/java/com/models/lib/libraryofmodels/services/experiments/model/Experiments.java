@@ -1,6 +1,8 @@
 package com.models.lib.libraryofmodels.services.experiments.model;
 
 import java.sql.Date;
+
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -15,8 +17,8 @@ public class Experiments implements Persistable {
     private Long id;
     private String project_name;
     private String name;
-    private String descriptor;
-    private Date date_Created;
+    private String description;
+    private Date date_created;
     private Long author;
     private Long top_model_type;
 
