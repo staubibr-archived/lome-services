@@ -4,8 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.sql.Date;
-
 import com.models.lib.libraryofmodels.services.db.Persistable;
 
 @Data
