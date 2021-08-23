@@ -43,9 +43,6 @@ public abstract class AbstractDao<T extends Persistable> implements Dao<T> {
     public void create(T entity) {
     	Map<String,String> paramMap= table.getParamMap(entity);
         String query = String.format(INSERT_IN_COLUMNS, table.name(),getColumns(paramMap), getTableColumnsForInsertFromParamMap(paramMap));
-        String query2 = String.format(INSERT, table.name(),getTableColsForInsert());
-    	String query3=getTableColsForInsert();
-    	String query4= getTableColumnsForInsertFromParamMap(paramMap);
         jdbcTemplate.update(query, paramMap);
     }
    
