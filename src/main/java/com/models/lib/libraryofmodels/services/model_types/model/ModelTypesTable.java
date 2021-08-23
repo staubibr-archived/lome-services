@@ -37,7 +37,6 @@ public class ModelTypesTable implements Table<ModelTypes> {
 		insertIntoParamMap(ModelTypesDbColumn.description,entity.getDescription(),paramMap);
 		insertIntoParamMap(ModelTypesDbColumn.date_created,entity.getDate_created(),paramMap);
 		insertIntoParamMap(ModelTypesDbColumn.author,entity.getAuthor(),paramMap);
-		insertIntoParamMap(ModelTypesDbColumn.file,entity.getFile(),paramMap);
 		
 //            put(ModelTypesDbColumn.id.name(), entity.getId().toString());
 //            put(ModelTypesDbColumn.name.name(), entity.getName());
@@ -89,7 +88,6 @@ public class ModelTypesTable implements Table<ModelTypes> {
             res.setDescription(resultSet.getString(ModelTypesDbColumn.description.name()));
             res.setDate_created(resultSet.getDate(ModelTypesDbColumn.date_created.name()));
             res.setAuthor(resultSet.getLong(ModelTypesDbColumn.author.name()));
-            res.setFile(resultSet.getLong(ModelTypesDbColumn.file.name()));
             return res;
         }
     }
@@ -98,7 +96,7 @@ public class ModelTypesTable implements Table<ModelTypes> {
 
     public enum ModelTypesDbColumn implements DbColumn {
 
-        id(true), name(false), type(false), formalism(false), simulator(false), description(false), date_created(false), author(false), file(false);
+        id(true), name(false), type(false), formalism(false), simulator(false), description(false), date_created(false), author(false);
 
         private final boolean pkCol;
 

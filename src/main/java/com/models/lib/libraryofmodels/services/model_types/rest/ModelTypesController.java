@@ -71,7 +71,7 @@ public class ModelTypesController {
     
     @PostMapping("/api/modeltypes")
     public RESTResponse create(@RequestBody ModelTypes entity) {
-    	log.info("Creating modeltypes");
+    	log.info("Creating a modeltype");
     	modelTypesManager.create(entity);
         return RESTResponse.builder().data(Collections.singletonList(entity)).build();
     }

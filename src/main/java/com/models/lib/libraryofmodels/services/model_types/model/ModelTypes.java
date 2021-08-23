@@ -21,5 +21,4 @@ public class ModelTypes implements Persistable {
     private String description;
     private Date date_created;
     private Long author;
-    private Long file;
 }

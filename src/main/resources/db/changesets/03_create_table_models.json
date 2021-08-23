@@ -77,14 +77,6 @@
                                         "name": "author",
                                         "type": "BIGINT"
                                     }
-                                }, {
-                                    "column": {
-                                        "constraints": {
-                                            "nullable": false
-                                        },
-                                        "name": "file",
-                                        "type": "BIGINT"
-                                    }
                                 }
                             ],
                             "tableName": "model_types"
