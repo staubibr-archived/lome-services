@@ -1,12 +1,13 @@
 package com.models.lib.libraryofmodels.services.db;
 
-import org.springframework.jdbc.core.RowMapper;
-
+import java.sql.Date;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.springframework.jdbc.core.RowMapper;
 
 public interface Table<K> {
 
@@ -23,6 +24,18 @@ public interface Table<K> {
     default Collection<DbColumn> allColsExceptPk() {
         return getTableColumns().stream().filter(col -> !col.isPkColumn()).collect(Collectors.toList());
     }
+
+    default void insertIntoParamMap(DbColumn key, Long value, Map<String, String> paramMap) {
+		if (value != null) paramMap.put(key.name(), value.toString());
+	}
+	
+    default void insertIntoParamMap(DbColumn key, String value, Map<String, String> paramMap) {
+		if (value != null) paramMap.put(key.name(), value);
+	}
+
+    default void insertIntoParamMap(DbColumn key, Date value, Map<String, String> paramMap) {
+		if (value != null) paramMap.put(key.name(), value.toString());
+	}
 
     Class<? extends DbColumn> getTableColumnClass();
 

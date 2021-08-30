@@ -1,11 +1,11 @@
 package com.models.lib.libraryofmodels.services.db;
 
-import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.models.lib.libraryofmodels.services.db.Table.DbColumn;
+import com.models.lib.libraryofmodels.services.db.Table.DbColumn;
+
+import lombok.Data;
 
 @Data
 public class DbWhereClause {
@@ -40,4 +40,5 @@ public class DbWhereClause {
     public enum Comparator {
         eq, in, not_in;
     }
+
 }
