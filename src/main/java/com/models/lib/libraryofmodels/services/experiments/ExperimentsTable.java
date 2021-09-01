@@ -3,6 +3,7 @@ package com.models.lib.libraryofmodels.services.experiments;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.jdbc.core.RowMapper;
@@ -11,68 +12,60 @@ import org.springframework.stereotype.Component;
 import com.models.lib.libraryofmodels.services.db.Table;
 
 @Component
-public class ExperimentsTable implements Table<Experiments> {
+public class ExperimentsTable extends Table<Experiments> {
 
-	@Override
 	public String name() {
 		return "experiments";
 	}
 
-	@Override
-	public RowMapper<Experiments> rowMapper() {
-		return new ExperimentsEntityMapper();
+	static String colId = "id";
+	static String colProjectName = "project_name";
+	static String colName = "name";
+	static String colDescription = "description";
+	static String colDateCreated = "date_created";
+	static String colAuthor = "author";
+	static String colTopModelType = "top_model_type";
+	
+	public String pk() {
+		return colId;
 	}
 
-	@Override
-	public Map<String, String> getParamMap(Experiments entity) {
-		Map<String, String> paramMap = new HashMap<String, String>();
+	public List<String> columns() {
+		return List.of(colId, colProjectName, colName, colDescription, colDateCreated, colAuthor, colTopModelType);
+	}
 
-		insertIntoParamMap(ExperimentsDbColumn.id, entity.getId(), paramMap);
-		insertIntoParamMap(ExperimentsDbColumn.project_name, entity.getProject_name(), paramMap);
-		insertIntoParamMap(ExperimentsDbColumn.name, entity.getName(), paramMap);
-		insertIntoParamMap(ExperimentsDbColumn.description,entity.getDescription(),paramMap);
-		insertIntoParamMap(ExperimentsDbColumn.date_created,entity.getDate_created(),paramMap);
-		insertIntoParamMap(ExperimentsDbColumn.author,entity.getAuthor(),paramMap);
-		insertIntoParamMap(ExperimentsDbColumn.top_model_type,entity.getTop_model_type(),paramMap);
+	public Map<String, Object> mapEntity(Experiments entity) {
+		Map<String, Object> map = new HashMap<String, Object>();
 
-		return paramMap;
+		map.put(colId, entity.getId());
+		map.put(colProjectName, entity.getProject_name());
+		map.put(colName, entity.getName());
+		map.put(colDescription, entity.getDescription());
+		map.put(colDateCreated, entity.getDate_created());
+		map.put(colAuthor, entity.getAuthor());
+		map.put(colTopModelType, entity.getTop_model_type());
+
+		return map;
 	}
 
 	private static class ExperimentsEntityMapper implements RowMapper<Experiments> {
 		@Override
 		public Experiments mapRow(ResultSet resultSet, int rowNum) throws SQLException {
 			Experiments res = new Experiments();
-			res.setId(resultSet.getLong(ExperimentsDbColumn.id.name()));
-			res.setProject_name(resultSet.getString(ExperimentsDbColumn.project_name.name()));
-			res.setName(resultSet.getString(ExperimentsDbColumn.name.name()));
-			res.setDescription(resultSet.getString(ExperimentsDbColumn.description.name()));
-			res.setDate_created(resultSet.getDate(ExperimentsDbColumn.date_created.name()));
-			res.setAuthor(resultSet.getLong(ExperimentsDbColumn.author.name()));
-			res.setTop_model_type(resultSet.getLong(ExperimentsDbColumn.top_model_type.name()));
+            
+            res.setId(resultSet.getLong(colId));
+            res.setProject_name(resultSet.getString(colProjectName));
+            res.setName(resultSet.getString(colName));
+            res.setDescription(resultSet.getString(colDescription));
+            res.setDate_created(resultSet.getDate(colDateCreated));
+            res.setAuthor(resultSet.getLong(colAuthor));
+            res.setTop_model_type(resultSet.getLong(colTopModelType));
+
 			return res;
 		}
 	}
 
-	public enum ExperimentsDbColumn implements DbColumn {
-
-		id(true), project_name(false), name(false), description(false), date_created(false), author(false),
-		top_model_type(false);
-
-		private final boolean pkCol;
-
-		ExperimentsDbColumn(boolean pkCol) {
-			this.pkCol = pkCol;
-		}
-
-		@Override
-		public boolean isPkColumn() {
-			return pkCol;
-		}
+	public RowMapper<Experiments> rowMapper() {
+		return new ExperimentsEntityMapper();
 	}
-
-	@Override
-	public Class<? extends DbColumn> getTableColumnClass() {
-		return ExperimentsDbColumn.class;
-	}
-
 }

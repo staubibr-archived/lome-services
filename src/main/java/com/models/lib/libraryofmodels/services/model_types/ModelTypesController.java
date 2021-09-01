@@ -1,6 +1,5 @@
 package com.models.lib.libraryofmodels.services.model_types;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.models.lib.libraryofmodels.services.db.Dao;
-import com.models.lib.libraryofmodels.services.db.Page;
-import com.models.lib.libraryofmodels.utils.RESTResponse;
+import com.models.lib.libraryofmodels.services.db.Query;
 
 @RestController
 public class ModelTypesController {
@@ -26,41 +24,40 @@ public class ModelTypesController {
     public ModelTypesController(Dao<ModelTypes> dao) {
         this.dao = dao;
     }
+    
+    @PostMapping("/api/modeltypes")
+    public List<Object> create(@RequestBody List<ModelTypes> entities) {
+    	return dao.create(entities);
+    }
 
     @GetMapping("/api/modeltypes/{id}")
     public ModelTypes get(@PathVariable(value = "id") Long id) {
-        return dao.get(id.toString());
+    	Query query = new Query();
+    	
+    	query.addCondition(new Query.Condition(ModelTypesTable.colId, Query.Comparator.eq, id.toString()));
+    	
+    	return dao.selectOne(query);
     }
 
     @GetMapping("/api/modeltypes")
-    public RESTResponse list(@RequestParam(value = "pageSize", defaultValue = "20", required = false) Integer pageSize,
-                             @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber) {
+    public List<ModelTypes> list(@RequestParam(value = "ids", required = false) String ids,
+							 @RequestParam(value = "pageSize", required = false) Integer pageSize,
+				             @RequestParam(value = "pageNumber", required = false) Integer pageNumber) {
     	        
-        ModelTypesQuery query = ModelTypesQuery.builder()
-							                   .pageSize(pageSize)
-							                   .pageNumber(pageNumber)
-							                   .build();
-        
-        Page<ModelTypes> results = dao.search(query.ToWhere());
-        
-        return RESTResponse.builder().data(results.getData()).pagination(results.getPagination()).build();
+        Query query = new Query(pageSize, pageNumber);
+
+        if (ids != null) query.addCondition(new Query.Condition(ModelTypesTable.colId, Query.Comparator.in, ids));
+                
+        return dao.select(query);
     }
     
     @PutMapping("/api/modeltypes")
-    public RESTResponse update(@RequestBody List<ModelTypes> modeltypes) {
-        dao.update(modeltypes);
-        return RESTResponse.builder().data(modeltypes).build();
+    public List<Object> update(@RequestBody List<ModelTypes> entities) {
+    	return dao.update(entities);
     }
 
     @DeleteMapping("/api/modeltypes")
-    public RESTResponse delete(@RequestBody List<String> modeltypesIds) {
-    	dao.delete(modeltypesIds);
-        return RESTResponse.builder().build();
-    }
-    
-    @PostMapping("/api/modeltypes")
-    public RESTResponse create(@RequestBody ModelTypes entity) {
-    	dao.create(entity);
-        return RESTResponse.builder().data(Collections.singletonList(entity)).build();
+    public List<Object> delete(@RequestBody List<Object> modeltypesIds) {
+    	return dao.delete(modeltypesIds);
     }
 }

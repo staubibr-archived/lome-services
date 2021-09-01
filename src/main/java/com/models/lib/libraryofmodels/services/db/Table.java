@@ -1,54 +1,23 @@
 package com.models.lib.libraryofmodels.services.db;
 
-import java.sql.Date;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.jdbc.core.RowMapper;
 
-public interface Table<K> {
-
-    String name();
-
-    default Collection<String> allCols() {
-        return getTableColumns().stream().map(DbColumn::name).collect(Collectors.toList());
-    }
-
-    default List<DbColumn> pkColumns() {
-        return getTableColumns().stream().filter(DbColumn::isPkColumn).collect(Collectors.toList());
-    }
-
-    default Collection<DbColumn> allColsExceptPk() {
-        return getTableColumns().stream().filter(col -> !col.isPkColumn()).collect(Collectors.toList());
-    }
-
-    default void insertIntoParamMap(DbColumn key, Long value, Map<String, String> paramMap) {
-		if (value != null) paramMap.put(key.name(), value.toString());
-	}
+public abstract class Table<K> {
 	
-    default void insertIntoParamMap(DbColumn key, String value, Map<String, String> paramMap) {
-		if (value != null) paramMap.put(key.name(), value);
-	}
+	public abstract String name();
+    public abstract RowMapper<K> rowMapper();
+    public abstract Map<String, Object> mapEntity(K entity);
+    public abstract String pk();
+    public abstract List<String> columns();
+    
+    public Map<String, Object> mapEntityNoPk(K entity) {
+    	Map<String, Object> map = mapEntity(entity);
+    	
+    	map.remove(pk());
 
-    default void insertIntoParamMap(DbColumn key, Date value, Map<String, String> paramMap) {
-		if (value != null) paramMap.put(key.name(), value.toString());
-	}
-
-    Class<? extends DbColumn> getTableColumnClass();
-
-    RowMapper<K> rowMapper();
-
-    Map<String, String> getParamMap(K entity);
-
-    default Collection<DbColumn> getTableColumns() {
-        return Arrays.asList(getTableColumnClass().getEnumConstants());
-    }
-
-    interface DbColumn {
-        String name();
-        boolean isPkColumn();
+    	return map;
     }
 }

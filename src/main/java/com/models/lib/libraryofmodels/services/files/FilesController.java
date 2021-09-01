@@ -1,6 +1,5 @@
 package com.models.lib.libraryofmodels.services.files;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.models.lib.libraryofmodels.services.db.Dao;
-import com.models.lib.libraryofmodels.services.db.Page;
-import com.models.lib.libraryofmodels.utils.RESTResponse;
+import com.models.lib.libraryofmodels.services.db.Query;
 
 @RestController
 public class FilesController {
@@ -26,41 +24,40 @@ public class FilesController {
     public FilesController(Dao<Files> dao) {
         this.dao = dao;
     }
-
+    
+    @PostMapping("/api/files")
+    public List<Object> create(@RequestBody List<Files> entities) {
+    	return dao.create(entities);
+    }
+    
     @GetMapping("/api/files/{id}")
     public Files get(@PathVariable(value = "id") Long id) {
-        return dao.get(id.toString());
+    	Query query = new Query();
+    	
+    	query.addCondition(new Query.Condition(FilesTable.colId, Query.Comparator.eq, id.toString()));
+    	
+    	return dao.selectOne(query);
     }
 
     @GetMapping("/api/files")
-    public RESTResponse list(@RequestParam(value = "pageSize", defaultValue = "20", required = false) Integer pageSize,
-                             @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber) {
+    public List<Files> list(@RequestParam(value = "ids", required = false) String ids,
+    						 @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                             @RequestParam(value = "pageNumber", required = false) Integer pageNumber) {
     	        
-        FilesQuery query = FilesQuery.builder()
-					                 .pageSize(pageSize)
-					                 .pageNumber(pageNumber)
-					                 .build();
-        
-        Page<Files> results = dao.search(query.ToWhere());
-        
-        return RESTResponse.builder().data(results.getData()).pagination(results.getPagination()).build();
+    	Query query = new Query(pageSize, pageNumber);
+
+        if (ids != null) query.addCondition(new Query.Condition(FilesTable.colId, Query.Comparator.in, ids));
+                
+        return dao.select(query);
     }
 
     @PutMapping("/api/files")
-    public RESTResponse update(@RequestBody List<Files> files) {
-    	dao.update(files);
-        return RESTResponse.builder().data(files).build();
+    public List<Object> update(@RequestBody List<Files> entities) {
+    	return dao.update(entities);
     }
 
     @DeleteMapping("/api/files")
-    public RESTResponse delete(@RequestBody List<String> filesIds) {
-    	dao.delete(filesIds);
-        return RESTResponse.builder().build();
-    }
-    
-    @PostMapping("/api/files")
-    public RESTResponse create(@RequestBody Files entity) {
-    	dao.create(entity);
-        return RESTResponse.builder().data(Collections.singletonList(entity)).build();
+    public List<Object> delete(@RequestBody List<Object> filesIds) {
+    	return dao.delete(filesIds);
     }
 }

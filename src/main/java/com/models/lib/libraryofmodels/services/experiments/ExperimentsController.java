@@ -1,7 +1,5 @@
 package com.models.lib.libraryofmodels.services.experiments;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.apache.tomcat.websocket.AuthenticationException;
@@ -16,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.models.lib.libraryofmodels.services.db.Dao;
-import com.models.lib.libraryofmodels.services.db.Page;
-import com.models.lib.libraryofmodels.utils.RESTResponse;
+import com.models.lib.libraryofmodels.services.db.Query;
 
 @RestController
 public class ExperimentsController {
@@ -28,44 +25,42 @@ public class ExperimentsController {
     public ExperimentsController(Dao<Experiments> dao) {
         this.dao = dao;
     }
+    
+    @PostMapping("/api/experiments")
+    public List<Object> create(@RequestBody List<Experiments> entities) {
+    	return dao.create(entities);
+    }
 
     @GetMapping("/api/experiments/{id}")
     public Experiments get(@PathVariable(value = "id") Long id) {
-        return dao.get(id.toString());
+    	Query query = new Query();
+    	
+    	query.addCondition(new Query.Condition(ExperimentsTable.colId, Query.Comparator.eq, id.toString()));
+    	
+    	return dao.selectOne(query);
     }
 
     @GetMapping("/api/experiments")
-    public RESTResponse list(@RequestParam(value = "names", required = false) String names,
+    public List<Experiments> list(@RequestParam(value = "names", required = false) String names,
                              @RequestParam(value = "ids", required = false) String ids,
-                             @RequestParam(value = "pageSize", defaultValue = "20", required = false) Integer pageSize,
-                             @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber) throws AuthenticationException {
+                             @RequestParam(value = "pageSize", required = false) Integer pageSize,
+                             @RequestParam(value = "pageNumber", required = false) Integer pageNumber) throws AuthenticationException {
 
-        ExperimentsQuery searchQuery = ExperimentsQuery.builder()
-                .pageSize(pageSize)
-                .pageNumber(pageNumber)
-                .ids(ids == null ? null : Arrays.asList(ids.split(",")))
-                .names(names == null ? null : Arrays.asList(names.split(",")))
-                .build();
-        
-        Page<Experiments> results = dao.search(searchQuery.ToWhere());
-        return RESTResponse.builder().data(results.getData()).pagination(results.getPagination()).build();
+    	Query query = new Query(pageSize, pageNumber);
+
+        if (ids != null) query.addCondition(new Query.Condition(ExperimentsTable.colId, Query.Comparator.in, ids));
+        if (names != null) query.addCondition(new Query.Condition(ExperimentsTable.colName, Query.Comparator.in, names));
+
+        return dao.select(query);
     }
-    
+        
     @PutMapping("/api/experiments")
-    public RESTResponse update(@RequestBody List<Experiments> experiments) {
-    	dao.update(experiments);
-        return RESTResponse.builder().data(experiments).build();
+    public List<Object> update(@RequestBody List<Experiments> entities) {
+    	return dao.update(entities);
     }
 
     @DeleteMapping("/api/experiments")
-    public RESTResponse delete(@RequestBody List<String> experimentsIds) {
-        dao.delete(experimentsIds);
-        return RESTResponse.builder().build();
-    }
-    
-    @PostMapping("/api/experiments")
-    public RESTResponse create(@RequestBody Experiments entity) {
-    	dao.create(entity);
-        return RESTResponse.builder().data(Collections.singletonList(entity)).build();
+    public List<Object> delete(@RequestBody List<Object> experimentsIds) {
+        return dao.delete(experimentsIds);
     }
 }

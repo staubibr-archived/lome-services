@@ -1,6 +1,5 @@
 package com.models.lib.libraryofmodels.services.file_types;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.models.lib.libraryofmodels.services.db.Dao;
-import com.models.lib.libraryofmodels.services.db.Page;
-import com.models.lib.libraryofmodels.utils.RESTResponse;
+import com.models.lib.libraryofmodels.services.db.Query;
 
 @RestController
 public class FileTypesController {
@@ -26,41 +24,40 @@ public class FileTypesController {
     public FileTypesController(Dao<FileTypes> dao) {
         this.dao = dao;
     }
+    
+    @PostMapping("/api/fileTypes")
+    public List<Object> create(@RequestBody List<FileTypes> entities) {
+        return dao.create(entities);
+    }
 
     @GetMapping("/api/fileTypes/{id}")
     public FileTypes get(@PathVariable(value = "id") Long id) {
-        return dao.get(id.toString());
+    	Query query = new Query();
+    	
+    	query.addCondition(new Query.Condition(FileTypesTable.colId, Query.Comparator.eq, id.toString()));
+    	
+    	return dao.selectOne(query);
     }
 
     @GetMapping("/api/fileTypes")
-    public RESTResponse list(@RequestParam(value = "pageSize", defaultValue = "20", required = false) Integer pageSize,
-                             @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber) {
+    public List<FileTypes> list(@RequestParam(value = "ids", required = false) String ids,
+							 @RequestParam(value = "pageSize", required = false) Integer pageSize,
+				             @RequestParam(value = "pageNumber", required = false) Integer pageNumber) {
     	        
-        FileTypesQuery query = FileTypesQuery.builder()
-							                 .pageSize(pageSize)
-							                 .pageNumber(pageNumber)
-							                 .build();
+    	Query query = new Query(pageSize, pageNumber);
+
+        if (ids != null) query.addCondition(new Query.Condition(FileTypesTable.colId, Query.Comparator.in, ids));
         
-        Page<FileTypes> results = dao.search(query.ToWhere());
-        
-        return RESTResponse.builder().data(results.getData()).pagination(results.getPagination()).build();
+        return dao.select(query);
     }
 
     @PutMapping("/api/fileTypes")
-    public RESTResponse update(@RequestBody List<FileTypes> fileTypes) {
-    	dao.update(fileTypes);
-        return RESTResponse.builder().data(fileTypes).build();
+    public List<Object> update(@RequestBody List<FileTypes> entities) {
+    	return dao.update(entities);
     }
 
     @DeleteMapping("/api/fileTypes")
-    public RESTResponse delete(@RequestBody List<String> fileTypesIds) {
-        dao.delete(fileTypesIds);
-        return RESTResponse.builder().build();
-    }
-    
-    @PostMapping("/api/fileTypes")
-    public RESTResponse create(@RequestBody FileTypes entity) {
-        dao.create(entity);
-        return RESTResponse.builder().data(Collections.singletonList(entity)).build();
+    public List<Object> delete(@RequestBody List<Object> fileTypesIds) {
+    	return dao.delete(fileTypesIds);
     }
 }

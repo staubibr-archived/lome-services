@@ -25,13 +25,13 @@ public class ContributorsTable implements Table<Contributor> {
         @Override
         public Contributor mapRow(ResultSet resultSet, int rowNum) throws SQLException {
             Contributor res = new Contributor();
-            res.setId(resultSet.getLong(ContributorsDbColumn.id.name()));
-            res.setFirst_name(resultSet.getString(ContributorsDbColumn.first_name.name()));
-            res.setLast_name(resultSet.getString(ContributorsDbColumn.last_name.name()));
-            res.setMiddle_name(resultSet.getString(ContributorsDbColumn.middle_name.name()));
-            res.setEmail(resultSet.getString(ContributorsDbColumn.email.name()));
-            res.setAffiliation(resultSet.getString(ContributorsDbColumn.affiliation.name()));
-            res.setCreation_date(resultSet.getDate(ContributorsDbColumn.creation_date.name()));
+            res.setId(resultSet.getLong(ContributorsDbColumn.id));
+            res.setFirst_name(resultSet.getString(ContributorsDbColumn.first_name));
+            res.setLast_name(resultSet.getString(ContributorsDbColumn.last_name));
+            res.setMiddle_name(resultSet.getString(ContributorsDbColumn.middle_name));
+            res.setEmail(resultSet.getString(ContributorsDbColumn.email));
+            res.setAffiliation(resultSet.getString(ContributorsDbColumn.affiliation));
+            res.setCreation_date(resultSet.getDate(ContributorsDbColumn.creation_date));
             return res;
         }
     }
@@ -63,6 +63,7 @@ package com.models.lib.libraryofmodels.services.files;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.jdbc.core.RowMapper;
@@ -70,81 +71,76 @@ import org.springframework.stereotype.Component;
 
 import com.models.lib.libraryofmodels.services.db.Table;
 
-
 @Component
-public class FilesTable implements Table<Files> {
+public class FilesTable extends Table<Files> {
 
-    @Override
     public String name() {
         return "files";
     }
-
-    @Override
-    public RowMapper<Files> rowMapper() {
-        return new FilesEntityMapper();
+    
+	static String colId = "id";
+	static String colName = "name";
+	static String colFileTypeId = "file_type_id";
+	static String colLastModification = "last_modification";
+	static String colLastAuthor = "last_author";
+	static String colPath = "path";
+	static String colModelTypeId = "model_type_id";
+	static String colDocumentId = "document_id";
+	static String colExperimentId = "experiment_id";
+	static String colRawResultId = "raw_result_id";
+	static String colConvertedResultId = "converted_result_id";
+	static String colVisualizationId = "visualization_id";
+	
+	public String pk() {
+		return colId;
+	}
+	
+    public List<String> columns() {
+		return List.of(colId, colName, colFileTypeId, colLastModification, colLastAuthor, colPath, colModelTypeId, colDocumentId, colExperimentId, colRawResultId, colConvertedResultId, colVisualizationId);
     }
 
-    @Override
-    public Map<String, String> getParamMap(Files entity) {
-        Map<String,String> paramMap= new HashMap<String, String>();
-        insertIntoParamMap(FilesDbColumn.id, entity.getId(), paramMap);
-        insertIntoParamMap(FilesDbColumn.name,entity.getName(),paramMap);
-        insertIntoParamMap(FilesDbColumn.file_type_id, entity.getFile_type_id(), paramMap);
-        insertIntoParamMap(FilesDbColumn.last_modification, entity.getLast_modifications(), paramMap);
-        insertIntoParamMap(FilesDbColumn.last_author, entity.getLast_author(), paramMap);
-        insertIntoParamMap(FilesDbColumn.path,entity.getPath(),paramMap);
-        insertIntoParamMap(FilesDbColumn.model_type_id,entity.getModel_type_id(),paramMap);
-        insertIntoParamMap(FilesDbColumn.document_id, entity.getDocument_id(), paramMap);
-        insertIntoParamMap(FilesDbColumn.experiment_id, entity.getExperiment_id(), paramMap);
-        insertIntoParamMap(FilesDbColumn.raw_result_id, entity.getRaw_result_id(), paramMap);
-        insertIntoParamMap(FilesDbColumn.converted_result_id,entity.getConverted_result_id(),paramMap);
-        insertIntoParamMap(FilesDbColumn.visualization_id, entity.getVisualization_id(), paramMap);
+    public Map<String, Object> mapEntity(Files entity) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        
+        map.put(colId, entity.getId());
+        map.put(colName, entity.getName());
+        map.put(colFileTypeId, entity.getFile_type_id());
+        map.put(colLastModification, entity.getLast_modifications());
+        map.put(colLastAuthor, entity.getLast_author());
+        map.put(colPath, entity.getPath());
+        map.put(colModelTypeId, entity.getModel_type_id());
+        map.put(colDocumentId, entity.getDocument_id());
+        map.put(colExperimentId, entity.getExperiment_id());
+        map.put(colRawResultId, entity.getRaw_result_id());
+        map.put(colConvertedResultId, entity.getConverted_result_id());
+        map.put(colVisualizationId, entity.getVisualization_id());
 
-         return paramMap;
+        return map;
     }
     
     private static class FilesEntityMapper implements RowMapper<Files> {
         @Override
         public Files mapRow(ResultSet resultSet, int rowNum) throws SQLException {
             Files res = new Files();
-            res.setId(resultSet.getLong(FilesDbColumn.id.name()));
-            res.setName(resultSet.getString(FilesDbColumn.name.name()));
-            res.setFile_type_id(resultSet.getLong(FilesDbColumn.file_type_id.name()));
-            res.setLast_modifications(resultSet.getDate(FilesDbColumn.last_modification.name()));
-            res.setPath(resultSet.getString(FilesDbColumn.path.name()));
-            res.setLast_author(resultSet.getLong(FilesDbColumn.last_author.name()));
-            res.setModel_type_id(resultSet.getLong(FilesDbColumn.model_type_id.name()));
-            res.setDocument_id(resultSet.getLong(FilesDbColumn.document_id.name()));
-            res.setExperiment_id(resultSet.getLong(FilesDbColumn.experiment_id.name()));
-            res.setRaw_result_id(resultSet.getLong(FilesDbColumn.raw_result_id.name()));
-            res.setConverted_result_id(resultSet.getLong(FilesDbColumn.converted_result_id.name()));
-            res.setVisualization_id(resultSet.getLong(FilesDbColumn.visualization_id.name()));
+
+            res.setId(resultSet.getLong(colId));
+            res.setName(resultSet.getString(colName));
+            res.setFile_type_id(resultSet.getLong(colFileTypeId));
+            res.setLast_modifications(resultSet.getDate(colLastModification));
+            res.setLast_author(resultSet.getLong(colLastAuthor));
+            res.setPath(resultSet.getString(colPath));
+            res.setModel_type_id(resultSet.getLong(colModelTypeId));
+            res.setDocument_id(resultSet.getLong(colDocumentId));
+            res.setExperiment_id(resultSet.getLong(colExperimentId));
+            res.setRaw_result_id(resultSet.getLong(colRawResultId));
+            res.setConverted_result_id(resultSet.getLong(colConvertedResultId));
+            res.setVisualization_id(resultSet.getLong(colVisualizationId));
+
             return res;
         }
     }
 
-    public enum FilesDbColumn implements DbColumn {
-
-        id(true), name(false), file_type_id(false),
-        last_modification(false), last_author(false), path(false), model_type_id(false),
-        document_id(false), experiment_id(false), raw_result_id(false), converted_result_id(false),
-        visualization_id(false);
-
-        private final boolean pkCol;
-
-        FilesDbColumn(boolean pkCol) {
-            this.pkCol = pkCol;
-        }
-
-        @Override
-        public boolean isPkColumn() {
-            return pkCol;
-        }
+    public RowMapper<Files> rowMapper() {
+        return new FilesEntityMapper();
     }
-
-    @Override
-    public Class<? extends DbColumn> getTableColumnClass() {
-        return FilesDbColumn.class;
-    }
-
 }

@@ -11,5 +11,4 @@ public final class Pagination {
     private Integer count;
     private Integer pageSize;
     private Integer totalPages;
-
 }

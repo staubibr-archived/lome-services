@@ -63,6 +63,7 @@ package com.models.lib.libraryofmodels.services.tags;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.jdbc.core.RowMapper;
@@ -72,55 +73,45 @@ import com.models.lib.libraryofmodels.services.db.Table;
 
 
 @Component
-public class TagsTable implements Table<Tags> {
+public class TagsTable extends Table<Tags> {
 
-    @Override
     public String name() {
         return "tags";
     }
 
-    @Override
-    public RowMapper<Tags> rowMapper() {
-        return new TagsEntityMapper();
-    }
+	static String colId = "id";
+	static String colValue = "value";
+	
+	public String pk() {
+		return colId;
+	}
 
-    @Override
-    public Map<String, String> getParamMap(Tags entity) {
-        Map<String, String> paramMap = new HashMap<String, String>();
-        insertIntoParamMap(TagsDbColumn.id, entity.getId(), paramMap);
-        insertIntoParamMap(TagsDbColumn.value, entity.getValue(), paramMap);
+	public List<String> columns() {
+		return List.of(colId, colValue);
+	}
+
+    public Map<String, Object> mapEntity(Tags entity) {
+        Map<String, Object> map = new HashMap<String, Object>();
         
-        return paramMap;
+        map.put(colId, entity.getId());
+        map.put(colValue, entity.getValue());
+        
+        return map;
     }
 	
     private static class TagsEntityMapper implements RowMapper<Tags> {
         @Override
         public Tags mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         	Tags res = new Tags();
-            res.setId(resultSet.getLong(TagsDbColumn.id.name()));
-            res.setValue(resultSet.getString(TagsDbColumn.value.name()));
+        	
+            res.setId(resultSet.getLong(colId));
+            res.setValue(resultSet.getString(colValue));
+            
             return res;
         }
-    }
-
-    public enum TagsDbColumn implements DbColumn {
-
-        id(true), value(false);
-
-        private final boolean pkCol;
-
-        TagsDbColumn(boolean pkCol) {
-            this.pkCol = pkCol;
-        }
-
-        @Override
-        public boolean isPkColumn() {
-            return pkCol;
-        }
-    }
-
-    @Override
-    public Class<? extends DbColumn> getTableColumnClass() {
-        return DbColumn.class;
+    }    
+	
+    public RowMapper<Tags> rowMapper() {
+        return new TagsEntityMapper();
     }
 }

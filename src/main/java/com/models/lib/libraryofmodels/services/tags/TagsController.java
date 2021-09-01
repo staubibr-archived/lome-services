@@ -1,6 +1,5 @@
 package com.models.lib.libraryofmodels.services.tags;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.models.lib.libraryofmodels.services.db.Dao;
-import com.models.lib.libraryofmodels.services.db.Page;
-import com.models.lib.libraryofmodels.utils.RESTResponse;
+import com.models.lib.libraryofmodels.services.db.Query;
 
 @RestController
 public class TagsController {
@@ -26,41 +24,40 @@ public class TagsController {
     public TagsController(Dao<Tags> dao) {
         this.dao = dao;
     }
+    
+    @PostMapping("/api/tags")
+    public List<Object> create(@RequestBody List<Tags> entities) {
+    	return dao.create(entities);
+    }
 
     @GetMapping("/api/tags/{id}")
     public Tags get(@PathVariable(value = "id") Long id) {
-        return dao.get(id.toString());
+    	Query query = new Query();
+    	
+    	query.addCondition(new Query.Condition(TagsTable.colId, Query.Comparator.eq, id.toString()));
+    	
+    	return dao.selectOne(query);
     }
 
     @GetMapping("/api/tags")
-    public RESTResponse list(@RequestParam(value = "pageSize", defaultValue = "20", required = false) Integer pageSize,
-                             @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber) {
+    public List<Tags> list(@RequestParam(value = "ids", required = false) String ids,
+							 @RequestParam(value = "pageSize", required = false) Integer pageSize,
+				             @RequestParam(value = "pageNumber", required = false) Integer pageNumber) {
     	        
-        TagsQuery query = TagsQuery.builder()
-								   .pageSize(pageSize)
-								   .pageNumber(pageNumber)
-								   .build();
-        
-        Page<Tags> results = dao.search(query.ToWhere());
-        
-        return RESTResponse.builder().data(results.getData()).pagination(results.getPagination()).build();
+        Query query = new Query(pageSize, pageNumber);
+
+        if (ids != null) query.addCondition(new Query.Condition(TagsTable.colId, Query.Comparator.in, ids));
+                
+        return dao.select(query);
     }
 
     @PutMapping("/api/tags")
-    public RESTResponse update(@RequestBody List<Tags> tags) {
-        dao.update(tags);
-        return RESTResponse.builder().data(tags).build();
+    public List<Object> update(@RequestBody List<Tags> entities) {
+    	return dao.update(entities);
     }
 
     @DeleteMapping("/api/tags")
-    public RESTResponse delete(@RequestBody List<String> tagsIds) {
-        dao.delete(tagsIds);
-        return RESTResponse.builder().build();
-    }
-    
-    @PostMapping("/api/tags")
-    public RESTResponse create(@RequestBody Tags entity) {
-        dao.create(entity);
-        return RESTResponse.builder().data(Collections.singletonList(entity)).build();
+    public List<Object> delete(@RequestBody List<Object> tagsIds) {
+    	return dao.delete(tagsIds);
     }
 }

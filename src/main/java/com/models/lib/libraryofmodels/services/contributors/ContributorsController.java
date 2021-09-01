@@ -1,6 +1,5 @@
 package com.models.lib.libraryofmodels.services.contributors;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.models.lib.libraryofmodels.services.db.Dao;
-import com.models.lib.libraryofmodels.services.db.Page;
-import com.models.lib.libraryofmodels.utils.RESTResponse;
+import com.models.lib.libraryofmodels.services.db.Query;
 
 @RestController
 public class ContributorsController {
@@ -26,42 +24,40 @@ public class ContributorsController {
     public ContributorsController(Dao<Contributors> dao) {        
         this.dao = dao;
     }
+    
+    @PostMapping("/api/contributors")
+    public List<Object> create(@RequestBody List<Contributors> entities) {
+    	return dao.create(entities);
+    }
 
     @GetMapping("/api/contributors/{id}")
     public Contributors get(@PathVariable(value = "id") Long id) {
-        return dao.get(id.toString());
+    	Query query = new Query();
+    	    	
+    	query.addCondition(new Query.Condition(ContributorsTable.colId, Query.Comparator.eq, id.toString()));
+    	
+    	return dao.selectOne(query);
     }
 
     @GetMapping("/api/contributors")
-    public RESTResponse list(@RequestParam(value = "pageSize", defaultValue = "20", required = false) Integer pageSize,
-                             @RequestParam(value = "pageNumber", defaultValue = "1", required = false) Integer pageNumber) {
+    public List<Contributors> list(@RequestParam(value = "ids", required = false) String ids,
+	    						   @RequestParam(value = "pageSize", required = false) Integer pageSize,
+	                               @RequestParam(value = "pageNumber", required = false) Integer pageNumber) {
 
-    	
-        ContributorsQuery searchQuery = ContributorsQuery.builder()
-										                 .pageSize(pageSize)
-										                 .pageNumber(pageNumber)
-										                 .build();
-                
-        Page<Contributors> results = dao.search(searchQuery.ToWhere());
+    	Query query = new Query(pageSize, pageNumber);
+
+        if (ids != null) query.addCondition(new Query.Condition(ContributorsTable.colId, Query.Comparator.in, ids));
         
-        return RESTResponse.builder().data(results.getData()).pagination(results.getPagination()).build();
+        return dao.select(query);
     }
-
+    
     @PutMapping("/api/contributors")
-    public RESTResponse update(@RequestBody List<Contributors> contributors) {
-    	dao.update(contributors);
-        return RESTResponse.builder().data(contributors).build();
+    public List<Object> update(@RequestBody List<Contributors> entities) {
+    	return dao.update(entities);
     }
 
     @DeleteMapping("/api/contributors")
-    public RESTResponse delete(@RequestBody List<String> contributorIds) {
-    	dao.delete(contributorIds);
-        return RESTResponse.builder().build();
-    }
-    
-    @PostMapping("/api/contributors")
-    public RESTResponse create(@RequestBody Contributors entity) {
-    	dao.create(entity);
-        return RESTResponse.builder().data(Collections.singletonList(entity)).build();
+    public List<Object> delete(@RequestBody List<Object> contributorIds) {
+    	return dao.delete(contributorIds);
     }
 }

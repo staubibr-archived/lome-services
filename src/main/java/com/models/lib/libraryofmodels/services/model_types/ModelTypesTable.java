@@ -3,6 +3,7 @@ package com.models.lib.libraryofmodels.services.model_types;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.jdbc.core.RowMapper;
@@ -11,72 +12,63 @@ import org.springframework.stereotype.Component;
 import com.models.lib.libraryofmodels.services.db.Table;
 
 @Component
-public class ModelTypesTable implements Table<ModelTypes> {
+public class ModelTypesTable extends Table<ModelTypes> {
 
-    @Override
     public String name() {
         return "model_types";
     }
-
-    @Override
-    public RowMapper<ModelTypes> rowMapper() {
-        return new ModelTypesEntityMapper();
-    }
     
-    @Override
-    public Map<String, String> getParamMap(ModelTypes entity) {
-         
-    	Map<String, String> paramMap = new HashMap<String, String>();
+	static String colId = "id";
+	static String colName = "name";
+	static String colType = "type";
+	static String colFormalism = "formalism";
+	static String colSimulator = "simulator";
+	static String colDescription = "description";
+	static String colDateCreated = "date_created";
+	static String colAuthor = "author";
+	
+	public String pk() {
+		return colId;
+	}
 
-		insertIntoParamMap(ModelTypesDbColumn.id, entity.getId(), paramMap);
-		insertIntoParamMap(ModelTypesDbColumn.name, entity.getName(), paramMap);
-		insertIntoParamMap(ModelTypesDbColumn.type, entity.getType(), paramMap);
-		insertIntoParamMap(ModelTypesDbColumn.formalism,entity.getFormalism(),paramMap);
-		insertIntoParamMap(ModelTypesDbColumn.simulator,entity.getSimulator(),paramMap);
-		insertIntoParamMap(ModelTypesDbColumn.description,entity.getDescription(),paramMap);
-		insertIntoParamMap(ModelTypesDbColumn.date_created,entity.getDate_created(),paramMap);
-		insertIntoParamMap(ModelTypesDbColumn.author,entity.getAuthor(),paramMap);
+	public List<String> columns() {
+		return List.of(colId, colName, colType, colFormalism, colSimulator, colDescription, colDateCreated, colAuthor);
+	}
+	
+    public Map<String, Object> mapEntity(ModelTypes entity) {
+    	Map<String, Object> map = new HashMap<String, Object>();
 
-		return paramMap;
-        
+		map.put(colId, entity.getId());
+		map.put(colName, entity.getName());
+		map.put(colType, entity.getType());
+		map.put(colFormalism, entity.getFormalism());
+		map.put(colSimulator, entity.getSimulator());
+		map.put(colDescription, entity.getDescription());
+		map.put(colDateCreated, entity.getDate_created());
+		map.put(colAuthor, entity.getAuthor());
+
+		return map;
     }
 
     private static class ModelTypesEntityMapper implements RowMapper<ModelTypes> {
         @Override
         public ModelTypes mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         	ModelTypes  res = new ModelTypes();
-            res.setId(resultSet.getLong(ModelTypesDbColumn.id.name()));
-            res.setName(resultSet.getString(ModelTypesDbColumn.name.name()));
-            res.setType(resultSet.getString(ModelTypesDbColumn.type.name()));
-            res.setFormalism(resultSet.getString(ModelTypesDbColumn.formalism.name()));
-            res.setSimulator(resultSet.getString(ModelTypesDbColumn.simulator.name()));
-            res.setDescription(resultSet.getString(ModelTypesDbColumn.description.name()));
-            res.setDate_created(resultSet.getDate(ModelTypesDbColumn.date_created.name()));
-            res.setAuthor(resultSet.getLong(ModelTypesDbColumn.author.name()));
+        	
+            res.setId(resultSet.getLong(colId));
+            res.setName(resultSet.getString(colName));
+            res.setType(resultSet.getString(colType));
+            res.setFormalism(resultSet.getString(colFormalism));
+            res.setSimulator(resultSet.getString(colSimulator));
+            res.setDescription(resultSet.getString(colDescription));
+            res.setDate_created(resultSet.getDate(colDateCreated));
+            res.setAuthor(resultSet.getLong(colAuthor));
+            
             return res;
         }
     }
     
-    
-
-    public enum ModelTypesDbColumn implements DbColumn {
-
-        id(true), name(false), type(false), formalism(false), simulator(false), description(false), date_created(false), author(false);
-
-        private final boolean pkCol;
-
-        ModelTypesDbColumn(boolean pkCol) {
-            this.pkCol = pkCol;
-        }
-
-        @Override
-        public boolean isPkColumn() {
-            return pkCol;
-        }
-    }
-
-    @Override
-    public Class<? extends DbColumn> getTableColumnClass() {
-        return ModelTypesDbColumn.class;
+    public RowMapper<ModelTypes> rowMapper() {
+        return new ModelTypesEntityMapper();
     }
 }
