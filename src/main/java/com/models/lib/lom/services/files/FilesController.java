@@ -12,16 +12,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.models.lib.lom.services.db.Dao;
 import com.models.lib.lom.services.db.Query;
 
 @RestController
 public class FilesController {
 
-    private final Dao<Files> dao;
+    private final FilesDao dao;
 
     @Autowired
-    public FilesController(Dao<Files> dao) {
+    public FilesController(FilesDao dao) {
         this.dao = dao;
     }
     

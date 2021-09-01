@@ -12,16 +12,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.models.lib.lom.services.db.Dao;
 import com.models.lib.lom.services.db.Query;
 
 @RestController
 public class ContributorsController {
 
-    private final Dao<Contributors> dao;
+    private final ContributorsDao dao;
     
     @Autowired
-    public ContributorsController(Dao<Contributors> dao) {        
+    public ContributorsController(ContributorsDao dao) {        
         this.dao = dao;
     }
     
@@ -33,7 +32,7 @@ public class ContributorsController {
     @GetMapping("/api/contributors/{id}")
     public Contributors get(@PathVariable(value = "id") Long id) {
     	Query query = new Query();
-    	    	
+    	
     	query.addCondition(new Query.Condition(ContributorsTable.colId, Query.Comparator.eq, id.toString()));
     	
     	return dao.selectOne(query);

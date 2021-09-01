@@ -9,4 +9,9 @@ public class ModelTypesDao extends Dao<ModelTypes> {
 	public ModelTypesDao(ModelTypesTable table) {
 		super(table);
 	}
+	
+	@Override
+    public void setRelated(ModelTypes entity) {
+    	
+    }
 }

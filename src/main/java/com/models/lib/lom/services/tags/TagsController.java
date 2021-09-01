@@ -12,16 +12,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.models.lib.lom.services.db.Dao;
 import com.models.lib.lom.services.db.Query;
 
 @RestController
 public class TagsController {
 
-    private final Dao<Tags> dao;
+    private final TagsDao dao;
 
     @Autowired
-    public TagsController(Dao<Tags> dao) {
+    public TagsController(TagsDao dao) {
         this.dao = dao;
     }
     

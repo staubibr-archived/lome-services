@@ -9,4 +9,9 @@ public class FileTypesDao extends Dao<FileTypes> {
 	public FileTypesDao(FileTypesTable table) {
 		super(table);
 	}
+	
+	@Override
+    public void setRelated(FileTypes entity) {
+    	
+    }
 }

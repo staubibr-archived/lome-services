@@ -9,4 +9,9 @@ public class ExperimentsDao extends Dao<Experiments> {
 	public ExperimentsDao(ExperimentsTable table) {
 		super(table);
 	}
+	
+	@Override
+    public void setRelated(Experiments entity) {
+    	
+    }
 }

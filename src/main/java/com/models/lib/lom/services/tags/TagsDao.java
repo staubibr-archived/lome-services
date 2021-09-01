@@ -9,4 +9,9 @@ public class TagsDao extends Dao<Tags> {
 	public TagsDao(TagsTable table) {
 		super(table);
 	}
+	
+	@Override
+    public void setRelated(Tags entity) {
+    	
+    }
 }
