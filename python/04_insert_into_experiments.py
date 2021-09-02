@@ -20,14 +20,14 @@ payload = [{
             'description': 'Normal capacity, population & emergency rate',
             'author': 2,
             'date_created': '2021-07-08',
-            'top_model_type': 20
+            'top_model_type': 10
            }, {
             'project_name': 'GIS_Hospital',
             'name': 'Normal',
             'description': '90% capacity, 110% population & normal emergency rate',
             'author': 2,
             'date_created': '2021-07-08',
-            'top_model_type': 20
+            'top_model_type': 10
            }]
 
 r = requests.post('http://localhost:8080/api/experiments', json=payload)
