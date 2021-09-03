@@ -12,6 +12,6 @@ payload = [{
     'value': 'Health'
 }]
 
-r = requests.post('http://localhost:8080/api/tables/tags', json=payload)
+r = requests.post('http://localhost:8080/api/tags', json=payload)
 
 print(r.status_code)

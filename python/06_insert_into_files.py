@@ -200,6 +200,6 @@ payload = [{
             'path': 'cadmium-geo-hospital/visualization'
            }]
 
-r = requests.post('http://localhost:8080/api/tables/files', json=payload)
+r = requests.post('http://localhost:8080/api/files', json=payload)
 
 print(r.status_code)

@@ -30,6 +30,6 @@ payload = [{
             'top_model_type': 10
            }]
 
-r = requests.post('http://localhost:8080/api/tables/experiments', json=payload)
+r = requests.post('http://localhost:8080/api/experiments', json=payload)
 
 print(r.status_code)

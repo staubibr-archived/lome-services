@@ -69,7 +69,7 @@ import java.util.Map;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import com.models.lib.lom.services.db.Table;
+import com.models.lib.lom.components.Table;
 
 
 @Component
@@ -79,8 +79,8 @@ public class TagsTable extends Table<Tags> {
         return "tags";
     }
 
-	static String colId = "id";
-	static String colValue = "value";
+    public static String colId = "id";
+	public static String colValue = "value";
 	
 	public String pk() {
 		return colId;

@@ -338,6 +338,6 @@ payload = [{
             "visualization_id": 3
            }]
 
-r = requests.post('http://localhost:8080/api/tables/nn_files_v_all', json=payload)
+r = requests.post('http://localhost:8080/api/nn_files_v_all', json=payload)
 
 print(r.status_code)

@@ -53,6 +53,6 @@ payload = [{
            'extension': '.*',
            }]
 
-r = requests.post('http://localhost:8080/api/tables/fileTypes', json=payload)
+r = requests.post('http://localhost:8080/api/fileTypes', json=payload)
 
 print(r.status_code)

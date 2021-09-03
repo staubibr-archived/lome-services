@@ -1,4 +1,4 @@
-package com.models.lib.lom.services.db;
+package com.models.lib.lom.components;
 
 import java.util.List;
 import java.util.Map;

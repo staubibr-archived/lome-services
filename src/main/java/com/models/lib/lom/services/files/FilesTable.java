@@ -69,7 +69,7 @@ import java.util.Map;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import com.models.lib.lom.services.db.Table;
+import com.models.lib.lom.components.Table;
 
 @Component
 public class FilesTable extends Table<Files> {
@@ -78,25 +78,19 @@ public class FilesTable extends Table<Files> {
         return "files";
     }
     
-	static String colId = "id";
-	static String colName = "name";
-	static String colFileTypeId = "file_type_id";
-	static String colLastModification = "last_modification";
-	static String colLastAuthor = "last_author";
-	static String colPath = "path";
-	static String colModelTypeId = "model_type_id";
-	static String colDocumentId = "document_id";
-	static String colExperimentId = "experiment_id";
-	static String colRawResultId = "raw_result_id";
-	static String colConvertedResultId = "converted_result_id";
-	static String colVisualizationId = "visualization_id";
+    public static String colId = "id";
+    public static String colName = "name";
+    public static String colFileTypeId = "file_type_id";
+    public static String colLastModification = "last_modification";
+    public static String colLastAuthor = "last_author";
+    public static String colPath = "path";
 	
 	public String pk() {
 		return colId;
 	}
 	
     public List<String> columns() {
-		return List.of(colId, colName, colFileTypeId, colLastModification, colLastAuthor, colPath, colModelTypeId, colDocumentId, colExperimentId, colRawResultId, colConvertedResultId, colVisualizationId);
+		return List.of(colId, colName, colFileTypeId, colLastModification, colLastAuthor, colPath);
     }
 
     public Map<String, Object> mapEntity(Files entity) {

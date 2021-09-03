@@ -69,7 +69,7 @@ import java.util.Map;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import com.models.lib.lom.services.db.Table;
+import com.models.lib.lom.components.Table;
 
 @Component
 public class FileTypesTable extends Table<FileTypes> {
@@ -78,9 +78,9 @@ public class FileTypesTable extends Table<FileTypes> {
         return "file_types";
     }
     
-	static String colId = "id";
-	static String colDescription = "description";
-	static String colExtension = "extension";
+    public static String colId = "id";
+    public static String colDescription = "description";
+    public static String colExtension = "extension";
 	
 	public String pk() {
 		return colId;

@@ -9,7 +9,7 @@ import java.util.Map;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import com.models.lib.lom.services.db.Table;
+import com.models.lib.lom.components.Table;
 
 @Component
 public class NNModelTypesVTagsTable extends Table<NNModelTypesVTags> {
@@ -18,9 +18,9 @@ public class NNModelTypesVTagsTable extends Table<NNModelTypesVTags> {
         return "nn_model_types_v_tags";
     }
 
-	static String colId = "id";
-	static String colModelTypeId = "model_type_id";
-	static String colTagId = "tag_id";
+    public static String colId = "id";
+	public static String colModelTypeId = "model_type_id";
+	public static String colTagId = "tag_id";
 
 	public String pk() {
 		return colId;

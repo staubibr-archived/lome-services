@@ -9,7 +9,7 @@ import java.util.Map;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import com.models.lib.lom.services.db.Table;
+import com.models.lib.lom.components.Table;
 
 @Component
 public class NNFilesVAllTable extends Table<NNFilesVAll> {
@@ -18,14 +18,14 @@ public class NNFilesVAllTable extends Table<NNFilesVAll> {
         return "nn_files_v_all";
     }
 
-	static String colId = "id";
-	static String colFileId = "file_id";
-	static String colDocumentId = "document_id";
-	static String colSourceId = "source_id";
-	static String colExperimentId = "experiment_id";
-	static String colRawResultId = "raw_result_id";
-	static String colConvertedResultId = "converted_result_id";
-	static String colVisualizationId = "visualization_id";
+    public static String colId = "id";
+	public static String colFileId = "file_id";
+	public static String colDocumentId = "document_id";
+	public static String colSourceId = "source_id";
+	public static String colExperimentId = "experiment_id";
+	public static String colRawResultId = "raw_result_id";
+	public static String colConvertedResultId = "converted_result_id";
+	public static String colVisualizationId = "visualization_id";
 	
 	public String pk() {
 		return colId;

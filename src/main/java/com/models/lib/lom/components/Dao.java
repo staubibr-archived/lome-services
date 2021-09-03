@@ -1,4 +1,4 @@
-package com.models.lib.lom.services.db;
+package com.models.lib.lom.components;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,16 +78,16 @@ public class Dao<T> {
     }
     
     public List<T> select(Query query) {
-        String sql = String.format(Dao.READ, String.join(",", "*"), table.name());
+        String sql = String.format(Dao.READ, "*", table.name());
     	        
         if (query.getConditions().size() > 0) sql += query.getSQL();
-        	
+        
         return jdbcTemplate.query(sql, query.ToMap(), table.rowMapper());
     }
     
     public T selectOne(Query query) {
     	List<T> entities = select(query);
-
+    	
         return entities.isEmpty() ? null : entities.get(0);
     }
     /*
@@ -127,9 +127,5 @@ public class Dao<T> {
         if (CollectionUtils.isEmpty(ids)) return new ArrayList<Object>();
 
         return ids.stream().map(id -> delete(id)).collect(Collectors.toList());
-    }
-    
-    public void setRelated(T entity) {
-    	
     }
 }

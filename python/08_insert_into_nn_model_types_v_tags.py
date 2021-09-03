@@ -62,6 +62,6 @@ payload = [{
             "tag_id": 5
            }]
 
-r = requests.post('http://localhost:8080/api/tables/nn_model_types_v_tags', json=payload)
+r = requests.post('http://localhost:8080/api/nn_model_types_v_tags', json=payload)
 
 print(r.status_code)

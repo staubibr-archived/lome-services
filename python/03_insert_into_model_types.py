@@ -82,6 +82,6 @@ payload = [{
             'author': 2
             }]
 
-r = requests.post('http://localhost:8080/api/tables/modeltypes', json=payload)
+r = requests.post('http://localhost:8080/api/modeltypes', json=payload)
 
 print(r.status_code)

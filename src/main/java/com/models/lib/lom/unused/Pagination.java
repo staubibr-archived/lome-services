@@ -1,4 +1,4 @@
-package com.models.lib.lom.services.db;
+package com.models.lib.lom.unused;
 
 import lombok.Builder;
 import lombok.Data;

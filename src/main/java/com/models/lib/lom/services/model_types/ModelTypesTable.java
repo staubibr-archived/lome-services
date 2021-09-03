@@ -9,7 +9,7 @@ import java.util.Map;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import com.models.lib.lom.services.db.Table;
+import com.models.lib.lom.components.Table;
 
 @Component
 public class ModelTypesTable extends Table<ModelTypes> {
@@ -18,14 +18,14 @@ public class ModelTypesTable extends Table<ModelTypes> {
         return "model_types";
     }
     
-	static String colId = "id";
-	static String colName = "name";
-	static String colType = "type";
-	static String colFormalism = "formalism";
-	static String colSimulator = "simulator";
-	static String colDescription = "description";
-	static String colDateCreated = "date_created";
-	static String colAuthor = "author";
+    public static String colId = "id";
+    public static String colName = "name";
+    public static String colType = "type";
+    public static String colFormalism = "formalism";
+    public static String colSimulator = "simulator";
+    public static String colDescription = "description";
+    public static String colDateCreated = "date_created";
+    public static String colAuthor = "author";
 	
 	public String pk() {
 		return colId;
