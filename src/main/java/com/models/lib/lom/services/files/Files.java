@@ -14,13 +14,7 @@ public class Files {
     private Long id;
     private String name;
     private Long file_type_id;
-    private Date last_modifications;
+    private Date last_modification;
     private Long last_author;
     private String path;
-    private Long model_type_id;
-    private Long document_id;
-    private Long experiment_id;
-    private Long raw_result_id;
-    private Long converted_result_id;
-    private Long visualization_id;
 }

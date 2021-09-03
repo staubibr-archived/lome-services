@@ -24,12 +24,12 @@ public class FileTypesController {
         this.dao = dao;
     }
     
-    @PostMapping("/api/fileTypes")
+    @PostMapping("/api/tables/fileTypes")
     public List<Object> create(@RequestBody List<FileTypes> entities) {
         return dao.create(entities);
     }
 
-    @GetMapping("/api/fileTypes/{id}")
+    @GetMapping("/api/tables/fileTypes/{id}")
     public FileTypes get(@PathVariable(value = "id") Long id) {
     	Query query = new Query();
     	
@@ -38,7 +38,7 @@ public class FileTypesController {
     	return dao.selectOne(query);
     }
 
-    @GetMapping("/api/fileTypes")
+    @GetMapping("/api/tables/fileTypes")
     public List<FileTypes> list(@RequestParam(value = "ids", required = false) String ids,
 							 @RequestParam(value = "pageSize", required = false) Integer pageSize,
 				             @RequestParam(value = "pageNumber", required = false) Integer pageNumber) {
@@ -50,12 +50,12 @@ public class FileTypesController {
         return dao.select(query);
     }
 
-    @PutMapping("/api/fileTypes")
+    @PutMapping("/api/tables/fileTypes")
     public List<Object> update(@RequestBody List<FileTypes> entities) {
     	return dao.update(entities);
     }
 
-    @DeleteMapping("/api/fileTypes")
+    @DeleteMapping("/api/tables/fileTypes")
     public List<Object> delete(@RequestBody List<Object> fileTypesIds) {
     	return dao.delete(fileTypesIds);
     }

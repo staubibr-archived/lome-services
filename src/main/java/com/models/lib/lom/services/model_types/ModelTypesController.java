@@ -24,12 +24,12 @@ public class ModelTypesController {
         this.dao = dao;
     }
     
-    @PostMapping("/api/modeltypes")
+    @PostMapping("/api/tables/modeltypes")
     public List<Object> create(@RequestBody List<ModelTypes> entities) {
     	return dao.create(entities);
     }
 
-    @GetMapping("/api/modeltypes/{id}")
+    @GetMapping("/api/tables/modeltypes/{id}")
     public ModelTypes get(@PathVariable(value = "id") Long id) {
     	Query query = new Query();
     	
@@ -38,7 +38,7 @@ public class ModelTypesController {
     	return dao.selectOne(query);
     }
 
-    @GetMapping("/api/modeltypes")
+    @GetMapping("/api/tables/modeltypes")
     public List<ModelTypes> list(@RequestParam(value = "ids", required = false) String ids,
 							 @RequestParam(value = "pageSize", required = false) Integer pageSize,
 				             @RequestParam(value = "pageNumber", required = false) Integer pageNumber) {
@@ -50,12 +50,12 @@ public class ModelTypesController {
         return dao.select(query);
     }
     
-    @PutMapping("/api/modeltypes")
+    @PutMapping("/api/tables/modeltypes")
     public List<Object> update(@RequestBody List<ModelTypes> entities) {
     	return dao.update(entities);
     }
 
-    @DeleteMapping("/api/modeltypes")
+    @DeleteMapping("/api/tables/modeltypes")
     public List<Object> delete(@RequestBody List<Object> modeltypesIds) {
     	return dao.delete(modeltypesIds);
     }

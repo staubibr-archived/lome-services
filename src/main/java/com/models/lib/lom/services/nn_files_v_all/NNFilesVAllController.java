@@ -1,4 +1,4 @@
-package com.models.lib.lom.services.files;
+package com.models.lib.lom.services.nn_files_v_all;
 
 import java.util.List;
 
@@ -15,47 +15,47 @@ import org.springframework.web.bind.annotation.RestController;
 import com.models.lib.lom.services.db.Query;
 
 @RestController
-public class FilesController {
+public class NNFilesVAllController {
 
-    private final FilesDao dao;
+    private final NNFilesVAllDao dao;
 
     @Autowired
-    public FilesController(FilesDao dao) {
+    public NNFilesVAllController(NNFilesVAllDao dao) {
         this.dao = dao;
     }
     
-    @PostMapping("/api/tables/files")
-    public List<Object> create(@RequestBody List<Files> entities) {
+    @PostMapping("/api/tables/nn_files_v_all")
+    public List<Object> create(@RequestBody List<NNFilesVAll> entities) {
     	return dao.create(entities);
     }
     
-    @GetMapping("/api/tables/files/{id}")
-    public Files get(@PathVariable(value = "id") Long id) {
+    @GetMapping("/api/tables/nn_files_v_all/{id}")
+    public NNFilesVAll get(@PathVariable(value = "id") Long id) {
     	Query query = new Query();
     	
-    	query.addCondition(new Query.Condition(FilesTable.colId, Query.Comparator.eq, id.toString()));
+    	query.addCondition(new Query.Condition(NNFilesVAllTable.colId, Query.Comparator.eq, id.toString()));
     	
     	return dao.selectOne(query);
     }
 
-    @GetMapping("/api/tables/files")
-    public List<Files> list(@RequestParam(value = "ids", required = false) String ids,
+    @GetMapping("/api/tables/nn_files_v_all")
+    public List<NNFilesVAll> list(@RequestParam(value = "ids", required = false) String ids,
     						 @RequestParam(value = "pageSize", required = false) Integer pageSize,
                              @RequestParam(value = "pageNumber", required = false) Integer pageNumber) {
     	        
     	Query query = new Query(pageSize, pageNumber);
 
-        if (ids != null) query.addCondition(new Query.Condition(FilesTable.colId, Query.Comparator.in, ids));
+        if (ids != null) query.addCondition(new Query.Condition(NNFilesVAllTable.colId, Query.Comparator.in, ids));
                 
         return dao.select(query);
     }
 
-    @PutMapping("/api/tables/files")
-    public List<Object> update(@RequestBody List<Files> entities) {
+    @PutMapping("/api/tables/nn_files_v_all")
+    public List<Object> update(@RequestBody List<NNFilesVAll> entities) {
     	return dao.update(entities);
     }
 
-    @DeleteMapping("/api/tables/files")
+    @DeleteMapping("/api/tables/nn_files_v_all")
     public List<Object> delete(@RequestBody List<Object> filesIds) {
     	return dao.delete(filesIds);
     }

@@ -24,12 +24,12 @@ public class TagsController {
         this.dao = dao;
     }
     
-    @PostMapping("/api/tags")
+    @PostMapping("/api/tables/tags")
     public List<Object> create(@RequestBody List<Tags> entities) {
     	return dao.create(entities);
     }
 
-    @GetMapping("/api/tags/{id}")
+    @GetMapping("/api/tables/tags/{id}")
     public Tags get(@PathVariable(value = "id") Long id) {
     	Query query = new Query();
     	
@@ -38,7 +38,7 @@ public class TagsController {
     	return dao.selectOne(query);
     }
 
-    @GetMapping("/api/tags")
+    @GetMapping("/api/tables/tags")
     public List<Tags> list(@RequestParam(value = "ids", required = false) String ids,
 							 @RequestParam(value = "pageSize", required = false) Integer pageSize,
 				             @RequestParam(value = "pageNumber", required = false) Integer pageNumber) {
@@ -50,12 +50,12 @@ public class TagsController {
         return dao.select(query);
     }
 
-    @PutMapping("/api/tags")
+    @PutMapping("/api/tables/tags")
     public List<Object> update(@RequestBody List<Tags> entities) {
     	return dao.update(entities);
     }
 
-    @DeleteMapping("/api/tags")
+    @DeleteMapping("/api/tables/tags")
     public List<Object> delete(@RequestBody List<Object> tagsIds) {
     	return dao.delete(tagsIds);
     }

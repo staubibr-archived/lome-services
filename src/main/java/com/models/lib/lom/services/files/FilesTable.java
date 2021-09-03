@@ -105,15 +105,9 @@ public class FilesTable extends Table<Files> {
         map.put(colId, entity.getId());
         map.put(colName, entity.getName());
         map.put(colFileTypeId, entity.getFile_type_id());
-        map.put(colLastModification, entity.getLast_modifications());
+        map.put(colLastModification, entity.getLast_modification());
         map.put(colLastAuthor, entity.getLast_author());
         map.put(colPath, entity.getPath());
-        map.put(colModelTypeId, entity.getModel_type_id());
-        map.put(colDocumentId, entity.getDocument_id());
-        map.put(colExperimentId, entity.getExperiment_id());
-        map.put(colRawResultId, entity.getRaw_result_id());
-        map.put(colConvertedResultId, entity.getConverted_result_id());
-        map.put(colVisualizationId, entity.getVisualization_id());
 
         return map;
     }
@@ -126,15 +120,9 @@ public class FilesTable extends Table<Files> {
             res.setId(resultSet.getLong(colId));
             res.setName(resultSet.getString(colName));
             res.setFile_type_id(resultSet.getLong(colFileTypeId));
-            res.setLast_modifications(resultSet.getDate(colLastModification));
+            res.setLast_modification(resultSet.getDate(colLastModification));
             res.setLast_author(resultSet.getLong(colLastAuthor));
             res.setPath(resultSet.getString(colPath));
-            res.setModel_type_id(resultSet.getLong(colModelTypeId));
-            res.setDocument_id(resultSet.getLong(colDocumentId));
-            res.setExperiment_id(resultSet.getLong(colExperimentId));
-            res.setRaw_result_id(resultSet.getLong(colRawResultId));
-            res.setConverted_result_id(resultSet.getLong(colConvertedResultId));
-            res.setVisualization_id(resultSet.getLong(colVisualizationId));
 
             return res;
         }

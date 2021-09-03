@@ -11,10 +11,13 @@ payload = [{
            'extension': '.cpp',
            }, {
            'description': 'Output message data structure header file (C++)',
-           'extension': '.cpp',
+           'extension': '.hpp',
            }, {
            'description': 'Output message data structure source code file (C++)',
            'extension': '.cpp',
+           }, {
+           'description': 'makefile to compile a model',
+           'extension': '',
            }, {
            'description': 'Spatial data file for visualization and automated modeling workflows.',
            'extension': '.geojson',
@@ -43,10 +46,13 @@ payload = [{
            'description': 'Diagram file for the web viewer',
            'extension': '.svg',
            }, {
+           'description': 'Experiment configuration file',
+           'extension': '.json',
+           }, {
            'description': 'Other file type',
            'extension': '.*',
            }]
 
-r = requests.post('http://localhost:8080/api/fileTypes', json=payload)
+r = requests.post('http://localhost:8080/api/tables/fileTypes', json=payload)
 
 print(r.status_code)

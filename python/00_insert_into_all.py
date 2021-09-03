@@ -1,0 +1,8 @@
+exec(open("./01_insert_into_file_types.py").read())
+exec(open("./02_insert_into_contributors.py").read())
+exec(open("./03_insert_into_model_types.py").read())
+exec(open("./04_insert_into_experiments.py").read())
+exec(open("./05_insert_into_tags.py").read())
+exec(open("./06_insert_into_files.py").read())
+exec(open("./07_insert_into_nn_files_v_all.py").read())
+exec(open("./08_insert_into_nn_model_types_v_tags.py").read())

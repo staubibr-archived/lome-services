@@ -17,19 +17,19 @@ payload = [{
            }, {
             'project_name': 'GIS_Hospital',
             'name': 'Normal',
-            'description': 'Normal capacity, population & emergency rate',
+            'description': '100% capacity, 100% population & 100% emergency rate',
             'author': 2,
             'date_created': '2021-07-08',
             'top_model_type': 10
            }, {
             'project_name': 'GIS_Hospital',
             'name': 'Normal',
-            'description': '90% capacity, 110% population & normal emergency rate',
+            'description': '90% capacity, 110% population & 100% emergency rate',
             'author': 2,
             'date_created': '2021-07-08',
             'top_model_type': 10
            }]
 
-r = requests.post('http://localhost:8080/api/experiments', json=payload)
+r = requests.post('http://localhost:8080/api/tables/experiments', json=payload)
 
 print(r.status_code)

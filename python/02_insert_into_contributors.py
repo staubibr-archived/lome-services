@@ -37,6 +37,6 @@ payload = [{
             'creation_date': '2021-08-18'
            }]
 
-r = requests.post('http://localhost:8080/api/contributors', json=payload)
+r = requests.post('http://localhost:8080/api/tables/contributors', json=payload)
 
 print(r.status_code)

@@ -50,7 +50,7 @@ payload = [{
             'author': 1
             }, {
             'name': 'ABP Top',
-            'type': 'Coupled',
+            'type': 'Top',
             'formalism': 'DEVS',
             'simulator': 'Cadmium',
             'description': 'A wrapper model that links the input reader with the ABP model',
@@ -74,7 +74,7 @@ payload = [{
             'author': 2
             }, {
             'name': 'GIS Emergencies',
-            'type': 'Coupled',
+            'type': 'Top',
             'formalism': 'GIS-DEVS',
             'simulator': 'Cadmium',
             'description': 'A spatial model that links emergency areas with hospitals',
@@ -82,6 +82,6 @@ payload = [{
             'author': 2
             }]
 
-r = requests.post('http://localhost:8080/api/modeltypes', json=payload)
+r = requests.post('http://localhost:8080/api/tables/modeltypes', json=payload)
 
 print(r.status_code)

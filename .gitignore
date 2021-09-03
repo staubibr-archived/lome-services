@@ -57,3 +57,5 @@ build/
 /.metadata/.plugins/org.eclipse.ui.workbench/dialog_settings.xml
 /.metadata/.plugins/org.eclipse.ui.workbench/workingsets.xml
 /.metadata/version.ini
+/python/__pycache__/01_insert_into_file_types.cpython-39.pyc
+/doc/files examples/cadmium-geo-hospital/data/Ottawa-Gatineau/network.geojson

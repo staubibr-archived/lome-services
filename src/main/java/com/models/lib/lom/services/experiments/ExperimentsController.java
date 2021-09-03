@@ -25,12 +25,12 @@ public class ExperimentsController {
         this.dao = dao;
     }
     
-    @PostMapping("/api/experiments")
+    @PostMapping("/api/tables/experiments")
     public List<Object> create(@RequestBody List<Experiments> entities) {
     	return dao.create(entities);
     }
 
-    @GetMapping("/api/experiments/{id}")
+    @GetMapping("/api/tables/experiments/{id}")
     public Experiments get(@PathVariable(value = "id") Long id) {
     	Query query = new Query();
     	
@@ -39,7 +39,7 @@ public class ExperimentsController {
     	return dao.selectOne(query);
     }
 
-    @GetMapping("/api/experiments")
+    @GetMapping("/api/tables/experiments")
     public List<Experiments> list(@RequestParam(value = "names", required = false) String names,
                              @RequestParam(value = "ids", required = false) String ids,
                              @RequestParam(value = "pageSize", required = false) Integer pageSize,
@@ -53,12 +53,12 @@ public class ExperimentsController {
         return dao.select(query);
     }
         
-    @PutMapping("/api/experiments")
+    @PutMapping("/api/tables/experiments")
     public List<Object> update(@RequestBody List<Experiments> entities) {
     	return dao.update(entities);
     }
 
-    @DeleteMapping("/api/experiments")
+    @DeleteMapping("/api/tables/experiments")
     public List<Object> delete(@RequestBody List<Object> experimentsIds) {
         return dao.delete(experimentsIds);
     }

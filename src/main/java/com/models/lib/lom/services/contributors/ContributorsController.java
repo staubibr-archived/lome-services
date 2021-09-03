@@ -24,12 +24,12 @@ public class ContributorsController {
         this.dao = dao;
     }
     
-    @PostMapping("/api/contributors")
+    @PostMapping("/api/tables/contributors")
     public List<Object> create(@RequestBody List<Contributors> entities) {
     	return dao.create(entities);
     }
 
-    @GetMapping("/api/contributors/{id}")
+    @GetMapping("/api/tables/contributors/{id}")
     public Contributors get(@PathVariable(value = "id") Long id) {
     	Query query = new Query();
     	
@@ -38,7 +38,7 @@ public class ContributorsController {
     	return dao.selectOne(query);
     }
 
-    @GetMapping("/api/contributors")
+    @GetMapping("/api/tables/contributors")
     public List<Contributors> list(@RequestParam(value = "ids", required = false) String ids,
 	    						   @RequestParam(value = "pageSize", required = false) Integer pageSize,
 	                               @RequestParam(value = "pageNumber", required = false) Integer pageNumber) {
@@ -50,12 +50,12 @@ public class ContributorsController {
         return dao.select(query);
     }
     
-    @PutMapping("/api/contributors")
+    @PutMapping("/api/tables/contributors")
     public List<Object> update(@RequestBody List<Contributors> entities) {
     	return dao.update(entities);
     }
 
-    @DeleteMapping("/api/contributors")
+    @DeleteMapping("/api/tables/contributors")
     public List<Object> delete(@RequestBody List<Object> contributorIds) {
     	return dao.delete(contributorIds);
     }
