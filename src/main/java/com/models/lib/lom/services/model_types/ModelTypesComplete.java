@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.models.lib.lom.services.contributors.Contributors;
 import com.models.lib.lom.services.tags.Tags;
 
@@ -21,6 +22,7 @@ public class ModelTypesComplete extends ModelTypes {
 	@JsonIgnore
 	private Long author;
 	
+	@JsonProperty("author")
     private Contributors author_obj;
     private List<String> tags;
     
