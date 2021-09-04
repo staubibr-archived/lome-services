@@ -12,22 +12,22 @@ import lombok.Data;
 @Data
 public class Query {
     
-	private Boolean complex;
+	// private Boolean complex;
     private final List<Condition> conditions = new ArrayList<>();
 
-    public Query(Boolean complex, Condition... conditions) {
-    	this.complex = complex == null ? false : complex;
+    public Query(/*Boolean complex, */Condition... conditions) {
+    	// this.complex = complex == null ? false : complex;
     	
     	Stream.of(conditions).forEach(c -> addCondition(c));
     }
     
-    public Query(Boolean complex) {
-    	this.complex = complex == null ? false : complex;
+    public Query(/*Boolean complex*/) {
+    	// this.complex = complex == null ? false : complex;
     }
     
-    public Query() {
-    	this(null);
-    }
+    // public Query() {
+    //	this(null);
+    // }
     
     public void addCondition(Condition condition) {
         conditions.add(condition);

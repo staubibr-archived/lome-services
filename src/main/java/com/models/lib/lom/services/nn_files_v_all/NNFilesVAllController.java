@@ -31,16 +31,14 @@ public class NNFilesVAllController {
     
     @GetMapping("/api/nn_files_v_all/{id}")
     public NNFilesVAll get(@PathVariable(value = "id") Long id,
-			  			   @RequestParam(value = "complex", required = false) Boolean complex) {
+			  			   @RequestParam(value = "complex", defaultValue = "false") Boolean complex) {
     	    	
     	return service.selectOne(NNFilesVAllTable.colId, Query.Comparator.eq, id.toString(), complex);
     }
 
     @GetMapping("/api/nn_files_v_all")
     public List<NNFilesVAll> list(@RequestParam(value = "ids", required = false) List<String> ids,
-    						 	  @RequestParam(value = "pageSize", required = false) Integer pageSize,
-    						 	  @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
-	   						  	  @RequestParam(value = "complex", required = false) Boolean complex) {
+	   						  	  @RequestParam(value = "complex", defaultValue = "false") Boolean complex) {
     	        
         return service.select(NNFilesVAllTable.colId, Query.Comparator.in, ids, complex);
     }

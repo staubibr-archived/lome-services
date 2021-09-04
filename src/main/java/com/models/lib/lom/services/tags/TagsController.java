@@ -31,16 +31,14 @@ public class TagsController {
 
     @GetMapping("/api/tags/{id}")
     public Tags get(@PathVariable(value = "id") Long id,
-				 	@RequestParam(value = "complex", required = false) Boolean complex) {
+				 	@RequestParam(value = "complex", defaultValue = "false") Boolean complex) {
     	
     	return service.selectOne(TagsTable.colId, Query.Comparator.eq, id.toString(), complex);
     }
 
     @GetMapping("/api/tags")
     public List<Tags> list(@RequestParam(value = "ids", required = false) List<String> ids,
-    					   @RequestParam(value = "pageSize", required = false) Integer pageSize,
-				           @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
-		   				   @RequestParam(value = "complex", required = false) Boolean complex) {
+		   				   @RequestParam(value = "complex", defaultValue = "false") Boolean complex) {
     	        
         return service.select(TagsTable.colId, Query.Comparator.in, ids, complex);
     }

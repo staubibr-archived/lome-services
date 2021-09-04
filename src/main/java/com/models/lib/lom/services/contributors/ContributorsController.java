@@ -31,16 +31,14 @@ public class ContributorsController {
 
     @GetMapping("/api/contributors/{id}")
     public Contributors get(@PathVariable(value = "id") Long id,
-            				@RequestParam(value = "complex", required = false) Boolean complex) {
+            				@RequestParam(value = "complex", defaultValue = "false") Boolean complex) {
     	    	
     	return service.selectOne(ContributorsTable.colId, Query.Comparator.eq, id.toString(), complex);
     }
 
     @GetMapping("/api/contributors")
     public List<Contributors> list(@RequestParam(value = "ids", required = false) List<String> ids,
-	    						   @RequestParam(value = "pageSize", required = false) Integer pageSize,
-	                               @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
-	                               @RequestParam(value = "complex", required = false) Boolean complex) {
+	                               @RequestParam(value = "complex", defaultValue = "false") Boolean complex) {
         
         return service.select(ContributorsTable.colId, Query.Comparator.in, ids, complex);
     }
@@ -53,10 +51,5 @@ public class ContributorsController {
     @DeleteMapping("/api/contributors")
     public List<Object> delete(@RequestBody List<Object> contributorIds) {
     	return service.delete(contributorIds);
-    }
-    
-    @PostMapping("/api/contributors/query")
-    public List<Object> query(@RequestBody List<Contributors> entities) {
-    	return service.create(entities);
     }
 }

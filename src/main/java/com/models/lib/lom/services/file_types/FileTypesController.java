@@ -31,16 +31,14 @@ public class FileTypesController {
 
     @GetMapping("/api/fileTypes/{id}")
     public FileTypes get(@PathVariable(value = "id") Long id,
-			  			 @RequestParam(value = "complex", required = false) Boolean complex) {
+			  			 @RequestParam(value = "complex", defaultValue = "false") Boolean complex) {
     	    	
     	return service.selectOne(FileTypesTable.colId, Query.Comparator.eq, id.toString(), complex);
     }
 
     @GetMapping("/api/fileTypes")
     public List<FileTypes> list(@RequestParam(value = "ids", required = false) List<String> ids,
-							 	@RequestParam(value = "pageSize", required = false) Integer pageSize,
-							 	@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
-	   						  	@RequestParam(value = "complex", required = false) Boolean complex) {
+	   						  	@RequestParam(value = "complex", defaultValue = "false") Boolean complex) {
         
         return service.select(FileTypesTable.colId, Query.Comparator.in, ids, complex);
     }

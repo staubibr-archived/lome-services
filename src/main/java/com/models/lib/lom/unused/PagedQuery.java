@@ -13,15 +13,15 @@ public class PagedQuery extends Query {
     private Integer pageSize;
     private Integer pageNumber;
 
-    public PagedQuery(Integer pageSize, Integer pageNumber, Boolean complex) {
-    	super(complex);
+    public PagedQuery(Integer pageSize, Integer pageNumber) {
+    	super();
     	
     	this.pageSize = pageSize == null ? 20 : pageSize;
     	this.pageNumber = pageNumber == null ? 1 : pageNumber;
     }
     
     public PagedQuery() {
-    	this(null, null, null);
+    	this(null, null);
     }
     
     public int getOffset() {

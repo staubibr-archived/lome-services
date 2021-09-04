@@ -22,36 +22,36 @@ public abstract class Service<T> {
         return dao.create(entities);
     }
     
-    public List<T> select(Query query) {
+    public List<T> select(Query query, Boolean complex) {
         List<T> entities = dao.select(query);
 
-        if (query.getComplex()) {
-        	entities = entities.stream().map(e -> this.getComplexEntity(e)).collect(Collectors.toList());
-        }
-        
-        return entities;
+        return complex ? entities.stream().map(e -> this.getComplexEntity(e)).collect(Collectors.toList()) : entities;
     }
     
     public List<T> select(String col, Comparator comp, Object value, Boolean complex) {
-		Query query = new Query(complex, new Condition(col, comp, value));
+		Query query = new Query();
     	
-		return select(query);
+		if (value != null) query.addCondition(new Condition(col, comp, value));
+		
+		return select(query, complex);
     }
     
     public List<T> select(String col, Comparator comp, Object value) {    	
 		return select(col, comp, value, false);
     }
 
-    public T selectOne(Query query) {
-        List<T> entities = select(query);
+    public T selectOne(Query query, Boolean complex) {
+        List<T> entities = select(query, complex);
 
         return entities.isEmpty() ? null : entities.get(0);
     }
     
 	public T selectOne(String col, Comparator comp, Object value, Boolean complex) {
-		Query query = new Query(complex, new Condition(col, comp, value));
+		Query query = new Query();
+    	
+		if (value != null) query.addCondition(new Condition(col, comp, value));
 		
-		return selectOne(query);
+		return selectOne(query, complex);
 	}
 	
 	public T selectOne(String col, Comparator comp, Object value) {	

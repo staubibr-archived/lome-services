@@ -31,16 +31,14 @@ public class FilesController {
     
     @GetMapping("/api/files/{id}")
     public Files get(@PathVariable(value = "id") Long id,
-			  		 @RequestParam(value = "complex", required = false) Boolean complex) {
+			  		 @RequestParam(value = "complex", defaultValue = "false") Boolean complex) {
     	
     	return service.selectOne(FilesTable.colId, Query.Comparator.eq, id.toString(), complex);
     }
 
     @GetMapping("/api/files")
     public List<Files> list(@RequestParam(value = "ids", required = false) List<String> ids,
-    						@RequestParam(value = "pageSize", required = false) Integer pageSize,
-                            @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
-   						  	@RequestParam(value = "complex", required = false) Boolean complex) {
+   						  	@RequestParam(value = "complex", defaultValue = "false") Boolean complex) {
                 
         return service.select(FilesTable.colId, Query.Comparator.in, ids, complex);
     }

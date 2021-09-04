@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.models.lib.lom.components.Query;
-import com.models.lib.lom.components.Query.Condition;
 
 @RestController
 public class ModelTypesController {
@@ -32,24 +31,16 @@ public class ModelTypesController {
 
     @GetMapping("/api/modeltypes/{id}")
     public ModelTypes get(@PathVariable(value = "id") Long id,
-						  @RequestParam(value = "complex", required = false) Boolean complex) {
-    	
-    	Query query = new Query(complex, new Condition(ModelTypesTable.colId, Query.Comparator.eq, id.toString()));
-    	
-    	return service.selectOne(query);
+						  @RequestParam(value = "complex", defaultValue = "false") Boolean complex) {
+    	    	
+    	return service.selectOne(ModelTypesTable.colId, Query.Comparator.eq, id.toString(), complex);
     }
 
     @GetMapping("/api/modeltypes")
     public List<ModelTypes> list(@RequestParam(value = "ids", required = false) List<String> ids,
-							 	 @RequestParam(value = "pageSize", required = false) Integer pageSize,
-							 	 @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
-	            				 @RequestParam(value = "complex", required = false) Boolean complex) {
-    	
-        Query query = new Query(complex);
+	            				 @RequestParam(value = "complex", defaultValue = "false") Boolean complex) {
 
-        if (ids != null) query.addCondition(new Query.Condition(ModelTypesTable.colId, Query.Comparator.in, ids));
-                
-        return service.select(query);
+        return service.select(ModelTypesTable.colId, Query.Comparator.in, ids, complex);
     }
     
     @PutMapping("/api/modeltypes")

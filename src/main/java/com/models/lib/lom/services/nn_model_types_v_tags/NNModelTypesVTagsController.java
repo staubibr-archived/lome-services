@@ -31,16 +31,14 @@ public class NNModelTypesVTagsController {
     
     @GetMapping("/api/nn_model_types_v_tags/{id}")
     public NNModelTypesVTags get(@PathVariable(value = "id") Long id,
-			   					 @RequestParam(value = "complex", required = false) Boolean complex) {
+			   					 @RequestParam(value = "complex", defaultValue = "false") Boolean complex) {
     	
     	return service.selectOne(NNModelTypesVTagsTable.colId, Query.Comparator.eq, id.toString(), complex);
     }
 
     @GetMapping("/api/nn_model_types_v_tags")
     public List<NNModelTypesVTags> list(@RequestParam(value = "ids", required = false) List<String> ids,
-    						 			@RequestParam(value = "pageSize", required = false) Integer pageSize,
-                             			@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
-  			  			   				@RequestParam(value = "complex", required = false) Boolean complex) {
+  			  			   				@RequestParam(value = "complex", defaultValue = "false") Boolean complex) {
 
         return service.select(NNModelTypesVTagsTable.colId, Query.Comparator.in, ids, complex);
     }

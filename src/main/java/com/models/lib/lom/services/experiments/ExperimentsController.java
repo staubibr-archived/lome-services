@@ -32,24 +32,16 @@ public class ExperimentsController {
 
     @GetMapping("/api/experiments/{id}")
     public Experiments get(@PathVariable(value = "id") Long id,
-						   @RequestParam(value = "complex", required = false) Boolean complex) {
+						   @RequestParam(value = "complex", defaultValue = "false") Boolean complex) {
     	
     	return service.selectOne(ExperimentsTable.colId, Query.Comparator.eq, id.toString(), complex);
     }
 
     @GetMapping("/api/experiments")
-    public List<Experiments> list(@RequestParam(value = "names", required = false) List<String> names,
-                             	  @RequestParam(value = "ids", required = false) List<String> ids,
-                             	  @RequestParam(value = "pageSize", required = false) Integer pageSize,
-                             	  @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
-                             	  @RequestParam(value = "complex", required = false) Boolean complex) throws AuthenticationException {
+    public List<Experiments> list(@RequestParam(value = "ids", required = false) List<String> ids,
+                             	  @RequestParam(value = "complex", defaultValue = "false") Boolean complex) throws AuthenticationException {
 
-    	Query query = new Query(complex);
-
-        if (ids != null) query.addCondition(new Query.Condition(ExperimentsTable.colId, Query.Comparator.in, ids));
-        if (names != null) query.addCondition(new Query.Condition(ExperimentsTable.colName, Query.Comparator.in, names));
-
-        return service.select(query);
+        return service.select(ExperimentsTable.colId, Query.Comparator.in, ids, complex);
     }
         
     @PutMapping("/api/experiments")
