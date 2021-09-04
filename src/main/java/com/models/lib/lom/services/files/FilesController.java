@@ -13,30 +13,27 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.models.lib.lom.components.Query;
-import com.models.lib.lom.components.Query.Condition;
 
 @RestController
 public class FilesController {
 
-    private final FilesDao dao;
+    private final FilesService service;
 
     @Autowired
-    public FilesController(FilesDao dao) {
-        this.dao = dao;
+    public FilesController(FilesService service) {
+        this.service = service;
     }
     
     @PostMapping("/api/files")
     public List<Object> create(@RequestBody List<Files> entities) {
-    	return dao.create(entities);
+    	return service.create(entities);
     }
     
     @GetMapping("/api/files/{id}")
     public Files get(@PathVariable(value = "id") Long id,
 			  		 @RequestParam(value = "complex", required = false) Boolean complex) {
     	
-    	Query query = new Query(complex, new Condition(FilesTable.colId, Query.Comparator.eq, id.toString()));
-    	
-    	return dao.selectOne(query);
+    	return service.selectOne(FilesTable.colId, Query.Comparator.eq, id.toString(), complex);
     }
 
     @GetMapping("/api/files")
@@ -44,21 +41,17 @@ public class FilesController {
     						@RequestParam(value = "pageSize", required = false) Integer pageSize,
                             @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
    						  	@RequestParam(value = "complex", required = false) Boolean complex) {
-    	        
-    	Query query = new Query(complex);
-
-        if (ids != null) query.addCondition(new Query.Condition(FilesTable.colId, Query.Comparator.in, ids));
                 
-        return dao.select(query);
+        return service.select(FilesTable.colId, Query.Comparator.in, ids, complex);
     }
 
     @PutMapping("/api/files")
     public List<Object> update(@RequestBody List<Files> entities) {
-    	return dao.update(entities);
+    	return service.update(entities);
     }
 
     @DeleteMapping("/api/files")
     public List<Object> delete(@RequestBody List<Object> filesIds) {
-    	return dao.delete(filesIds);
+    	return service.delete(filesIds);
     }
 }

@@ -1,8 +1,12 @@
 package com.models.lib.lom.components;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class Service<T> {
+import com.models.lib.lom.components.Query.Comparator;
+import com.models.lib.lom.components.Query.Condition;
+
+public abstract class Service<T> {
 
     private Dao<T> dao;
 
@@ -19,12 +23,40 @@ public class Service<T> {
     }
     
     public List<T> select(Query query) {
-        return dao.select(query);
+        List<T> entities = dao.select(query);
+
+        if (query.getComplex()) {
+        	entities = entities.stream().map(e -> this.getComplexEntity(e)).collect(Collectors.toList());
+        }
+        
+        return entities;
     }
     
-    public T selectOne(Query query) {
-        return dao.selectOne(query);
+    public List<T> select(String col, Comparator comp, Object value, Boolean complex) {
+		Query query = new Query(complex, new Condition(col, comp, value));
+    	
+		return select(query);
     }
+    
+    public List<T> select(String col, Comparator comp, Object value) {    	
+		return select(col, comp, value, false);
+    }
+
+    public T selectOne(Query query) {
+        List<T> entities = select(query);
+
+        return entities.isEmpty() ? null : entities.get(0);
+    }
+    
+	public T selectOne(String col, Comparator comp, Object value, Boolean complex) {
+		Query query = new Query(complex, new Condition(col, comp, value));
+		
+		return selectOne(query);
+	}
+	
+	public T selectOne(String col, Comparator comp, Object value) {	
+		return selectOne(col, comp, value, false);
+	}
 
     public Object update(T entity) {
         return dao.update(entity);
@@ -41,5 +73,7 @@ public class Service<T> {
     public List<Object> delete(List<Object> ids) {        
         return dao.delete(ids);
     }
+    
+    public abstract T getComplexEntity(T entity);
 }
 

@@ -1,5 +1,6 @@
 package com.models.lib.lom.services.model_types;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -7,63 +8,67 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.models.lib.lom.components.Dao;
-import com.models.lib.lom.components.Query;
 import com.models.lib.lom.components.Query.Comparator;
-import com.models.lib.lom.components.Query.Condition;
 import com.models.lib.lom.components.Service;
 import com.models.lib.lom.services.contributors.Contributors;
-import com.models.lib.lom.services.contributors.ContributorsDao;
+import com.models.lib.lom.services.contributors.ContributorsService;
 import com.models.lib.lom.services.contributors.ContributorsTable;
+import com.models.lib.lom.services.files.Files;
+import com.models.lib.lom.services.files.FilesService;
+import com.models.lib.lom.services.files.FilesTable;
+import com.models.lib.lom.services.nn_files_v_all.NNFilesVAll;
+import com.models.lib.lom.services.nn_files_v_all.NNFilesVAllService;
+import com.models.lib.lom.services.nn_files_v_all.NNFilesVAllTable;
 import com.models.lib.lom.services.nn_model_types_v_tags.NNModelTypesVTags;
-import com.models.lib.lom.services.nn_model_types_v_tags.NNModelTypesVTagsDao;
+import com.models.lib.lom.services.nn_model_types_v_tags.NNModelTypesVTagsService;
 import com.models.lib.lom.services.nn_model_types_v_tags.NNModelTypesVTagsTable;
 import com.models.lib.lom.services.tags.Tags;
-import com.models.lib.lom.services.tags.TagsDao;
+import com.models.lib.lom.services.tags.TagsService;
 import com.models.lib.lom.services.tags.TagsTable;
 
 @Repository
 public class ModelTypesService extends Service<ModelTypes> {
 
 	@Autowired
-    private ModelTypesDao dao;
+	private ContributorsService sContributors;
 
 	@Autowired
-	private ContributorsDao contributorsDao;
+	private NNModelTypesVTagsService sNNTags;
 
 	@Autowired
-	private NNModelTypesVTagsDao nnTagsDao;
+	private TagsService sTags;
 
 	@Autowired
-	private TagsDao TagsDao;
-    
-    public ModelTypesService(Dao<ModelTypes> dao) {
+	private NNFilesVAllService sNNFiles;
+
+	@Autowired
+	private FilesService sFiles;
+
+	@Autowired
+	public ModelTypesService(Dao<ModelTypes> dao) {
 		super(dao);
 	}
-    
-    public List<ModelTypes> select(Query query) {
-    	List<ModelTypes> entities = dao.select(query);
-    	
-    	if (!query.getComplex()) return entities;
 
-    	return entities.stream().map(e -> {
-    		Query author_query = new Query(false, new Condition(ContributorsTable.colId, Comparator.eq, e.getAuthor()));
-    		Contributors author = contributorsDao.selectOne(author_query);
-    		
-    		Query nn_tags_query = new Query(false, new Condition(NNModelTypesVTagsTable.colModelTypeId, Comparator.eq, e.getId()));
-    		List<NNModelTypesVTags> nn_tags = nnTagsDao.select(nn_tags_query);
+	@Override
+	public ModelTypes getComplexEntity(ModelTypes e) {
+		// TODO Auto-generated method stub
+		// Get related author from Contributors table
+		Contributors author = sContributors.selectOne(ContributorsTable.colId, Comparator.eq, e.getAuthor());
+		
+		// Get tag ids from nn_model_types_v_tags table
+		List<NNModelTypesVTags> nn_tags = sNNTags.select(NNModelTypesVTagsTable.colModelTypeId, Comparator.eq, e.getId());
+		List<Long> tag_ids = nn_tags.stream().map(n -> n.getTag_id()).collect(Collectors.toList());
+		
+		// Get tags from tags table using the tag ids found above
+		List<Tags> tags = tag_ids.isEmpty() ? Collections.emptyList() : sTags.select(TagsTable.colId, Comparator.in, tag_ids);
 
-    		List<Long> tag_ids = nn_tags.stream().map(n -> n.getTag_id()).collect(Collectors.toList());
-    		
-    		Query tags_query = new Query(false, new Condition(TagsTable.colId, Comparator.in, tag_ids));
-    		List<Tags> tags = TagsDao.select(tags_query);
-    		
-    		return new ModelTypesComplete(e, author, tags);
-    	}).collect(Collectors.toList());        
-    }
-    
-    public ModelTypes selectOne(Query query) {
-    	List<ModelTypes> entities = this.select(query);
-    	
-        return entities.isEmpty() ? null : entities.get(0);
-    }
+		// Get file ids from nn_files_v_all table
+		List<NNFilesVAll> nn_files = sNNFiles.select(NNFilesVAllTable.colSourceId, Comparator.eq, e.getId());
+		List<Long> file_ids = nn_files.stream().map(n -> n.getFile_id()).collect(Collectors.toList());
+
+		// Get complete files from files table using the file ids found above
+		List<Files> files = file_ids.isEmpty() ? Collections.emptyList() : sFiles.select(FilesTable.colId, Comparator.in, file_ids, true);
+		
+		return new ModelTypesComplete(e, author, tags, files);
+	}
 }

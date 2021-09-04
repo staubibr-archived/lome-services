@@ -18,7 +18,7 @@ public class Dao<T> {
     public static final String IN_PARAMETER = "%s IN (:%s)";
     public static final String NOT_IN_PARAMETER = "%s NOT IN (:%s)";
     public static final String NN_QUERY = "SELECT %s FROM %s WHERE %s IN (SELECT %s FROM %s WHERE %s in (SELECT %s FROM %s WHERE %s))";
-
+    public static final String OO_QUERY = "SELECT %s FROM %s WHERE %s IN (SELECT %s FROM %s WHERE %s IN (%s))"; 
     public static final String CREATE = "INSERT INTO %s (%s) VALUES(%s)";
     public static final String READ = "SELECT %s FROM %s";
     public static final String UPDATE = "UPDATE %s SET %s WHERE %s";
@@ -84,13 +84,7 @@ public class Dao<T> {
         
         return jdbcTemplate.query(sql, query.ToMap(), table.rowMapper());
     }
-    
-    public T selectOne(Query query) {
-    	List<T> entities = select(query);
-    	
-        return entities.isEmpty() ? null : entities.get(0);
-    }
-    /*
+    /*    
     public Page<T> selectByPage(Query query) {
         List<T> entities = select(query);
         
