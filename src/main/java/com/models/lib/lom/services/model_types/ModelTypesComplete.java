@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.models.lib.lom.services.contributors.Contributors;
+import com.models.lib.lom.services.files.Files;
 import com.models.lib.lom.services.tags.Tags;
 
 import lombok.Data;
@@ -25,8 +26,9 @@ public class ModelTypesComplete extends ModelTypes {
 	@JsonProperty("author")
     private Contributors author_obj;
     private List<String> tags;
+    private List<Files> files;
     
-    public ModelTypesComplete(ModelTypes entity, Contributors author, List<Tags> tags) {
+    public ModelTypesComplete(ModelTypes entity, Contributors author, List<Tags> tags, List<Files> files) {
         this.setId(entity.getId());
         this.setName(entity.getName());
         this.setType(entity.getType());
@@ -38,5 +40,6 @@ public class ModelTypesComplete extends ModelTypes {
 
         this.setAuthor_obj(author);
         this.setTags(tags.stream().map(t -> t.getValue()).collect(Collectors.toList()));
+        this.setFiles(files);
     }
 }

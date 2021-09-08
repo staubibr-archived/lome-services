@@ -19,16 +19,16 @@ import com.models.lib.lom.components.Query.Condition;
 @RestController
 public class ExperimentsController {
 	
-    private final ExperimentsDao dao;
+    private final ExperimentsService service;
 
     @Autowired
-    public ExperimentsController(ExperimentsDao dao) {
-        this.dao = dao;
+    public ExperimentsController(ExperimentsService service) {
+        this.service = service;
     }
     
     @PostMapping("/api/experiments")
     public List<Object> create(@RequestBody List<Experiments> entities) {
-    	return dao.create(entities);
+    	return service.create(entities);
     }
 
     @GetMapping("/api/experiments/{id}")
@@ -37,7 +37,7 @@ public class ExperimentsController {
     	
     	Query query = new Query(complex, new Condition(ExperimentsTable.colId, Query.Comparator.eq, id.toString()));
     	
-    	return dao.selectOne(query);
+    	return service.selectOne(query);
     }
 
     @GetMapping("/api/experiments")
@@ -52,16 +52,16 @@ public class ExperimentsController {
         if (ids != null) query.addCondition(new Query.Condition(ExperimentsTable.colId, Query.Comparator.in, ids));
         if (names != null) query.addCondition(new Query.Condition(ExperimentsTable.colName, Query.Comparator.in, names));
 
-        return dao.select(query);
+        return service.select(query);
     }
         
     @PutMapping("/api/experiments")
     public List<Object> update(@RequestBody List<Experiments> entities) {
-    	return dao.update(entities);
+    	return service.update(entities);
     }
 
     @DeleteMapping("/api/experiments")
     public List<Object> delete(@RequestBody List<Object> experimentsIds) {
-        return dao.delete(experimentsIds);
+        return service.delete(experimentsIds);
     }
 }

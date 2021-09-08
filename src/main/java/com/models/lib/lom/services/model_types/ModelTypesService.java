@@ -1,5 +1,6 @@
 package com.models.lib.lom.services.model_types;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,12 @@ import com.models.lib.lom.components.Service;
 import com.models.lib.lom.services.contributors.Contributors;
 import com.models.lib.lom.services.contributors.ContributorsDao;
 import com.models.lib.lom.services.contributors.ContributorsTable;
+import com.models.lib.lom.services.files.Files;
+import com.models.lib.lom.services.files.FilesDao;
+import com.models.lib.lom.services.files.FilesTable;
+import com.models.lib.lom.services.nn_files_v_all.NNFilesVAll;
+import com.models.lib.lom.services.nn_files_v_all.NNFilesVAllDao;
+import com.models.lib.lom.services.nn_files_v_all.NNFilesVAllTable;
 import com.models.lib.lom.services.nn_model_types_v_tags.NNModelTypesVTags;
 import com.models.lib.lom.services.nn_model_types_v_tags.NNModelTypesVTagsDao;
 import com.models.lib.lom.services.nn_model_types_v_tags.NNModelTypesVTagsTable;
@@ -35,6 +42,12 @@ public class ModelTypesService extends Service<ModelTypes> {
 
 	@Autowired
 	private TagsDao TagsDao;
+	
+	@Autowired
+	private NNFilesVAllDao nnFilesVAllDao;
+	
+	@Autowired
+	private FilesDao filesdao;
     
     public ModelTypesService(Dao<ModelTypes> dao) {
 		super(dao);
@@ -57,7 +70,18 @@ public class ModelTypesService extends Service<ModelTypes> {
     		Query tags_query = new Query(false, new Condition(TagsTable.colId, Comparator.in, tag_ids));
     		List<Tags> tags = TagsDao.select(tags_query);
     		
-    		return new ModelTypesComplete(e, author, tags);
+    		Query nn_files_v_all_query_source_files= new Query(false,new Condition(NNFilesVAllTable.colSourceId,Comparator.eq,e.getId()));
+    		List<NNFilesVAll> nn_source_files= nnFilesVAllDao.select(nn_files_v_all_query_source_files);
+    		
+    		List<Long> soucrce_file_ids= nn_source_files.stream().map(d -> d.getFile_id()).collect(Collectors.toList());
+    		
+    		List<Files> source_files= new ArrayList<>();
+    		if(soucrce_file_ids.size()>0) {
+    		Query source_files_query= new Query(false, new Condition(FilesTable.colId,Comparator.in,soucrce_file_ids));
+    		source_files= filesdao.select(source_files_query);
+    		}
+    		
+    		return new ModelTypesComplete(e, author, tags, source_files);
     	}).collect(Collectors.toList());        
     }
     
