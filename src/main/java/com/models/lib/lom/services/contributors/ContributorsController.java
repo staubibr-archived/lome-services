@@ -23,7 +23,7 @@ public class ContributorsController {
     public ContributorsController(ContributorsService service) {        
         this.service = service;
     }
-    
+
     @PostMapping("/api/contributors")
     public List<Object> create(@RequestBody List<Contributors> entities) {
     	return service.create(entities);
@@ -42,7 +42,7 @@ public class ContributorsController {
         
         return service.select(ContributorsTable.colId, Query.Comparator.in, ids, complex);
     }
-    
+
     @PutMapping("/api/contributors")
     public List<Object> update(@RequestBody List<Contributors> entities) {
     	return service.update(entities);

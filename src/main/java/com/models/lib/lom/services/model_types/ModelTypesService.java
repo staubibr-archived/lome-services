@@ -53,7 +53,7 @@ public class ModelTypesService extends Service<ModelTypes> {
 	public ModelTypes getComplexEntity(ModelTypes e) {
 		// TODO Auto-generated method stub
 		// Get related author from Contributors table
-		Contributors author = sContributors.selectOne(ContributorsTable.colId, Comparator.eq, e.getAuthor());
+		Contributors author = sContributors.selectOne(ContributorsTable.colId, Comparator.eq, e.getAuthor_id());
 		
 		// Get tag ids from nn_model_types_v_tags table
 		List<NNModelTypesVTags> nn_tags = sNNTags.select(NNModelTypesVTagsTable.colModelTypeId, Comparator.eq, e.getId());

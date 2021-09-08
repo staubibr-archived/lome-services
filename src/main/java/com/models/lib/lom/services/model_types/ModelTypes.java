@@ -18,5 +18,5 @@ public class ModelTypes {
     private String simulator;
     private String description;
     private Date date_created;
-    private Long author;
+    private Long author_id;
 }

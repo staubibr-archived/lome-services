@@ -2,8 +2,6 @@ package com.models.lib.lom.services.model_types;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.models.lib.lom.services.contributors.Contributors;
 import com.models.lib.lom.services.files.Files;
 import com.models.lib.lom.services.tags.Tags;
@@ -18,12 +16,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class ModelTypesComplete extends ModelTypes {
-	
-	@JsonIgnore
-	private Long author;
-	
-	@JsonProperty("author")
-    private Contributors author_obj;
+		
+    private Contributors author;
     private List<Tags> tags;
     private List<Files> files;
     
@@ -35,9 +29,9 @@ public class ModelTypesComplete extends ModelTypes {
         this.setSimulator(entity.getSimulator());
         this.setDescription(entity.getDescription());
         this.setDate_created(entity.getDate_created());
-        this.setAuthor(entity.getAuthor());
+        this.setAuthor_id(entity.getAuthor_id());
 
-        this.setAuthor_obj(author);
+        this.setAuthor(author);
         this.setTags(tags);
         this.setFiles(files);
     }

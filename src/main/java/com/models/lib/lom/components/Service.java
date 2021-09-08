@@ -8,7 +8,7 @@ import com.models.lib.lom.components.Query.Condition;
 
 public abstract class Service<T> {
 
-    private Dao<T> dao;
+    protected Dao<T> dao;
 
     public Service(Dao<T> dao) {
     	this.dao = dao;

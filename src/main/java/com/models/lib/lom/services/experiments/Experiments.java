@@ -18,5 +18,4 @@ public class Experiments {
     private Date date_created;
     private Long author;
     private Long top_model_type;
-
 }

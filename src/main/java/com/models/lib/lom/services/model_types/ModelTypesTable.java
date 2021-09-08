@@ -25,14 +25,14 @@ public class ModelTypesTable extends Table<ModelTypes> {
     public static String colSimulator = "simulator";
     public static String colDescription = "description";
     public static String colDateCreated = "date_created";
-    public static String colAuthor = "author";
+    public static String colAuthorId = "author";
 	
 	public String pk() {
 		return colId;
 	}
 
 	public List<String> columns() {
-		return List.of(colId, colName, colType, colFormalism, colSimulator, colDescription, colDateCreated, colAuthor);
+		return List.of(colId, colName, colType, colFormalism, colSimulator, colDescription, colDateCreated, colAuthorId);
 	}
 	
     public Map<String, Object> mapEntity(ModelTypes entity) {
@@ -45,7 +45,7 @@ public class ModelTypesTable extends Table<ModelTypes> {
 		map.put(colSimulator, entity.getSimulator());
 		map.put(colDescription, entity.getDescription());
 		map.put(colDateCreated, entity.getDate_created());
-		map.put(colAuthor, entity.getAuthor());
+		map.put(colAuthorId, entity.getAuthor_id());
 
 		return map;
     }
@@ -62,7 +62,7 @@ public class ModelTypesTable extends Table<ModelTypes> {
             res.setSimulator(resultSet.getString(colSimulator));
             res.setDescription(resultSet.getString(colDescription));
             res.setDate_created(resultSet.getDate(colDateCreated));
-            res.setAuthor(resultSet.getLong(colAuthor));
+            res.setAuthor_id(resultSet.getLong(colAuthorId));
             
             return res;
         }

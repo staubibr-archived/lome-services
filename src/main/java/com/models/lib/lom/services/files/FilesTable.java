@@ -82,7 +82,7 @@ public class FilesTable extends Table<Files> {
     public static String colName = "name";
     public static String colFileTypeId = "file_type_id";
     public static String colLastModification = "last_modification";
-    public static String colLastAuthor = "last_author";
+    public static String colLastAuthorId = "last_author";
     public static String colPath = "path";
 	
 	public String pk() {
@@ -90,7 +90,7 @@ public class FilesTable extends Table<Files> {
 	}
 	
     public List<String> columns() {
-		return List.of(colId, colName, colFileTypeId, colLastModification, colLastAuthor, colPath);
+		return List.of(colId, colName, colFileTypeId, colLastModification, colLastAuthorId, colPath);
     }
 
     public Map<String, Object> mapEntity(Files entity) {
@@ -100,7 +100,7 @@ public class FilesTable extends Table<Files> {
         map.put(colName, entity.getName());
         map.put(colFileTypeId, entity.getFile_type_id());
         map.put(colLastModification, entity.getLast_modification());
-        map.put(colLastAuthor, entity.getLast_author());
+        map.put(colLastAuthorId, entity.getLast_author_id());
         map.put(colPath, entity.getPath());
 
         return map;
@@ -115,7 +115,7 @@ public class FilesTable extends Table<Files> {
             res.setName(resultSet.getString(colName));
             res.setFile_type_id(resultSet.getLong(colFileTypeId));
             res.setLast_modification(resultSet.getDate(colLastModification));
-            res.setLast_author(resultSet.getLong(colLastAuthor));
+            res.setLast_author_id(resultSet.getLong(colLastAuthorId));
             res.setPath(resultSet.getString(colPath));
 
             return res;

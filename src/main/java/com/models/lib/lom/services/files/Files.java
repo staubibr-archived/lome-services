@@ -15,6 +15,6 @@ public class Files {
     private String name;
     private Long file_type_id;
     private Date last_modification;
-    private Long last_author;
+    private Long last_author_id;
     private String path;
 }
