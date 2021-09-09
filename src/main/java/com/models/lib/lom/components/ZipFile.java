@@ -31,7 +31,7 @@ public class ZipFile {
 	
 	public void NewEntry(String name) throws IOException {
 	    ZipEntry entry = new ZipEntry(name);
-	    	    
+
 	    this.zos.putNextEntry(entry);
 	}
 	

@@ -26,31 +26,34 @@ public class DownloadService {
 		this.service = service;
 	}
     
-    public byte[] select(Query query) throws IOException {
-    	return ZipEntities(service.select(query, false));
+    public byte[] select(Query query, Boolean hierarchy) throws IOException {
+    	return ZipEntities(service.select(query, false), hierarchy);
     }
 
-    public byte[] select(String col, Comparator comp, Object value) throws IOException {
-    	return ZipEntities(service.select(col, comp, value, false));
+    public byte[] select(String col, Comparator comp, Object value, Boolean hierarchy) throws IOException {
+    	return ZipEntities(service.select(col, comp, value, false), hierarchy);
     }
     
-    public byte[] selectOne(Query query) throws IOException {
-    	return ZipEntities(service.select(query, false));
+    public byte[] selectOne(Query query, Boolean hierarchy) throws IOException {
+    	return ZipEntities(service.select(query, false), hierarchy);
     }
 
-	public byte[] selectOne(String col, Comparator comp, Object value) throws IOException {
-    	return ZipEntities(service.select(col, comp, value));
+	public byte[] selectOne(String col, Comparator comp, Object value, Boolean hierarchy) throws IOException {
+    	return ZipEntities(service.select(col, comp, value), hierarchy);
 	}
     
-    private byte[] ZipEntities(List<Files> entities) throws IOException {
+    private byte[] ZipEntities(List<Files> entities, Boolean hierarchy) throws IOException {
+    	
         ZipFile zf = new ZipFile().Open();
         
         for (int i = 0; i < entities.size(); i++) {
         	Files e = entities.get(i);
         	String name = e.getId().toString() + "_" + e.getName();
         	File source = Paths.get(FOLDER, name).toFile();
+
+        	String target = hierarchy ? Paths.get(e.getPath(), e.getName()).toString() : e.getName();
         	
-    		zf.WriteFull(e.getName(), source);
+    		zf.WriteFull(target, source);
         }
        
         zf.Close();

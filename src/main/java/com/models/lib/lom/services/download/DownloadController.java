@@ -30,18 +30,20 @@ public class DownloadController {
     
     @GetMapping("/api/download/files/{id}")
     public ResponseEntity<byte[]> get(@PathVariable(value = "id") Long id,
-    								  @RequestParam(value = "name", defaultValue="files.zip") String name) throws IOException {
+			  						  @RequestParam(value = "name", defaultValue="files.zip") String name,
+			  						  @RequestParam(value = "hierarchy", defaultValue="false") Boolean hierarchy) throws IOException {
     	
-    	byte[] content = service.select(FilesTable.colId, Comparator.eq, id.toString());
+    	byte[] content = service.select(FilesTable.colId, Comparator.eq, id.toString(), hierarchy);
     	
     	return ByteResponse(name, content);
     }
 
     @GetMapping("/api/download/files")
     public ResponseEntity<byte[]> list(@RequestParam(value = "ids", required = true) List<String> ids,
-    								   @RequestParam(value = "name", defaultValue="files.zip") String name) throws IOException {
+    								   @RequestParam(value = "name", defaultValue="files.zip") String name,
+ 			  						  @RequestParam(value = "hierarchy", defaultValue="false") Boolean hierarchy) throws IOException {
 
-    	byte[] content = service.select(FilesTable.colId, Comparator.in, ids);
+    	byte[] content = service.select(FilesTable.colId, Comparator.in, ids, hierarchy);
     	
     	return ByteResponse(name, content);
     }
