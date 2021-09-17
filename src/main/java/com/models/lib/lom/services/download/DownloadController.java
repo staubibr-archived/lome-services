@@ -1,7 +1,6 @@
 package com.models.lib.lom.services.download;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.models.lib.lom.components.Query.Comparator;
-import com.models.lib.lom.services.files.Files;
 import com.models.lib.lom.services.files.FilesTable;
 
 @RestController

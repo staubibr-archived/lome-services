@@ -4,19 +4,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.models.lib.lom.components.Dao;
+import com.models.lib.lom.components.Query.Comparator;
 import com.models.lib.lom.components.Service;
+import com.models.lib.lom.services.files.FilesService;
+import com.models.lib.lom.services.files.FilesTable;
 
 @Repository
 public class NNFilesVAllService extends Service<NNFilesVAll> {
 
+	@Autowired
+	private FilesService sFiles;
+	
 	@Autowired
 	public NNFilesVAllService(Dao<NNFilesVAll> dao) {
 		super(dao);
 	}
 
 	@Override
-	public NNFilesVAll getComplexEntity(NNFilesVAll entity) {
-		// TODO Auto-generated method stub
-		return entity;
+	public void getComplexEntity(NNFilesVAll e) {
+		e.setFile(sFiles.selectOne(FilesTable.colId, Comparator.eq, e.getFile_id(), true));
 	}
 }

@@ -15,8 +15,7 @@ public class TagsService extends Service<Tags> {
 	}
 
 	@Override
-	public Tags getComplexEntity(Tags entity) {
-		// TODO Auto-generated method stub
-		return entity;
+	public void getComplexEntity(Tags entity) {
+
 	}
 }

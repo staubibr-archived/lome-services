@@ -42,8 +42,8 @@ public class ExperimentsTable extends Table<Experiments> {
 		map.put(colName, entity.getName());
 		map.put(colDescription, entity.getDescription());
 		map.put(colDateCreated, entity.getDate_created());
-		map.put(colAuthor, entity.getAuthor());
-		map.put(colTopModelType, entity.getTop_model_type());
+		map.put(colAuthor, entity.getAuthor_id());
+		map.put(colTopModelType, entity.getTop_model_type_id());
 
 		return map;
 	}
@@ -58,8 +58,8 @@ public class ExperimentsTable extends Table<Experiments> {
             res.setName(resultSet.getString(colName));
             res.setDescription(resultSet.getString(colDescription));
             res.setDate_created(resultSet.getDate(colDateCreated));
-            res.setAuthor(resultSet.getLong(colAuthor));
-            res.setTop_model_type(resultSet.getLong(colTopModelType));
+            res.setAuthor_id(resultSet.getLong(colAuthor));
+            res.setTop_model_type_id(resultSet.getLong(colTopModelType));
 
 			return res;
 		}

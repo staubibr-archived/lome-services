@@ -15,8 +15,7 @@ public class FileTypesService extends Service<FileTypes> {
 	}
 
 	@Override
-	public FileTypes getComplexEntity(FileTypes entity) {
-		// TODO Auto-generated method stub
-		return entity;
+	public void getComplexEntity(FileTypes entity) {
+		
 	}
 }

@@ -1,5 +1,9 @@
 package com.models.lib.lom.services.nn_files_v_all;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.models.lib.lom.services.files.Files;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -17,4 +21,7 @@ public class NNFilesVAll {
     private Long raw_result_id;
     private Long converted_result_id;
     private Long visualization_id;
+    
+    @JsonInclude(Include.NON_NULL)
+    private Files file;
 }

@@ -1,6 +1,14 @@
 package com.models.lib.lom.services.experiments;
 
 import java.sql.Date;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.models.lib.lom.services.contributors.Contributors;
+import com.models.lib.lom.services.files.Files;
+import com.models.lib.lom.services.model_types.ModelTypes;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +24,29 @@ public class Experiments {
     private String name;
     private String description;
     private Date date_created;
-    private Long author;
-    private Long top_model_type;
+    private Long author_id;
+    private Long top_model_type_id;
+
+	private Contributors author;
+	
+	@JsonProperty("top_model_type")
+	private ModelTypes top_model_type;
+
+	@JsonInclude(Include.NON_NULL)
+	private List<String> tags;
+
+	@JsonInclude(Include.NON_NULL)
+	private List<Files> exp_files;
+
+	@JsonInclude(Include.NON_NULL)
+	private List<Files> doc_files;
+
+	@JsonInclude(Include.NON_NULL)
+	private List<Files> raw_res_files;
+
+	@JsonInclude(Include.NON_NULL)
+	private List<Files> conv_res_files;
+
+	@JsonInclude(Include.NON_NULL)
+	private List<Files> viz_files;
 }

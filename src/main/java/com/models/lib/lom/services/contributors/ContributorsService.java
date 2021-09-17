@@ -15,8 +15,7 @@ public class ContributorsService extends Service<Contributors> {
 	}
 
 	@Override
-	public Contributors getComplexEntity(Contributors entity) {
-		// TODO Auto-generated method stub
-		return entity;
+	public void getComplexEntity(Contributors entity) {
+
 	}
 }

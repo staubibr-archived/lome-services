@@ -1,7 +1,6 @@
 package com.models.lib.lom.components;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.models.lib.lom.components.Query.Comparator;
 import com.models.lib.lom.components.Query.Condition;
@@ -25,7 +24,9 @@ public abstract class Service<T> {
     public List<T> select(Query query, Boolean complex) {
         List<T> entities = dao.select(query);
 
-        return complex ? entities.stream().map(e -> this.getComplexEntity(e)).collect(Collectors.toList()) : entities;
+        if (complex) entities.forEach(e -> this.getComplexEntity(e));
+        
+        return entities;
     }
     
     public List<T> select(String col, Comparator comp, Object value, Boolean complex) {
@@ -74,6 +75,6 @@ public abstract class Service<T> {
         return dao.delete(ids);
     }
     
-    public abstract T getComplexEntity(T entity);
+    public abstract void getComplexEntity(T entity);
 }
 
