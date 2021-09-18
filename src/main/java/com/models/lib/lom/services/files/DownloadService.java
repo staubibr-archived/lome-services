@@ -1,4 +1,4 @@
-package com.models.lib.lom.services.download;
+package com.models.lib.lom.services.files;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,8 +11,6 @@ import org.springframework.stereotype.Repository;
 import com.models.lib.lom.components.Query;
 import com.models.lib.lom.components.Query.Comparator;
 import com.models.lib.lom.components.ZipFile;
-import com.models.lib.lom.services.files.Files;
-import com.models.lib.lom.services.files.FilesService;
 
 @Repository
 public class DownloadService {

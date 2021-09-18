@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,54 +20,89 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.models.lib.lom.components.Query;
+import com.models.lib.lom.components.Query.Comparator;
 
 @RestController
 public class FilesController {
 
-    private final FilesService service;
-
+    private final FilesService fService;
+    private final DownloadService dService;
+    private final UploadService uService;
+    
     @Autowired
-    public FilesController(FilesService service) {
-        this.service = service;
+    public FilesController(FilesService fService, DownloadService dService, UploadService uService) {
+        this.fService = fService;
+        this.dService = dService;
+        this.uService = uService;
     }
     
     @PostMapping("/api/files")
     public List<Object> create(@RequestBody List<Files> entities) {
-    	return service.create(entities);
+    	return fService.create(entities);
     }
 
 	@PostMapping(path = "api/files/upload", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
 	public List<Long> uploadFile(@RequestPart("files") List<MultipartFile> files, @RequestPart String db_files) throws IOException{
-		List<Files> l_db_files = this.service.parse(db_files);
+		List<Files> l_db_files = this.uService.parse(db_files);
 		
-		String message = this.service.validate(files, l_db_files);
+		String message = this.uService.validate(files, l_db_files);
 		
 		if (message != null) throw new IllegalArgumentException(message) ;
 		
-		return this.service.upload(files, l_db_files);
+		return this.uService.upload(files, l_db_files);
 	}
+    
+    @GetMapping("/api/files/download/{id}")
+    public ResponseEntity<byte[]> get(@PathVariable(value = "id") Long id,
+			  						  @RequestParam(value = "name", defaultValue="files.zip") String name,
+			  						  @RequestParam(value = "hierarchy", defaultValue="false") Boolean hierarchy) throws IOException {
+    	
+    	byte[] content = this.dService.select(FilesTable.colId, Comparator.eq, id.toString(), hierarchy);
+    	
+    	return ByteResponse(name, content);
+    }
+
+    @GetMapping("/api/files/download")
+    public ResponseEntity<byte[]> list(@RequestParam(value = "ids", required = true) List<String> ids,
+    								   @RequestParam(value = "name", defaultValue="files.zip") String name,
+ 			  						  @RequestParam(value = "hierarchy", defaultValue="false") Boolean hierarchy) throws IOException {
+
+    	byte[] content = this.dService.select(FilesTable.colId, Comparator.in, ids, hierarchy);
+    	
+    	return ByteResponse(name, content);
+    }
     
     @GetMapping("/api/files/{id}")
     public Files get(@PathVariable(value = "id") Long id,
 			  		 @RequestParam(value = "complex", defaultValue = "false") Boolean complex) {
     	
-    	return service.selectOne(FilesTable.colId, Query.Comparator.eq, id.toString(), complex);
+    	return fService.selectOne(FilesTable.colId, Query.Comparator.eq, id.toString(), complex);
     }
 
     @GetMapping("/api/files")
     public List<Files> list(@RequestParam(value = "ids", required = false) List<String> ids,
    						  	@RequestParam(value = "complex", defaultValue = "false") Boolean complex) {
                 
-        return service.select(FilesTable.colId, Query.Comparator.in, ids, complex);
+        return fService.select(FilesTable.colId, Query.Comparator.in, ids, complex);
     }
 
     @PutMapping("/api/files")
     public List<Object> update(@RequestBody List<Files> entities) {
-    	return service.update(entities);
+    	return fService.update(entities);
     }
 
     @DeleteMapping("/api/files")
     public List<Object> delete(@RequestBody List<Object> filesIds) {
-    	return service.delete(filesIds);
+    	return fService.delete(filesIds);
+    }
+    
+    private ResponseEntity<byte[]> ByteResponse(String name, byte[] content) {
+    	ContentDisposition disposition = ContentDisposition.attachment().filename(name).build();
+    	
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
+        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, disposition.toString());
+        
+        return ResponseEntity.ok().headers(httpHeaders).body(content);
     }
 }
