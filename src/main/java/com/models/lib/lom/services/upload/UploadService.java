@@ -53,17 +53,19 @@ public class UploadService {
 		return null;
 	}
 	
-    public void copyFile(MultipartFile f, BigInteger id) throws IOException {
+    private void copyFile(MultipartFile f, BigInteger id) throws IOException {
 		String name = FOLDER + id.toString() + "_" + f.getOriginalFilename();
 		
 		java.nio.file.Files.copy(f.getInputStream(), Paths.get(name), StandardCopyOption.REPLACE_EXISTING);
     }
     
-    public void upload(List<MultipartFile> files, List<Files> db_files) throws IOException {
+    public List<Long> upload(List<MultipartFile> files, List<Files> db_files) throws IOException {
 		List<BigInteger> ids = this.fService.create(db_files).stream().map(id -> (BigInteger)id).collect(Collectors.toList());
 
 		for (int i = 0; i < files.size(); i++) {
 			this.copyFile(files.get(i), ids.get(i));
 		}
+		
+		return ids.stream().map(x -> x.longValue()).collect(Collectors.toList());
     }
 }

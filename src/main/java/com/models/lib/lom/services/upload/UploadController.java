@@ -27,7 +27,7 @@ public class UploadController {
 	}
 
 	@PostMapping(path = "api/upload/files", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
-	public ResponseEntity<Message> uploadFile(@RequestPart("files") List<MultipartFile> files, @RequestPart String db_files) throws IOException{
+	public List<Long> uploadFile(@RequestPart("files") List<MultipartFile> files, @RequestPart String db_files) throws IOException{
 		List<Files> l_db_files = this.uService.parse(db_files);
 		
     	// TODO: This needs to be done at the same time files are uploaded.
@@ -35,8 +35,6 @@ public class UploadController {
 		
 		if (message != null) throw new IllegalArgumentException(message) ;
 		
-		this.uService.upload(files, l_db_files);
-		
-		return ResponseEntity.ok().body(new Message("Files uploaded successfully."));
+		return this.uService.upload(files, l_db_files);
 	}
 }
