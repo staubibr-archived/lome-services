@@ -1,4 +1,4 @@
-package com.models.lib.lom.components;
+package com.models.lib.lom.components.services;
 
 import java.util.ArrayList;
 import java.util.List;

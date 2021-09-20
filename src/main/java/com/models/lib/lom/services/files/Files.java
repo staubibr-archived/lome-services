@@ -1,5 +1,6 @@
 package com.models.lib.lom.services.files;
 
+import java.nio.file.Paths;
 import java.sql.Date;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -28,4 +29,16 @@ public class Files {
     
     @JsonInclude(Include.NON_NULL)
     private Contributors last_author;
+	
+	public String getClassName() {
+		return this.getName().substring(0, this.getName().lastIndexOf("."));
+	}
+	
+	public String getFullPath() {
+		return Paths.get(this.getPath(), this.getName()).toString();
+	}
+	
+	public String getServerPath() {
+		return this.getId().toString() + "_" + this.getName();
+	}
 }

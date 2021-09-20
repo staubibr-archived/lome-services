@@ -35,4 +35,16 @@ public class ModelTypes {
 
     @JsonInclude(Include.NON_NULL)
     private List<Files> files;
+
+	public Files getSourceFile() {
+		String model_name = this.getName().replace(" ", "_").toLowerCase();
+	
+		for (int i = 0; i < this.getFiles().size(); i++) {
+			Files f = this.getFiles().get(i);
+						
+			if (model_name.equals(f.getClassName())) return f;
+		}
+	
+	    throw new RuntimeException("Unable to find a source file for model type " + model_name);
+	}
 }

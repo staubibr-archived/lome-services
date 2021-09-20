@@ -3,9 +3,9 @@ package com.models.lib.lom.services.nn_model_types_v_tags;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.models.lib.lom.components.Dao;
-import com.models.lib.lom.components.Query.Comparator;
-import com.models.lib.lom.components.Service;
+import com.models.lib.lom.components.services.Dao;
+import com.models.lib.lom.components.services.Service;
+import com.models.lib.lom.components.services.Query.Comparator;
 import com.models.lib.lom.services.tags.TagsService;
 import com.models.lib.lom.services.tags.TagsTable;
 

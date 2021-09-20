@@ -1,0 +1,8 @@
+		map<string, json> m_${model_type};
+
+		for (auto& f : instances_set[${instances_index}].at("instances")) {
+			${model_type} m = web::make_atomic_model<${model_type}, NDTime, json>(id, ${model_type}, move(f));
+			m_${model_type}.put(m.get_id(), m);
+			submodels_TOP.push_back(m);
+		}
+

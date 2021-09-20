@@ -9,7 +9,7 @@ import java.util.Map;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import com.models.lib.lom.components.Table;
+import com.models.lib.lom.components.services.Table;
 
 @Component
 public class ModelTypesTable extends Table<ModelTypes> {

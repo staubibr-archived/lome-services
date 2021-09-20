@@ -1,9 +1,9 @@
-package com.models.lib.lom.components;
+package com.models.lib.lom.components.services;
 
 import java.util.List;
 
-import com.models.lib.lom.components.Query.Comparator;
-import com.models.lib.lom.components.Query.Condition;
+import com.models.lib.lom.components.services.Query.Comparator;
+import com.models.lib.lom.components.services.Query.Condition;
 
 public abstract class Service<T> {
 

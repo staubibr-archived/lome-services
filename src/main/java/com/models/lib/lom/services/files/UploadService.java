@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,7 +20,8 @@ import com.fasterxml.jackson.databind.type.CollectionType;
 @Service
 public class UploadService {
 
-	static final String FOLDER = "D:\\Development\\arslab-services-v2\\files\\";
+	@Value("${app.folders.files}")
+	private String FOLDER;
 	
 	private final FilesService fService ;
 
@@ -52,7 +54,7 @@ public class UploadService {
 	}
 	
     private void copyFile(MultipartFile f, BigInteger id) throws IOException {
-		String name = FOLDER + id.toString() + "_" + f.getOriginalFilename();
+		String name = this.FOLDER + id.toString() + "_" + f.getOriginalFilename();
 		
 		java.nio.file.Files.copy(f.getInputStream(), Paths.get(name), StandardCopyOption.REPLACE_EXISTING);
     }

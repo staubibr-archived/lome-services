@@ -1,7 +1,7 @@
 package com.models.lib.lom.unused;
 
-import com.models.lib.lom.components.Dao;
-import com.models.lib.lom.components.Query;
+import com.models.lib.lom.components.services.Dao;
+import com.models.lib.lom.components.services.Query;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

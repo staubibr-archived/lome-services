@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,20 +17,19 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.models.lib.lom.components.Query;
-import com.models.lib.lom.components.Query.Comparator;
+import com.models.lib.lom.components.FilesResponse;
+import com.models.lib.lom.components.services.Query;
+import com.models.lib.lom.components.services.Query.Comparator;
 
 @RestController
 public class FilesController {
 
     private final FilesService fService;
-    private final DownloadService dService;
-    private final UploadService uService;
+    private final UploadService uService;	
     
     @Autowired
-    public FilesController(FilesService fService, DownloadService dService, UploadService uService) {
+    public FilesController(FilesService fService, UploadService uService) {
         this.fService = fService;
-        this.dService = dService;
         this.uService = uService;
     }
     
@@ -56,10 +53,10 @@ public class FilesController {
     public ResponseEntity<byte[]> get(@PathVariable(value = "id") Long id,
 			  						  @RequestParam(value = "name", defaultValue="files.zip") String name,
 			  						  @RequestParam(value = "hierarchy", defaultValue="false") Boolean hierarchy) throws IOException {
-    	
-    	byte[] content = this.dService.select(FilesTable.colId, Comparator.eq, id.toString(), hierarchy);
-    	
-    	return ByteResponse(name, content);
+
+    	List<Files> files = this.fService.select(FilesTable.colId, Comparator.in, id.toString(), false);
+
+    	return FilesResponse.build(name, this.fService.zip(files, hierarchy));
     }
 
     @GetMapping("/api/files/download")
@@ -67,9 +64,9 @@ public class FilesController {
     								   @RequestParam(value = "name", defaultValue="files.zip") String name,
  			  						  @RequestParam(value = "hierarchy", defaultValue="false") Boolean hierarchy) throws IOException {
 
-    	byte[] content = this.dService.select(FilesTable.colId, Comparator.in, ids, hierarchy);
+    	List<Files> files = this.fService.select(FilesTable.colId, Comparator.in, ids, false);
     	
-    	return ByteResponse(name, content);
+    	return FilesResponse.build(name, this.fService.zip(files, hierarchy));
     }
     
     @GetMapping("/api/files/{id}")
@@ -94,15 +91,5 @@ public class FilesController {
     @DeleteMapping("/api/files")
     public List<Object> delete(@RequestBody List<Object> filesIds) {
     	return fService.delete(filesIds);
-    }
-    
-    private ResponseEntity<byte[]> ByteResponse(String name, byte[] content) {
-    	ContentDisposition disposition = ContentDisposition.attachment().filename(name).build();
-    	
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM_VALUE);
-        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, disposition.toString());
-        
-        return ResponseEntity.ok().headers(httpHeaders).body(content);
     }
 }
