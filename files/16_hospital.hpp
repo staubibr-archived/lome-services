@@ -12,8 +12,8 @@
 #include <vector>
 #include <nlohmann/json.hpp>
 
-#include "../web-extension/output/message_type.hpp"
-#include "../web-extension/web_ports.hpp"
+#include <web/output/message_type.hpp>
+#include <web/web_ports.hpp>
 
 #include "../data_structures/emergency.hpp"
 
@@ -22,13 +22,13 @@ using namespace cadmium;
 using json = nlohmann::json;
 
 //Port definition
-struct Hospital_defs{
+struct hospital_defs{
     struct processor_out : public web::out_port<Emergency_t> {};
     struct processor_in : public web::in_port<Emergency_t> {};
 };
 
 // model parameters
-struct Hospital_params {
+struct hospital_params {
 	string id = "";
 	string name = "";
 	int rate = 0;
@@ -36,12 +36,12 @@ struct Hospital_params {
 };
 
 template<typename TIME>
-class Hospital{
+class hospital{
 public:
 
     // ports definition
-    using output_ports = tuple<typename Hospital_defs::processor_out>;
-    using input_ports = tuple<typename Hospital_defs::processor_in>;
+    using output_ports = tuple<typename hospital_defs::processor_out>;
+    using input_ports = tuple<typename hospital_defs::processor_in>;
 
     // state definition
     struct state_type{
@@ -53,27 +53,23 @@ public:
     };
 
     state_type state;
-    Hospital_params params;
+    hospital_params params;
 
-    Hospital() {}
+    hospital() {}
 
-    Hospital(Hospital_params ext_params) {
-    	params = ext_params;
-    }
+    hospital(json j_params) {
+		struct hospital_params p;
 
-    static Hospital_params params_from_feature(json j) {
-		struct Hospital_params p;
+		p.id = j_params.at("index").get<string>();
+		p.name = j_params.at("facility_name").get<string>();
+		p.rate = j_params.at("rate").get<int>();
+		p.capacity = j_params.at("capacity").get<int>();
 
-		p.id = j.at("properties").at("index").get<string>();
-		p.name = j.at("properties").at("facility_name").get<string>();
-		p.rate = j.at("properties").at("rate").get<int>();
-		p.capacity = j.at("properties").at("capacity").get<int>();
-
-		return p;
+		params = p;
     }
 
     void external_transition(TIME e, typename make_message_bags<input_ports>::type mbs) {
-        for(const auto &msg : get_messages<typename Hospital_defs::processor_in>(mbs)){
+        for(const auto &msg : get_messages<typename hospital_defs::processor_in>(mbs)){
             state.active += msg.quantity;
             state.total += msg.quantity;
 
@@ -104,7 +100,7 @@ public:
         typename make_message_bags<output_ports>::type bags;
 
 		for(const auto &em : state.emergencies){
-			get<message_bag<typename Hospital_defs::processor_out>>(bags).messages.push_back(em);
+			get<message_bag<typename hospital_defs::processor_out>>(bags).messages.push_back(em);
 		}
 
         return bags;
@@ -123,7 +119,7 @@ public:
         external_transition(TIME(), move(mbs));
     }
 
-    friend ostringstream& operator<<(ostringstream& os, const typename Hospital<TIME>::state_type& i) {
+    friend ostringstream& operator<<(ostringstream& os, const typename hospital<TIME>::state_type& i) {
         os << i.active << "," << i.total << "," << i.released << "," << i.rejected;
 
         return os;

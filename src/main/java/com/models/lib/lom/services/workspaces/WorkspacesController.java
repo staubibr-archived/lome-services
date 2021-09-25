@@ -26,9 +26,6 @@ public class WorkspacesController {
     
     @PostMapping("/api/workspaces")
     public ResponseEntity<byte[]> create(@RequestPart("instances") MultipartFile f_instances, @RequestPart("relations") MultipartFile f_relations) throws JsonParseException, JsonMappingException, IOException {    	
-    	List<Instances> instances = this.wService.readJson(f_instances, Instances.class);
-    	List<Relations> relations = this.wService.readJson(f_relations, Relations.class);
-    	
-    	return FilesResponse.build("workspace.zip", this.wService.make_workspace(instances, relations));
+    	return FilesResponse.build("workspace.zip", this.wService.make_workspace(f_instances, f_relations));
     }
 }

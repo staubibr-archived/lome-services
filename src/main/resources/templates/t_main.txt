@@ -14,7 +14,8 @@ ${include_sources}
 
 using json = nlohmann::json;
 
-int main(){
+int main(int argc, char ** argv){
+	
 	try {
 	    web::Ports iports_TOP = {};
 	    web::Ports oports_TOP = {};
@@ -23,29 +24,29 @@ int main(){
 	    web::ICs ics_TOP = {};
 	    web::Models submodels_TOP = {};
 
-	    // args[0] is instances.json, args[1] is relationsets.json
-		json instances_set = web::tools::read_geojson(args[0]);
-		json relations_set = web::tools::read_geojson(args[1]);
+		std::cout << std::endl << "Reading sets of instances and relations..." << std::endl;
+		json instances_set = web::tools::read_geojson("./input/auto_instances.json");
+		json relations_set = web::tools::read_geojson("./input/auto_relations.json");
 
 ${include_instances_sets}
 
 ${include_relations_sets}
 
-		// NOTE: SLIGHT DIFFERENCE HERE, THERE'S A SECOND PARAMETER TO THE CALL TO MAKE AN COUPLED/TOP MODEL. THAT PARAMETER IS A STRING IDENTIFYING THE MODEL TYPE.
 	    std::shared_ptr<web::coupled<NDTime>> TOP;
 		TOP	= web::make_top_model<NDTime>("my_top_model", "my_top_model", submodels_TOP, iports_TOP, oports_TOP, eics_TOP, eocs_TOP, ics_TOP);
 
-		// NOTE: THERE'S A DEFAULT PATH, THIS IS ONLY TO WRITE TO ANOTHER PATH
-	    web::out_messages = std::ofstream("../simulation_results/output_messages.txt");
-	    web::out_state = std::ofstream("../simulation_results/state_messages.txt");
+	    web::out_messages = std::ofstream("./simulation_results/output_messages.txt");
+	    web::out_state = std::ofstream("./simulation_results/state_messages.txt");
 
-		// NOTE: CALLING THE RUNNER SAME AS USUAL, DIFFERENT NAMESPACE
 	    web::runner<NDTime, web::logger_top> r(TOP, {0});
 
+		std::cout << "Running the simulation..." << std::endl;
 	    r.run_until(NDTime("2400:00:00:000"));
 
-		// NOTE: CALL TO GENERATE THE OUTPUT FILES IN THE VIEWER FORMAT
-	    web::output_results(TOP, "GIS-DEVS", "../simulation_results/");
+		std::cout << "Converting output files to the viewer format..." << std::endl;
+	    web::output_results(TOP, "GIS-DEVS", "./simulation_results/");
+		
+		std::cout << "Done!" << std::endl;
 	}
 	catch (const exception& e) {
 		cerr << e.what();

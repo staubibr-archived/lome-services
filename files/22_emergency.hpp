@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include "../web-extension/output/message_type.hpp"
+#include <web/output/message_type.hpp>
 
 struct Emergency_t{
 	Emergency_t(): area_id(""), port_i(0), quantity(0){}

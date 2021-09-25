@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -47,10 +46,12 @@ public class WorkspacesService {
     	return m_instances.readValue(file.getBytes(), t_instances);
     }
     
-    public byte[] make_workspace(List<Instances> instances_sets, List<Relations> relations_sets) throws IOException {
+    public byte[] make_workspace(MultipartFile f_instances, MultipartFile f_relations) throws IOException {
+    	List<Instances> instances_sets = this.readJson(f_instances, Instances.class);
+    	List<Relations> relations_sets = this.readJson(f_relations, Relations.class);
+    	
     	this.LoadFromDb(instances_sets, relations_sets);
     	
-
         ZipFile zf = new ZipFile().Open();
     	
     	for (int i = 0; i < instances_sets.size(); i++) {
@@ -63,9 +64,11 @@ public class WorkspacesService {
         		zf.WriteFull(target, source);
         	}
     	}
-   
+
+    	zf.WriteFull("input/auto_instances.json", f_instances.getBytes());
+    	zf.WriteFull("input/auto_relations.json", f_relations.getBytes());
     	zf.WriteFull("makefile", Paths.get(Templater.T_MAKEFILE).toFile());
-    	zf.WriteFull("main.cpp", this.make_main_file(instances_sets, relations_sets));
+    	zf.WriteFull("top_model/main.cpp", this.make_main_file(instances_sets, relations_sets));
         zf.Close();
     	
     	return zf.toByteArray();
