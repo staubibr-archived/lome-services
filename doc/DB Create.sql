@@ -72,6 +72,7 @@ CREATE TABLE `nn_files_v_all` (
   `file_id` bigint(20) NOT NULL,
   `document_id` bigint(20) DEFAULT NULL,		  -- context document file (.*), linked to many experiments 
   `source_id` bigint(20) DEFAULT NULL,			  -- source file (cpp, hpp), linked to many model types (i.e data structures)
+  `metadata_id` bigint(20) DEFAULT NULL,		  -- metadata file (json), linked to a model type, contains info on ports, messages, etc.
   `experiment_id` bigint(20) DEFAULT NULL,		  -- experiment file (json), linked to a single experiment
   `raw_result_id` bigint(20) DEFAULT NULL,		  -- raw result file (.txt), linked to a single experiment
   `converted_result_id` bigint(20) DEFAULT NULL,  -- converted result file (.json, .log, .svg), linked to a single experiment,
@@ -80,6 +81,7 @@ CREATE TABLE `nn_files_v_all` (
   KEY `fk_nn_files_v_all_file` (`file_id`),
   KEY `fk_nn_files_v_all_document` (`document_id`),
   KEY `fk_nn_files_v_all_source` (`source_id`),
+  KEY `fk_nn_files_v_all_metadata` (`metadata_id`),
   KEY `fk_nn_files_v_all_experiment` (`experiment_id`),
   KEY `fk_nn_files_v_all_raw_result` (`raw_result_id`),
   KEY `fk_nn_files_v_all_converted_result` (`converted_result_id`),
@@ -87,6 +89,7 @@ CREATE TABLE `nn_files_v_all` (
   CONSTRAINT `fk_nn_files_v_all_file` FOREIGN KEY (`file_id`) REFERENCES `files` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_nn_files_v_all_document` FOREIGN KEY (`document_id`) REFERENCES `experiments` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_nn_files_v_all_source` FOREIGN KEY (`source_id`) REFERENCES `model_types` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_nn_files_v_all_metadata` FOREIGN KEY (`metadata_id`) REFERENCES `model_types` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_nn_files_v_all_experiment` FOREIGN KEY (`experiment_id`) REFERENCES `experiments` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_nn_files_v_all_raw_result` FOREIGN KEY (`raw_result_id`) REFERENCES `experiments` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_nn_files_v_all_converted_result` FOREIGN KEY (`converted_result_id`) REFERENCES `experiments` (`id`) ON DELETE CASCADE,

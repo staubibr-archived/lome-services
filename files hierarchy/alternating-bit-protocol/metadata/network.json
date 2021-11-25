@@ -1,0 +1,11 @@
+{
+    "message_types": [],
+    "model_type": {
+            "components": [6, 7],
+            "id": 5,
+            "name": "Network",
+            "ports": [],
+            "type": "coupled"
+        }
+    ]
+}

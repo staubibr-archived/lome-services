@@ -1,0 +1,9 @@
+{
+    "model_type": {
+        "components": [1, 2],
+        "id": 0,
+        "name": "top",
+        "ports": [],
+        "type": "top"
+    }
+}

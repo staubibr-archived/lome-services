@@ -3,6 +3,7 @@ package com.models.lib.lom.services.workspaces;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,14 +55,20 @@ public class WorkspacesService {
     	
         ZipFile zf = new ZipFile().Open();
     	
+        List<Long> zipped = new ArrayList<Long>();
+        
     	for (int i = 0; i < instances_sets.size(); i++) {
-    		List<Files> files = instances_sets.get(i).getModel_type().getFiles();
+    		List<Files> files = instances_sets.get(i).getModel_type().getSrc_files();
     		
         	for (int j = 0; j < files.size(); j++) {
+        		if (zipped.contains(files.get(j).getId())) continue;
+        		
             	File source = Paths.get(this.FOLDER, files.get(j).getServerPath()).toFile();
             	String target = files.get(j).getFullPath();
 
         		zf.WriteFull(target, source);
+        		
+        		zipped.add(files.get(j).getId());
         	}
     	}
 

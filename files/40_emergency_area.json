@@ -1,0 +1,43 @@
+{
+    "message_types": [{
+            "description": "Number of deaths due to rejected emergencies.",
+            "id": 0,
+            "name": "s_area",
+            "template": ["dead"]
+        }, {
+            "description": "area_id is the unique identifier of the emergency area, port_i is the port index through which the message was emitted, quantity is the count of emergencies sent with the message.",
+            "id": 1,
+            "name": "o_emergency",
+            "template": ["area_id", "port_i", "quantity"]
+        }, {
+            "description": "Number of active, total, released and rejected emergencies at this hospital.",
+            "id": 2,
+            "name": "s_hospital",
+            "template": ["active", "total", "released", "rejected"]
+        }
+    ],
+    "model_type": {
+        "id": 1,
+        "message_type": 0,
+        "name": "emergency_area",
+        "ports": [{
+                "message_type": 1,
+                "name": "rejected_1",
+                "type": "input"
+            }, {
+                "message_type": 1,
+                "name": "out_1",
+                "type": "output"
+            }, {
+                "message_type": 1,
+                "name": "out_2",
+                "type": "output"
+            }, {
+                "message_type": 1,
+                "name": "out_3",
+                "type": "output"
+            }
+        ],
+        "type": "atomic"
+    }
+}

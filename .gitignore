@@ -59,3 +59,5 @@ build/
 /.metadata/version.ini
 /python/__pycache__/01_insert_into_file_types.cpython-39.pyc
 /doc/files examples/cadmium-geo-hospital/data/Ottawa-Gatineau/network.geojson
+/files/29_network.geojson
+/files hierarchy/gis-emergencies/data/Ottawa-Gatineau/network.geojson

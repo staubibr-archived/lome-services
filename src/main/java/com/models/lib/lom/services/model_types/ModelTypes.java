@@ -3,8 +3,10 @@ package com.models.lib.lom.services.model_types;
 import java.sql.Date;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.models.lib.lom.services.contributors.Contributors;
 import com.models.lib.lom.services.files.Files;
 import com.models.lib.lom.services.tags.Tags;
@@ -34,13 +36,19 @@ public class ModelTypes {
     private List<Tags> tags;
 
     @JsonInclude(Include.NON_NULL)
-    private List<Files> files;
+    private List<Files> src_files;
 
+    // private List<Files> meta_files;
+
+    @JsonInclude(Include.NON_NULL)
+    private JsonNode meta;
+
+    @JsonIgnore
 	public Files getSourceFile() {
 		String model_name = this.getName().replace(" ", "_").toLowerCase();
 	
-		for (int i = 0; i < this.getFiles().size(); i++) {
-			Files f = this.getFiles().get(i);
+		for (int i = 0; i < this.getSrc_files().size(); i++) {
+			Files f = this.getSrc_files().get(i);
 						
 			if (model_name.equals(f.getClassName())) return f;
 		}

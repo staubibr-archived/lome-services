@@ -22,6 +22,7 @@ public class NNFilesVAllTable extends Table<NNFilesVAll> {
 	public static String colFileId = "file_id";
 	public static String colDocumentId = "document_id";
 	public static String colSourceId = "source_id";
+	public static String colMetadataId = "metadata_id";
 	public static String colExperimentId = "experiment_id";
 	public static String colRawResultId = "raw_result_id";
 	public static String colConvertedResultId = "converted_result_id";
@@ -32,7 +33,7 @@ public class NNFilesVAllTable extends Table<NNFilesVAll> {
 	}
 	
     public List<String> columns() {
-		return List.of(colFileId, colDocumentId, colSourceId, colExperimentId, colRawResultId, colConvertedResultId, colVisualizationId);
+		return List.of(colFileId, colDocumentId, colSourceId, colMetadataId, colExperimentId, colRawResultId, colConvertedResultId, colVisualizationId);
     }
 
     public Map<String, Object> mapEntity(NNFilesVAll entity) {
@@ -42,6 +43,7 @@ public class NNFilesVAllTable extends Table<NNFilesVAll> {
         map.put(colFileId, entity.getFile_id());
         map.put(colDocumentId, entity.getDocument_id());
         map.put(colSourceId, entity.getSource_id());
+        map.put(colMetadataId, entity.getMetadata_id());
         map.put(colExperimentId, entity.getExperiment_id());
         map.put(colRawResultId, entity.getRaw_result_id());
         map.put(colConvertedResultId, entity.getConverted_result_id());
@@ -59,6 +61,7 @@ public class NNFilesVAllTable extends Table<NNFilesVAll> {
             res.setFile_id(resultSet.getLong(colFileId));
             res.setDocument_id(resultSet.getLong(colDocumentId));
             res.setSource_id(resultSet.getLong(colSourceId));
+            res.setMetadata_id(resultSet.getLong(colMetadataId));
             res.setExperiment_id(resultSet.getLong(colExperimentId));
             res.setRaw_result_id(resultSet.getLong(colRawResultId));
             res.setConverted_result_id(resultSet.getLong(colConvertedResultId));

@@ -1,0 +1,10 @@
+{
+    "message_types": [],
+    "model_type": {
+        "components": [3, 4, 5],
+        "id": 2,
+        "name": "ABP",
+        "ports": [],
+        "type": "coupled"
+    }
+}

@@ -1,8 +1,33 @@
-exec(open("./01_insert_into_file_types.py").read())
-exec(open("./02_insert_into_contributors.py").read())
-exec(open("./03_insert_into_model_types.py").read())
-exec(open("./04_insert_into_experiments.py").read())
-exec(open("./05_insert_into_tags.py").read())
-exec(open("./06_insert_into_files.py").read())
-exec(open("./07_insert_into_nn_files_v_all.py").read())
-exec(open("./08_insert_into_nn_model_types_v_tags.py").read())
+import A_General.A_insert_into_file_types as A_insert_into_file_types
+import A_General.B_insert_into_contributors as B_insert_into_contributors
+import A_General.C_insert_into_tags as C_insert_into_tags
+import B_ABP.D_insert_into_model_types as D_insert_into_model_types
+import B_ABP.E_insert_into_experiments as E_insert_into_experiments
+import B_ABP.F_insert_into_files as F_insert_into_files
+import B_ABP.G_insert_into_nn_files_v_all as G_insert_into_nn_files_v_all
+import B_ABP.H_insert_into_nn_model_types_v_tags as H_insert_into_nn_model_types_v_tags
+import C_GIS_Emergencies.J_insert_into_model_types as J_insert_into_model_types
+import C_GIS_Emergencies.K_insert_into_experiments as K_insert_into_experiments
+import C_GIS_Emergencies.L_insert_into_files as L_insert_into_files
+import C_GIS_Emergencies.M_insert_into_nn_files_v_all as M_insert_into_nn_files_v_all
+import C_GIS_Emergencies.N_insert_into_nn_model_types_v_tags as N_insert_into_nn_model_types_v_tags
+
+file_types = A_insert_into_file_types.load()
+contributors = B_insert_into_contributors.load()
+tags = C_insert_into_tags.load()
+
+model_types = D_insert_into_model_types.load(contributors)
+experiments = E_insert_into_experiments.load(contributors)
+files = F_insert_into_files.load(contributors)
+
+G_insert_into_nn_files_v_all.load(files, experiments, model_types)
+H_insert_into_nn_model_types_v_tags.load(model_types, tags)
+
+model_types = J_insert_into_model_types.load(contributors)
+experiments = K_insert_into_experiments.load(contributors)
+files = L_insert_into_files.load(contributors)
+
+M_insert_into_nn_files_v_all.load(files, experiments, model_types)
+N_insert_into_nn_model_types_v_tags.load(model_types, tags)
+
+print("SUCCESSFULLY LOADED LIBRARY OF MODELS")

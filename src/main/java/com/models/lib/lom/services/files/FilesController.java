@@ -54,9 +54,9 @@ public class FilesController {
 			  						  @RequestParam(value = "name", defaultValue="files.zip") String name,
 			  						  @RequestParam(value = "hierarchy", defaultValue="false") Boolean hierarchy) throws IOException {
 
-    	List<Files> files = this.fService.select(FilesTable.colId, Comparator.in, id.toString(), false);
-
-    	return FilesResponse.build(name, this.fService.zip(files, hierarchy));
+    	Files files = this.fService.selectOne(FilesTable.colId, Comparator.eq, id.toString(), false);
+    	
+    	return FilesResponse.build(files.getName(), this.fService.getBytes(files));
     }
 
     @GetMapping("/api/files/download")
@@ -66,7 +66,7 @@ public class FilesController {
 
     	List<Files> files = this.fService.select(FilesTable.colId, Comparator.in, ids, false);
     	
-    	return FilesResponse.build(name, this.fService.zip(files, hierarchy));
+    	return FilesResponse.build(name, this.fService.getZip(files, hierarchy));
     }
     
     @GetMapping("/api/files/{id}")
