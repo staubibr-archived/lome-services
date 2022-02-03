@@ -78,7 +78,7 @@ public class WorkflowController extends Controller {
 		Entities<Entity> entities = this.wService.Entities();
 		
         mv.addObject("entities", entities.entities);
-        mv.addObject("title", "Workflow list");
+        mv.addObject("title", "Workflows");
         mv.addObject("link", "http://localhost:8080/api/workflow?uuid=");
         mv.setViewName("lifecycle/list");
         

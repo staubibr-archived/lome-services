@@ -78,7 +78,7 @@ public class ModelController extends Controller {
 		Entities<Entity> entities = this.mService.Entities();
 		
         mv.addObject("entities", entities.entities);
-        mv.addObject("title", "Model list");
+        mv.addObject("title", "Models");
         mv.addObject("link", "http://localhost:8080/api/model?uuid=");
         mv.setViewName("lifecycle/list");
         

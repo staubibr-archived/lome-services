@@ -5,18 +5,26 @@
 	</head>
 
 	<body>
-		<h1 th:text="${title}"></h1>
+		<div class="ribbon">
+			<a href="http://localhost:8080/api/model/list">MODELS</a>
+			<a href="http://localhost:8080/api/workflow/list">WORKFLOWS</a>
+			<a href="http://localhost:8080/api/visualization/list">VISUALIZATION</a>
+		</div>
 		
-		<ul class="row">
-			<li th:each="entity : ${entities}">
-				<div class="row tight">
-					<label>UUID: </label>
-					<a class="link" th:text="${entity.uuid.toString()}" th:href="${link + entity.uuid.toString()}" target="_blank"></a>
-				</div>
-				<div class="row tight"><label>Name: </label><span th:text="${entity.name}"></span></div>
-				<div class="row tight"><label>Description: </label><span th:text="${entity.description}"></span></div>
-				<div class="row tight"><label>Date created: </label><span th:text="${entity.created}"></span></div>
-			</li>
-		</ul>
+		<main>
+			<h1 th:text="${title}"></h1>
+			
+			<ul>
+				<li class="row loose" th:each="entity : ${entities}">
+					<div class="row tight">
+						<label>UUID: </label>
+						<a class="link" th:text="${entity.uuid.toString()}" th:href="${link + entity.uuid.toString()}"></a>
+					</div>
+					<div class="row tight"><label>Name: </label><span th:text="${entity.name}"></span></div>
+					<div class="row tight"><label>Description: </label><span th:text="${entity.description}"></span></div>
+					<div class="row tight"><label>Date created: </label><span th:text="${entity.created}"></span></div>
+				</li>
+			</ul>
+		</main>
 	</body>
 </html>

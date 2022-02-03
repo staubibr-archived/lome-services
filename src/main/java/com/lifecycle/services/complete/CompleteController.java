@@ -36,7 +36,7 @@ public class CompleteController extends Controller {
         this.vService = vService;
     }
     
-	@PostMapping(path="/api/complete/execute", consumes={ MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
+	@PostMapping(path="/api/complete/execute", consumes={ MediaType.MULTIPART_FORM_DATA_VALUE })
     public ObjectNode post(@RequestPart("params") CompleteInput params,
 				  		   @RequestPart(value = "workflow_data") List<MultipartFile> data,
 				  		   @RequestPart("visualization_config") MultipartFile visualization) throws Exception {

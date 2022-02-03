@@ -71,7 +71,7 @@ public class VisualizationController extends Controller {
 		Entities<Entity> entities = this.vService.Entities();
 		
         mv.addObject("entities", entities.entities);
-        mv.addObject("title", "Visualization list");
+        mv.addObject("title", "Visualizations");
         mv.addObject("link", "http://localhost:8080/api/visualization?uuid=");
         mv.setViewName("lifecycle/list-visualization");
         

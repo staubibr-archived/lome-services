@@ -1,7 +1,37 @@
 html {
     font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-    margin: 0px 16px;
 	background-color: #fafafa
+}
+
+html, body {
+	margin:0
+}
+
+main {
+	margin: 0px 16px;
+}
+
+.ribbon {
+    background-color: #396a6f;
+    padding: 0px 16px;
+}
+
+.ribbon a {
+    display: inline-block;
+    padding: 10px;
+    color: white;
+    text-decoration: none;
+    font-size: 1.2em;
+    transition: background-color 0.3s ease;
+}
+
+.ribbon a:hover {
+    background-color: #14497d;
+    color: white;
+}
+
+h1 {
+	color: #396a6f;
 }
 
 .row {
@@ -10,6 +40,10 @@ html {
 
 .row.tight {
     margin-bottom: 6px;
+}
+
+.row.loose {
+    margin-bottom: 24px;
 }
 
 label {
