@@ -3,9 +3,7 @@ package com.lifecycle.services.workflow;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,9 +13,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.components.ZipFile;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.lifecycle.components.Folder;
-import com.lifecycle.components.Scratch;
-import com.lifecycle.util.Entities;
+import com.lifecycle.components.Entities;
+import com.lifecycle.components.entities.Entity;
+import com.lifecycle.components.folders.Folder;
+import com.lifecycle.components.folders.Scratch;
+import com.lifecycle.components.processes.PythonProcess;
 
 @Service
 public class WorkflowService {
@@ -35,102 +35,69 @@ public class WorkflowService {
 	private String APP_WORKFLOWS;
 		
     @Autowired
-	public WorkflowService() throws JsonParseException, JsonMappingException, IOException {
+	public WorkflowService() {
 
 	}
 	
     public File List() throws IOException {
     	return new File(APP_WORKFLOWS);
     }
-    
-    public WorkflowMeta Publish(String sMeta, MultipartFile workflow) throws Exception {
-    	Entities<WorkflowMeta> workflows = new Entities<WorkflowMeta>(APP_WORKFLOWS, WorkflowMeta.class); 
-    	
-    	WorkflowMeta meta = workflows.Make(sMeta);
-		
-    	if (workflows.Contains(meta::CompareName)) throw new Exception("Cannot create a new workflow, the name is already in use.");
-
-		Scratch scratch = new Scratch(APP_FOLDERS_WORKFLOWS);
-		
-    	meta.setUuid(scratch.uuid);
-    	meta.setCreated(new Date());
-
-    	workflows.Add(meta);
-		workflows.Save();
-    	
-		scratch.Copy(workflow, "workflow.json", false);
-		
-		return meta;
-    }
 	
-    public void Delete(String uuid) throws Exception {
-    	Entities<WorkflowMeta> workflows = new Entities<WorkflowMeta>(APP_WORKFLOWS, WorkflowMeta.class); 
-
-    	WorkflowMeta meta = workflows.Get((m) -> m.getUuid().toString().equals(uuid));
-    	
-    	if (meta == null) throw new Exception("Cannot delete the workflow, it does not exist.");
-    	
-    	workflows.Remove(meta);
-    	
-    	Folder folder = new Folder(Paths.get(APP_FOLDERS_WORKFLOWS, uuid));
-
-    	workflows.Save();
-    	folder.Delete();
+    public Entities<Entity> Entities() throws JsonParseException, JsonMappingException, IOException {
+    	return new Entities<Entity>(APP_WORKFLOWS, Entity.class); 
     }
     
     public File Get(String uuid) throws IOException {
     	Folder folder = new Folder(APP_FOLDERS_WORKFLOWS, uuid);
     	
-    	return folder.Get("workflow.json");
+    	return folder.file("workflow.json");
+    }
+    
+    public Entity Publish(String sMeta, MultipartFile workflow) throws Exception {
+    	Entities<Entity> workflows = new Entities<Entity>(APP_WORKFLOWS, Entity.class); 
+    	Entity published = workflows.Add(Entity.fromJson(sMeta));
+		Scratch scratch = new Scratch(APP_FOLDERS_WORKFLOWS);
+		
+		published.setUuid(scratch.uuid);
+		workflows.Save();
+		scratch.copy(workflow, "workflow.json");
+		
+		return published;
+    }
+	
+    public void Delete(String uuid) throws Exception {
+    	Entities<Entity> workflows = new Entities<Entity>(APP_WORKFLOWS, Entity.class); 
+
+    	workflows.Remove(uuid);
+    	
+    	Folder folder = new Folder(Paths.get(APP_FOLDERS_WORKFLOWS, uuid));
+
+    	workflows.Save();
+    	folder.delete();
     }
     
     public void Update(String sMeta, MultipartFile workflow) throws Exception {
-    	Entities<WorkflowMeta> workflows = new Entities<WorkflowMeta>(APP_WORKFLOWS, WorkflowMeta.class); 
-    	
-    	WorkflowMeta curr = workflows.Make(sMeta);
-    	WorkflowMeta prev = workflows.Get(curr::CompareUuid);
-    	
-    	if (prev == null) throw new Exception("Cannot update the workflow, it does not exist.");
-
-    	Folder folder = new Folder(APP_FOLDERS_WORKFLOWS, prev.getUuid());
-    	
-    	prev.setCreated(curr.getCreated());
-    	prev.setDescription(curr.getDescription());
-    	prev.setName(curr.getName());
+    	Entities<Entity> workflows = new Entities<Entity>(APP_WORKFLOWS, Entity.class); 
+    	Entity updated = workflows.Update(Entity.fromJson(sMeta));
+    	Folder folder = new Folder(APP_FOLDERS_WORKFLOWS, updated.getUuid());
     	
     	workflows.Save();
 
-    	if (workflow != null) folder.Copy(workflow, "workflow.json", true);
+    	if (workflow != null) folder.copy(workflow, "workflow.json");
     }
-
     
-	public List<File> Execute(Scratch scratch, String uuid, List<MultipartFile> data) throws Exception {
-		Folder folder = new Folder(APP_FOLDERS_WORKFLOWS, uuid);
-		Folder input = new Folder(scratch.Path("input"), true);
-		Folder output = new Folder(scratch.Path("output"), true);
+	public List<File> Execute(Folder scratch, String uuid, List<MultipartFile> data) throws Exception {		
+		PythonProcess p = new PythonProcess(PYTHON);
 
-		input.Copy(data, false);
-		
-		String s_workflow = folder.Path("workflow.json").toString();
-		
-		String command = this.PYTHON + " " + s_workflow + " " + input.folder.toString() + " " + output.folder.toString();
-		
-		int exit = Runtime.getRuntime().exec(command).waitFor();
-		
-		if (exit != 0) throw new Exception("Unable to execute the workflow.");
-		
-		List<File> files = scratch.Get();
-		
-		return files.stream().filter((File f) -> !f.getName().equals("workflow.json")).collect(Collectors.toList());
+		return p.execute(scratch, this.Get(uuid), data);
 	}
 	
 	public ZipFile ExecuteZip(String uuid, List<MultipartFile> data) throws Exception {
-		
     	Scratch scratch = new Scratch(APP_FOLDERS_SCRATCH);
     	List<File> files = this.Execute(scratch, uuid, data);
     	ZipFile zf = new ZipFile(files);
 		
-		scratch.Delete();
+		scratch.delete();
 		
 		return zf;
 	}

@@ -1,22 +1,24 @@
-package com.lifecycle.util;
+package com.lifecycle.components;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.lifecycle.components.entities.Entity;
 
 
-public class Entities<T> {
+public class Entities<T extends Entity> {
 
 	private File file;
-	private List<T> entities;
+	public List<T> entities;
 	private ObjectMapper mapper = new ObjectMapper();
 	private Class<T> type;
 	
@@ -31,18 +33,52 @@ public class Entities<T> {
     	this.entities = this.mapper.readValue(this.file, typeReference);    	 	
 	} 
 	
-	public T Make(String s_entity) throws JsonMappingException, JsonProcessingException {
-    	return this.mapper.readValue(s_entity, this.type);
+	public T Make(String s_entity) throws Exception {
+    	T meta = this.mapper.readValue(s_entity, this.type);
+    	
+    	if (this.Contains(meta::compareName)) throw new Exception("Cannot create a new entity, the name is already in use.");
+
+    	meta.setCreated(new Date());
+    	
+    	return meta;
 	}
 	
-	public T Add(T entity) {
+	public T Add(T entity) throws Exception {
+    	if (this.Contains(entity::compareName)) throw new Exception("Cannot create a new entity, the name is already in use.");
+    	
 		this.entities.add(entity);
-		
+
+    	entity.setCreated(new Date());
+    	
 		return entity;
 	}
 	
 	public void Remove(T entity) {
 		this.entities.remove(entity);
+	}
+
+	public void Remove(String uuid) throws Exception {
+    	T meta = this.Get((e) -> e.getUuid().toString().equals(uuid));
+    	
+    	if (meta == null) throw new Exception("Cannot delete the entity, it does not exist.");
+    	
+    	this.Remove(meta);
+	}
+
+	public void Remove(UUID uuid) throws Exception {
+    	this.Remove(uuid.toString());
+	}
+	
+	public T Update(T curr) throws Exception {
+    	T prev = this.Get(curr::compareUuid);
+    	
+    	if (prev == null) throw new Exception("Cannot update the entity, it does not exist.");
+
+    	prev.setCreated(curr.getCreated());
+    	prev.setDescription(curr.getDescription());
+    	prev.setName(curr.getName());
+    	
+    	return prev;
 	}
 	
 	public void Save() throws JsonGenerationException, JsonMappingException, IOException {

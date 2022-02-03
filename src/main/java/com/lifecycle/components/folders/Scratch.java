@@ -1,4 +1,4 @@
-package com.lifecycle.components;
+package com.lifecycle.components.folders;
 
 import java.io.File;
 import java.io.IOException;

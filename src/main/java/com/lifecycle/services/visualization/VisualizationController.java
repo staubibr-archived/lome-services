@@ -14,11 +14,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.components.FilesResponse;
 import com.components.RestResponse;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lifecycle.components.Controller;
+import com.lifecycle.components.Entities;
+import com.lifecycle.components.entities.Entity;
 
 @RestController
 public class VisualizationController extends Controller {
@@ -26,8 +29,9 @@ public class VisualizationController extends Controller {
     private final VisualizationService vService;
     
     @Autowired
-    public VisualizationController(VisualizationService mService) {
-        this.vService = mService;
+    public VisualizationController(VisualizationService vService) {
+		this.vService = vService;
+
     }
     
 	@PostMapping(path="/api/visualization", consumes={ MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
@@ -37,7 +41,7 @@ public class VisualizationController extends Controller {
 			    		   @RequestPart(value = "data", required = false) List<MultipartFile> data, 
     					   @RequestPart("meta") String vMeta) throws Exception {
 				
-    	return this.vService.Publish(vMeta, visualization, structure, messages, data).Json();
+    	return this.vService.Publish(vMeta, visualization, structure, messages, data).json();
     }
 
 	@DeleteMapping(path="/api/visualization")
@@ -54,11 +58,24 @@ public class VisualizationController extends Controller {
     	return FilesResponse.build("visualization.zip", files);
 	}
 	
-	@GetMapping(path="/api/visualization/list")
+	@GetMapping(path="/api/visualization/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<byte[]> get() throws Exception {
     	File file = this.vService.List();
 
     	return FilesResponse.build(file);
+	}
+	
+	@GetMapping(path="/api/visualization/list", produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView getHtml() throws Exception {
+		ModelAndView mv = new ModelAndView();
+		Entities<Entity> entities = this.vService.Entities();
+		
+        mv.addObject("entities", entities.entities);
+        mv.addObject("title", "Visualization list");
+        mv.addObject("link", "http://localhost:8080/api/visualization?uuid=");
+        mv.setViewName("lifecycle/list-visualization");
+        
+        return mv;
 	}
 	
 	@PutMapping(path="/api/visualization")

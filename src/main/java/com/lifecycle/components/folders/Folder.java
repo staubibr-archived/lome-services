@@ -1,7 +1,9 @@
-package com.lifecycle.components;
+package com.lifecycle.components.folders;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -9,12 +11,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.components.ZipFile;
 
 public class Folder {
 
@@ -53,25 +52,40 @@ public class Folder {
 	public Folder(String first, UUID uuid) throws IOException {		
 		this(Paths.get(first, uuid.toString()));
 	}
-	
-	public void Copy(MultipartFile f, String file_name, Boolean overwrite) throws IOException {
+
+	public void copy(InputStream f, String file_name) throws IOException {
 		Path copy_path = Paths.get(folder.toString(), file_name);
-		File copy_file = new File(copy_path.toString());
 
-		if (!overwrite && copy_file.exists()) throw new IOException("Cannot copy file " + copy_file.toString() + ", it already exists.");
+		java.nio.file.Files.copy(f, copy_path, StandardCopyOption.REPLACE_EXISTING);
 		
-		java.nio.file.Files.copy(f.getInputStream(), copy_path, StandardCopyOption.REPLACE_EXISTING);
+		f.close();
 	}
 
-	public void Copy(MultipartFile f, Boolean overwrite) throws IOException {		
-		this.Copy(f, f.getOriginalFilename(), overwrite);
+	public void copy(MultipartFile f) throws IOException {
+		this.copy(f.getInputStream(), f.getOriginalFilename());
 	}
 
-	public void Copy(List<MultipartFile> files, Boolean overwrite) throws IOException {
-		for (MultipartFile f : files) this.Copy(f, overwrite);
+	public void copy(File f) throws IOException {
+		this.copy(new FileInputStream(f), f.getName());
+	}
+
+	public void copy(MultipartFile f, String file_name) throws IOException {
+		this.copy(f.getInputStream(), file_name);
+	}
+
+	public void copy(File f, String file_name) throws IOException {
+		this.copy(new FileInputStream(f), file_name);
 	}
 	
-	public void Delete() throws IOException {
+	public Folder makeFolder(String name) throws IOException {
+		Path path = this.path(name);
+		
+		path.toFile().mkdirs();
+		
+		return new Folder(path);
+	}
+	
+	public void delete() throws IOException {
 		File directory = new File(folder.toString());
 		
 		if (!directory.exists()) throw new IOException("Cannot delete folder " + folder.toString() + ", it does not exist.");
@@ -81,25 +95,27 @@ public class Folder {
 		directory.delete();
 	}
 	
-	public Path Path(String file_name) {
+	public Path path(String... file_name) {
 		return Paths.get(folder.toString(), file_name);
 	}
 	
-	public File Get(String file_name) {
-		return new File(Path(file_name).toString());
-	}
-	
-	public List<File> Get() {
+	public List<File> files() {
 		File folder = new File(this.folder.toString());
 		
 		return new ArrayList<>(Arrays.asList(folder.listFiles()));
 	}
 	
-	public List<File> Get(String ... file_names) {
-	    return Arrays.asList(file_names).stream().map(f -> Get(f)).collect(Collectors.toList());
+	public List<File> files(String ... file_names) {
+		File folder = path(file_names).toFile();
+
+		return new ArrayList<>(Arrays.asList(folder.listFiles()));
 	}
 	
-	public ZipFile Zip(String ... file_names) throws IOException {
-    	return new ZipFile(Get(file_names));
+	public File file(String file_name) {
+		return new File(path(file_name).toString());
+	}
+	
+	public File file(String... file_name) {		
+		return new File(path(file_name).toString());
 	}
 }

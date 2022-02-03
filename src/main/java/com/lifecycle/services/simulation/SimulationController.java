@@ -1,7 +1,5 @@
 package com.lifecycle.services.simulation;
 
-import java.io.IOException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -13,11 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.components.FilesResponse;
 import com.components.ZipFile;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.lifecycle.components.Controller;
 
 @RestController
-public class SimulationController {
+public class SimulationController extends Controller {
 
 	@Value("${app.folders.scratch}")
 	private String APP_FOLDERS_SCRATCH;
@@ -37,6 +34,6 @@ public class SimulationController {
 
     	ZipFile zf = this.sService.SimulateZip(f_config, n_iterations, n_duration);
 		
-    	return FilesResponse.build("results.zip", zf.toByteArray());
+    	return FilesResponse.build("simulation_results.zip", zf.toByteArray());
     }
 }

@@ -1,0 +1,25 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-3.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<link th:href="@{/static/css/main.css}" rel="stylesheet"/>
+	</head>
+
+	<body>
+		<h1 th:text="${title}"></h1>
+		
+		<ul class="row">
+			<li th:each="entity : ${entities}">
+				<div class="row tight">
+					<label>UUID: </label>
+					<a class="link" th:text="${entity.uuid.toString()}" th:href="${link + entity.uuid.toString()}" target="_blank"></a>
+				</div>
+				<div class="row tight"><label>Name: </label><span th:text="${entity.name}"></span></div>
+				<div class="row tight"><label>Description: </label><span th:text="${entity.description}"></span></div>
+				<div class="row tight"><label>Date created: </label><span th:text="${entity.created}"></span></div>
+				<div class="row tight">
+					<a class="link" th:href="'http://localhost:81/app-embed/index.html?uuid=' + ${entity.uuid.toString()}" target="_blank">show in viewer</a>
+				</div>
+			</li>
+		</ul>
+	</body>
+</html>

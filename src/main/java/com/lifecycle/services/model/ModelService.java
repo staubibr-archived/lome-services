@@ -1,9 +1,10 @@
 package com.lifecycle.services.model;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Paths;
-import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,85 +13,84 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.lifecycle.components.Folder;
-import com.lifecycle.components.Scratch;
-import com.lifecycle.util.Entities;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lifecycle.components.Entities;
+import com.lifecycle.components.entities.Entity;
+import com.lifecycle.components.entities.Model;
+import com.lifecycle.components.folders.Folder;
+import com.lifecycle.components.folders.Scratch;
 
 @Service
 public class ModelService {
-		
+	
 	@Value("${app.folders.models}")
 	private String APP_FOLDERS_MODELS;
-
+	
 	@Value("${app.models}")
 	private String APP_MODELS;
-		
+
     @Autowired
-	public ModelService() throws JsonParseException, JsonMappingException, IOException {
+	public ModelService() {
 
 	}
 	
     public File List() throws IOException {
     	return new File(APP_MODELS);
     }
+	
+    public Entities<Entity> Entities() throws JsonParseException, JsonMappingException, IOException {
+    	return new Entities<Entity>(APP_MODELS, Entity.class); 
+    }
     
-    public ModelMeta Publish(String sMeta, MultipartFile model) throws Exception {
-    	Entities<ModelMeta> models = new Entities<ModelMeta>(APP_MODELS, ModelMeta.class); 
+    public File GetFile(String uuid) throws IOException {
+    	Folder folder = new Folder(APP_FOLDERS_MODELS, uuid);
     	
-    	ModelMeta meta = models.Make(sMeta);
-		
-    	if (models.Contains(meta::CompareName)) throw new Exception("Cannot create a new model, the name is already in use.");
-
+    	return folder.file("model.json");
+    }
+    
+    public Model GetModel(String uuid) throws IOException {
+    	ObjectMapper om = new ObjectMapper();
+    	
+    	return om.readValue(this.GetFile(uuid), Model.class);
+    }
+    
+    public Entity Publish(String sMeta, MultipartFile model) throws Exception {
+    	ObjectMapper om = new ObjectMapper();
+    	Model mm = om.readValue(model.getInputStream(), Model.class);
+    	
+    	Entities<Entity> models = new Entities<Entity>(APP_MODELS, Entity.class); 
+    	Entity published = models.Add(Entity.fromJson(sMeta));
 		Scratch scratch = new Scratch(APP_FOLDERS_MODELS);
 		
-    	meta.setUuid(scratch.uuid);
-    	meta.setCreated(new Date());
-
-    	models.Add(meta);
+		mm.setIdentifier(scratch.uuid.toString());
+		published.setUuid(scratch.uuid);
+		
     	models.Save();
     	
-		scratch.Copy(model, "model.json", false);
+    	File file = new File(scratch.path("model.json").toString());
+    	om.writeValue(file, mm);
 		
-		return meta;
+		return published;
     }
 	
     public void Delete(String uuid) throws Exception {
-    	Entities<ModelMeta> models = new Entities<ModelMeta>(APP_MODELS, ModelMeta.class); 
+    	Entities<Entity> models = new Entities<Entity>(APP_MODELS, Entity.class); 
 
-    	ModelMeta meta = models.Get((m) -> m.getUuid().toString().equals(uuid));
-    	
-    	if (meta == null) throw new Exception("Cannot delete the model, it does not exist.");
-    	
-    	models.Remove(meta);
+    	models.Remove(uuid);
     	
     	Folder folder = new Folder(Paths.get(APP_FOLDERS_MODELS, uuid));
 
     	models.Save();
-    	folder.Delete();
+    	folder.delete();
     }
-    
-    public File Get(String uuid) throws IOException {
-    	Folder folder = new Folder(APP_FOLDERS_MODELS, uuid);
-    	
-    	return folder.Get("model.json");
-    }
-    
+	    
     public void Update(String sMeta, MultipartFile model) throws Exception {
-    	Entities<ModelMeta> models = new Entities<ModelMeta>(APP_MODELS, ModelMeta.class); 
-    	
-    	ModelMeta curr = models.Make(sMeta);
-    	ModelMeta prev = models.Get(curr::CompareUuid);
-    	
-    	if (prev == null) throw new Exception("Cannot update the model, it does not exist.");
-
-    	Folder folder = new Folder(APP_FOLDERS_MODELS, prev.getUuid());
-    	
-    	prev.setCreated(curr.getCreated());
-    	prev.setDescription(curr.getDescription());
-    	prev.setName(curr.getName());
+    	Entities<Entity> models = new Entities<Entity>(APP_MODELS, Entity.class); 
+    	Entity updated = models.Update(Entity.fromJson(sMeta));
+    	Folder folder = new Folder(APP_FOLDERS_MODELS, updated.getUuid());
     	
     	models.Save();
 
-    	if (model != null) folder.Copy(model, "model.json", true);
+    	if (model != null) folder.copy(model, "model.json");
     }
 }

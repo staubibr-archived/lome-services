@@ -1,7 +1,8 @@
 package com.lifecycle.services.simulation;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.components.ZipFile;
-import com.lifecycle.components.Scratch;
+import com.lifecycle.components.folders.Folder;
+import com.lifecycle.components.folders.Scratch;
+import com.lifecycle.components.processes.SimulationProcess;
 
 @Service
 public class SimulationService {
@@ -26,22 +29,23 @@ public class SimulationService {
     	
 	}
     
-	public List<File> Simulate(Scratch scratch, MultipartFile f_config, Long iterations, Double duration) throws Exception {		
-		scratch.Copy(f_config, "simulation.json", false);
-    	
-		String command = this.SIMULATOR + " " + scratch.Path("simulation.json").toString() + " " + scratch.folder.toString();
+	public List<File> Simulate(Folder scratch, InputStream config, Long iterations, Double duration) throws Exception {
+		SimulationProcess p = new SimulationProcess(SIMULATOR);
+		
+		return p.execute(scratch, config, iterations, duration);
+	}
+    
 
-		if (iterations != null) command = command + " " + iterations.toString();
-
-		else if (duration != null) command = command + " " + duration.toString();
+	public List<File> Simulate(Folder scratch, File config, Long iterations, Double duration) throws Exception {
+		SimulationProcess p = new SimulationProcess(SIMULATOR);
 		
-		int exit = Runtime.getRuntime().exec(command).waitFor();
+		return p.execute(scratch, new FileInputStream(config), iterations, duration);
+	}
+    
+	public List<File> Simulate(Folder scratch, MultipartFile config, Long iterations, Double duration) throws Exception {
+		SimulationProcess p = new SimulationProcess(SIMULATOR);
 		
-		if (exit != 0) throw new Exception("Unable to execute the simulation.");
-		
-		List<File> files = scratch.Get("structure.json", "messages.log");
-		
-		return files;
+		return p.execute(scratch, config.getInputStream(), iterations, duration);
 	}
 	
 	public ZipFile SimulateZip(MultipartFile f_config, Long iterations, Double duration) throws Exception {
@@ -49,7 +53,7 @@ public class SimulationService {
     	List<File> files = this.Simulate(scratch, f_config, iterations, duration);
     	ZipFile zf = new ZipFile(files);
 		
-		scratch.Delete();
+		scratch.delete();
 		
 		return zf;
 	}

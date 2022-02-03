@@ -1,7 +1,6 @@
 package com.lifecycle.services.workflow;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +14,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.components.FilesResponse;
 import com.components.RestResponse;
 import com.components.ZipFile;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lifecycle.components.Controller;
+import com.lifecycle.components.Entities;
+import com.lifecycle.components.entities.Entity;
 
 @RestController
 public class WorkflowController extends Controller {
@@ -41,14 +41,14 @@ public class WorkflowController extends Controller {
 
     	ZipFile zf = this.wService.ExecuteZip(uuid, data);
 		
-    	return FilesResponse.build("results.zip", zf.toByteArray());
+    	return FilesResponse.build("workflow_results.zip", zf.toByteArray());
     }
     
 	@PostMapping(path="/api/workflow", consumes={ MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
     public ObjectNode post(@RequestPart("workflow") MultipartFile workflow, 
     					   @RequestPart("meta") String sMeta) throws Exception {
 				
-    	return this.wService.Publish(sMeta, workflow).Json();
+    	return this.wService.Publish(sMeta, workflow).json();
     }
 
 	@DeleteMapping(path="/api/workflow")
@@ -65,11 +65,24 @@ public class WorkflowController extends Controller {
     	return FilesResponse.build(file);
 	}
 	
-	@GetMapping(path="/api/workflow/list")
+	@GetMapping(path="/api/workflow/list", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<byte[]> get() throws Exception {
     	File file = this.wService.List();
 
     	return FilesResponse.build(file);
+	}
+
+	@GetMapping(path="/api/workflow/list", produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView getHtml() throws Exception {
+		ModelAndView mv = new ModelAndView();
+		Entities<Entity> entities = this.wService.Entities();
+		
+        mv.addObject("entities", entities.entities);
+        mv.addObject("title", "Workflow list");
+        mv.addObject("link", "http://localhost:8080/api/workflow?uuid=");
+        mv.setViewName("lifecycle/list");
+        
+        return mv;
 	}
 	
 	@PutMapping(path="/api/workflow")
