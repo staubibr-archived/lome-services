@@ -2,6 +2,11 @@ package com.lifecycle.services.complete;
 
 import java.util.UUID;
 
+import org.springframework.web.bind.annotation.RequestPart;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonNode;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -9,9 +14,11 @@ import lombok.experimental.SuperBuilder;
 @Data
 @SuperBuilder
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CompleteInput {
 
 	UUID workflow_uuid;
+	JsonNode workflow_params;
 	Long simulation_iterations;
 	Double simulation_duration;
 	String visualization_name;

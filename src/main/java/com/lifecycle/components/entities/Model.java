@@ -1,5 +1,6 @@
 package com.lifecycle.components.entities;
 
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -69,7 +70,7 @@ public class Model {
 	@JsonDeserialize(using = Deserializer.class, contentAs = String.class)
 	private List<String> license;
 	
-	private String created;
+	private Date created;
 
 	@JsonSerialize(using = Serializer.class)
 	@JsonDeserialize(using = Deserializer.class, contentAs = String.class)

@@ -19,6 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.components.FilesResponse;
 import com.components.RestResponse;
 import com.components.ZipFile;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lifecycle.components.Controller;
 import com.lifecycle.components.Entities;
@@ -36,10 +37,11 @@ public class WorkflowController extends Controller {
     
     @PostMapping("/api/workflow/execute")
     public ResponseEntity<byte[]> execute(@RequestPart("uuid") String uuid,
- 		   								  @RequestPart(value = "data") List<MultipartFile> data) 
+ 		   								  @RequestPart(value = "data") List<MultipartFile> data,
+ 		   								  @RequestPart(value = "params", required = false) JsonNode params) 
     								   			   throws Exception {    	
 
-    	ZipFile zf = this.wService.ExecuteZip(uuid, data);
+    	ZipFile zf = this.wService.ExecuteZip(uuid, data, params);
 		
     	return FilesResponse.build("workflow_results.zip", zf.toByteArray());
     }

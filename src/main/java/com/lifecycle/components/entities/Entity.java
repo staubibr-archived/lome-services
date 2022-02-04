@@ -27,6 +27,25 @@ public class Entity {
     
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date created;
+
+    public Entity(UUID uuid, String name, String description, Date created) {    	
+    	this.uuid = uuid;
+    	this.name = name;
+    	this.description = description;
+    	this.created = created;
+    }
+
+    public Entity(UUID uuid, String name, String description) {    	
+    	this(uuid, name, description, null);
+    }
+
+    public Entity(String s_uuid, String name, String description, Date created) {    	
+    	this(s_uuid == null ? null: UUID.fromString(s_uuid), name, description, created);
+    }
+
+    public Entity(String s_uuid, String name, String description) {    	
+    	this(s_uuid, name, description, null);
+    }
     
     public Boolean compareName(Entity m) {
     	return this.getName().equals(m.getName());

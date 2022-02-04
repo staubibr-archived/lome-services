@@ -1,10 +1,9 @@
 package com.lifecycle.services.model;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Paths;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,16 +53,23 @@ public class ModelService {
     	return om.readValue(this.GetFile(uuid), Model.class);
     }
     
-    public Entity Publish(String sMeta, MultipartFile model) throws Exception {
-    	ObjectMapper om = new ObjectMapper();
-    	Model mm = om.readValue(model.getInputStream(), Model.class);
-    	
+    public Entity Publish(MultipartFile model) throws Exception {
     	Entities<Entity> models = new Entities<Entity>(APP_MODELS, Entity.class); 
-    	Entity published = models.Add(Entity.fromJson(sMeta));
 		Scratch scratch = new Scratch(APP_FOLDERS_MODELS);
 		
-		mm.setIdentifier(scratch.uuid.toString());
-		published.setUuid(scratch.uuid);
+    	ObjectMapper om = new ObjectMapper();
+    	Model mm;
+    	
+    	try {
+        	mm = om.readValue(model.getInputStream(), Model.class);
+    	}
+    	catch (Exception ex) {
+    		throw new Exception("Unable to parse model metadata file, invalid format.");
+    	}
+
+    	mm.setIdentifier(scratch.uuid.toString());
+		
+		Entity published = models.Add(new Entity(scratch.uuid, mm.getTitle().get(0), mm.getDescription().get(0)));
 		
     	models.Save();
     	
@@ -84,9 +90,19 @@ public class ModelService {
     	folder.delete();
     }
 	    
-    public void Update(String sMeta, MultipartFile model) throws Exception {
-    	Entities<Entity> models = new Entities<Entity>(APP_MODELS, Entity.class); 
-    	Entity updated = models.Update(Entity.fromJson(sMeta));
+    public void Update(String uuid, MultipartFile model) throws Exception {
+    	ObjectMapper om = new ObjectMapper();
+    	Model mm;
+    	
+    	try {
+        	mm = om.readValue(model.getInputStream(), Model.class);
+    	}
+    	catch (Exception ex) {
+    		throw new Exception("Unable to parse model metadata file, invalid format.");
+    	}
+    	
+    	Entities<Entity> models = new Entities<Entity>(APP_MODELS, Entity.class);
+		Entity updated = models.Update(new Entity(UUID.fromString(uuid), mm.getTitle().get(0), mm.getDescription().get(0), mm.getCreated()));
     	Folder folder = new Folder(APP_FOLDERS_MODELS, updated.getUuid());
     	
     	models.Save();

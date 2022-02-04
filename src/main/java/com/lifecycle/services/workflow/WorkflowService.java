@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.components.ZipFile;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.lifecycle.components.Entities;
 import com.lifecycle.components.entities.Entity;
 import com.lifecycle.components.folders.Folder;
@@ -86,15 +87,15 @@ public class WorkflowService {
     	if (workflow != null) folder.copy(workflow, "workflow.json");
     }
     
-	public List<File> Execute(Folder scratch, String uuid, List<MultipartFile> data) throws Exception {		
+	public List<File> Execute(Folder scratch, String uuid, List<MultipartFile> data, JsonNode params) throws Exception {		
 		PythonProcess p = new PythonProcess(PYTHON);
 
-		return p.execute(scratch, this.Get(uuid), data);
+		return p.execute(scratch, this.Get(uuid), data, params);
 	}
 	
-	public ZipFile ExecuteZip(String uuid, List<MultipartFile> data) throws Exception {
+	public ZipFile ExecuteZip(String uuid, List<MultipartFile> data, JsonNode params) throws Exception {
     	Scratch scratch = new Scratch(APP_FOLDERS_SCRATCH);
-    	List<File> files = this.Execute(scratch, uuid, data);
+    	List<File> files = this.Execute(scratch, uuid, data, params);
     	ZipFile zf = new ZipFile(files);
 		
 		scratch.delete();

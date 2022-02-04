@@ -34,10 +34,9 @@ public class ModelController extends Controller {
     }
         
 	@PostMapping(path="/api/model", consumes={ MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public ObjectNode post(@RequestPart("model") MultipartFile model, 
-    					   @RequestPart("meta") String mMeta) throws Exception {
+    public ObjectNode post(@RequestPart("model") MultipartFile model) throws Exception {
 		
-		return this.mService.Publish(mMeta, model).json();
+		return this.mService.Publish(model).json();
     }
 
 	@DeleteMapping(path="/api/model")
@@ -86,9 +85,8 @@ public class ModelController extends Controller {
 	}
 	
 	@PutMapping(path="/api/model")
-    public ResponseEntity<RestResponse> put(@RequestPart("meta") String mMeta, 
-    								  		@RequestPart(value = "model", required = false) MultipartFile model) throws Exception {
-    	this.mService.Update(mMeta, model);
+    public ResponseEntity<RestResponse> put(@RequestPart(value = "uuid", required = true) String uuid, @RequestPart(value = "model", required = false) MultipartFile model) throws Exception {
+    	this.mService.Update(uuid, model);
 
     	return this.handleSuccess();
 	}

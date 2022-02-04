@@ -46,7 +46,7 @@ public class CompleteController extends Controller {
 		Folder wFolder = scratch.makeFolder("workflow");
 		Folder sFolder = scratch.makeFolder("simulation");
 		
-		this.wService.Execute(wFolder, params.workflow_uuid.toString(), data);
+		this.wService.Execute(wFolder, params.workflow_uuid.toString(), data, params.workflow_params);
 		
 		this.sService.Simulate(sFolder, wFolder.file("output", "auto_coupled.json"), params.simulation_iterations, params.simulation_duration);
 		
