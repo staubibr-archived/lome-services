@@ -1,6 +1,7 @@
 package com.lifecycle.services.workflow;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,13 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.components.FilesResponse;
-import com.components.RestResponse;
-import com.components.ZipFile;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lifecycle.components.Controller;
 import com.lifecycle.components.Entities;
+import com.lifecycle.components.FilesResponse;
+import com.lifecycle.components.RestResponse;
+import com.lifecycle.components.ZipFile;
 import com.lifecycle.components.entities.Entity;
 
 @RestController
@@ -34,35 +35,15 @@ public class WorkflowController extends Controller {
     public WorkflowController(WorkflowService wService) {
         this.wService = wService;
     }
-    
-    @PostMapping("/api/workflow/execute")
-    public ResponseEntity<byte[]> execute(@RequestPart("uuid") String uuid,
- 		   								  @RequestPart(value = "data") List<MultipartFile> data,
- 		   								  @RequestPart(value = "params", required = false) JsonNode params) 
-    								   			   throws Exception {    	
 
-    	ZipFile zf = this.wService.ExecuteZip(uuid, data, params);
-		
-    	return FilesResponse.build("workflow_results.zip", zf.toByteArray());
-    }
-    
-	@PostMapping(path="/api/workflow", consumes={ MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public ObjectNode post(@RequestPart("workflow") MultipartFile workflow, 
-    					   @RequestPart("meta") String sMeta) throws Exception {
-				
-    	return this.wService.Publish(sMeta, workflow).json();
-    }
+	@GetMapping(path="/api/workflow/{uuid}", produces=MediaType.APPLICATION_JSON_VALUE)
+    public Entity get(@PathVariable("uuid") String uuid) throws Exception {
+    	return this.wService.Read(uuid);
+	}
 
-	@DeleteMapping(path="/api/workflow")
-    public ResponseEntity<RestResponse> delete(@RequestPart("uuid") String uuid) throws Exception {
-    	this.wService.Delete(uuid);
-    	
-    	return this.handleSuccess();
-    }
-	
-	@GetMapping(path="/api/workflow")
-    public ResponseEntity<byte[]> get(@RequestParam("uuid") String uuid) throws Exception {
-    	File file = this.wService.Get(uuid);
+	@GetMapping(path="/api/workflow/{uuid}/file", produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<byte[]> getFile(@PathVariable("uuid") String uuid) throws Exception {
+    	File file = this.wService.ReadFile(uuid);
 
     	return FilesResponse.build(file);
 	}
@@ -73,25 +54,68 @@ public class WorkflowController extends Controller {
 
     	return FilesResponse.build(file);
 	}
+    
+	@PostMapping(path="/api/workflow", consumes={ MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public ObjectNode post(@RequestPart MultipartFile workflow,
+    					   @RequestPart List<MultipartFile> data,
+						   @RequestParam(required = false) String name,
+						   @RequestParam(required = false) String description) throws Exception {
+    	return this.wService.Create(name, description, workflow, data).json();
+    }
 
-	@GetMapping(path="/api/workflow/list", produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getHtml() throws Exception {
-		ModelAndView mv = new ModelAndView();
-		Entities<Entity> entities = this.wService.Entities();
+    @PostMapping(path = "/api/workflow/{uuid}/execute", consumes={ MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public ResponseEntity<byte[]> execute(@PathVariable String uuid,
+    									  @RequestParam(required = false) String params) throws Exception {    	
+    	ZipFile zf = this.wService.ExecuteZip(uuid, params);
 		
-        mv.addObject("entities", entities.entities);
-        mv.addObject("title", "Workflows");
-        mv.addObject("link", "http://localhost:8080/api/workflow?uuid=");
-        mv.setViewName("lifecycle/list");
+    	return FilesResponse.build("workflow_results.zip", zf.toByteArray());
+    }
+	
+	@DeleteMapping(path="/api/workflow/{uuid}")
+    public ResponseEntity<RestResponse> delete(@PathVariable String uuid) throws Exception {
+    	this.wService.Delete(uuid);
+    	
+    	return this.handleSuccess();
+    }
+
+	@PutMapping(path="/api/workflow/{uuid}")
+    public ObjectNode put(@PathVariable String uuid,
+						  @RequestParam(required = false) MultipartFile workflow,
+						  @RequestParam(required = false) List<MultipartFile> data,
+						  @RequestParam(required = false) String name,
+						  @RequestParam(required = false) String description,
+						  @RequestParam(required = false) Date created) throws Exception {
+		return this.wService.Update(uuid, name, description, created, workflow, data).json();
+	}
+
+	/// HTML Endpoints
+	@GetMapping(path="/api/workflow", produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView postHtml() throws Exception {
+		ModelAndView mv = new ModelAndView();
+
+        mv.setViewName("lifecycle/workflow-publish");
         
         return mv;
 	}
 	
-	@PutMapping(path="/api/workflow")
-    public ResponseEntity<RestResponse> put(@RequestPart("meta") String sMeta, 
-    								  		@RequestPart(value = "workflow", required = false) MultipartFile workflow) throws Exception {
-    	this.wService.Update(sMeta, workflow);
+	@GetMapping(path="/api/workflow/list", produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView getList() throws Exception {
+		ModelAndView mv = new ModelAndView();
+		Entities<Entity> entities = this.wService.Entities();
+		
+        mv.addObject("entities", entities.entities);
+        mv.setViewName("lifecycle/workflow-list");
+        
+        return mv;
+	}
+	
+	@GetMapping(path="/api/workflow/{uuid}/execute", produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView executeHtml(@PathVariable(value="uuid") String uuid) throws Exception {
+		ModelAndView mv = new ModelAndView();
 
-    	return this.handleSuccess();
+        mv.addObject("uuid", uuid);
+        mv.setViewName("lifecycle/workflow-execute");
+        
+        return mv;
 	}
 }

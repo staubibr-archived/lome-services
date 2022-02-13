@@ -2,8 +2,7 @@ package com.lifecycle.services.model;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.UUID;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +16,7 @@ import com.lifecycle.components.Entities;
 import com.lifecycle.components.entities.Entity;
 import com.lifecycle.components.entities.Model;
 import com.lifecycle.components.folders.Folder;
-import com.lifecycle.components.folders.Scratch;
+import com.lifecycle.components.folders.UuidFolder;
 
 @Service
 public class ModelService {
@@ -33,80 +32,61 @@ public class ModelService {
 
 	}
 	
-    public File List() throws IOException {
-    	return new File(APP_MODELS);
-    }
-	
     public Entities<Entity> Entities() throws JsonParseException, JsonMappingException, IOException {
     	return new Entities<Entity>(APP_MODELS, Entity.class); 
     }
+	
+    public File List() throws IOException {
+    	return new File(APP_MODELS);
+    }
     
-    public File GetFile(String uuid) throws IOException {
+    public Entity Create(String name, String description, MultipartFile model) throws Exception {
+    	Entities<Entity> models = new Entities<Entity>(APP_MODELS, Entity.class); 
+		UuidFolder scratch = new UuidFolder(APP_FOLDERS_MODELS);
+		Entity entity = models.Add(new Entity(scratch.uuid, name, description));
+		
+    	models.Save();
+		scratch.copy(model, "model.json");
+    	
+		return entity;
+    }
+    
+    public Entity Read(String uuid) throws Exception {
+		Entities<Entity> models = Entities(); 
+    	
+		return models.Get((e) -> e.getUuid().toString().equals(uuid));
+    }
+    
+    public File ReadFile(String uuid) throws Exception {
     	Folder folder = new Folder(APP_FOLDERS_MODELS, uuid);
     	
     	return folder.file("model.json");
     }
     
-    public Model GetModel(String uuid) throws IOException {
+    public Model ReadModel(String uuid) throws Exception {
     	ObjectMapper om = new ObjectMapper();
     	
-    	return om.readValue(this.GetFile(uuid), Model.class);
+    	return om.readValue(this.ReadFile(uuid), Model.class);
     }
     
-    public Entity Publish(MultipartFile model) throws Exception {
-    	Entities<Entity> models = new Entities<Entity>(APP_MODELS, Entity.class); 
-		Scratch scratch = new Scratch(APP_FOLDERS_MODELS);
+	public Entity Update(String uuid, String name, String description, Date created, MultipartFile model) throws Exception {
+		Entities<Entity> models = Entities(); 
+		Entity updated = models.Update(new Entity(uuid, name, description, created));
+		Folder folder = new Folder(APP_FOLDERS_MODELS, uuid);
 		
-    	ObjectMapper om = new ObjectMapper();
-    	Model mm;
-    	
-    	try {
-        	mm = om.readValue(model.getInputStream(), Model.class);
-    	}
-    	catch (Exception ex) {
-    		throw new Exception("Unable to parse model metadata file, invalid format.");
-    	}
-
-    	mm.setIdentifier(scratch.uuid.toString());
+		models.Save();
+	
+		if (model != null) folder.copy(model, "model.json");
 		
-		Entity published = models.Add(new Entity(scratch.uuid, mm.getTitle().get(0), mm.getDescription().get(0)));
-		
-    	models.Save();
-    	
-    	File file = new File(scratch.path("model.json").toString());
-    	om.writeValue(file, mm);
-		
-		return published;
-    }
+		return updated;
+	}
 	
     public void Delete(String uuid) throws Exception {
-    	Entities<Entity> models = new Entities<Entity>(APP_MODELS, Entity.class); 
+		Entities<Entity> models = Entities(); 
+    	Folder folder = new Folder(APP_FOLDERS_MODELS, uuid);
 
-    	models.Remove(uuid);
-    	
-    	Folder folder = new Folder(Paths.get(APP_FOLDERS_MODELS, uuid));
-
-    	models.Save();
     	folder.delete();
-    }
-	    
-    public void Update(String uuid, MultipartFile model) throws Exception {
-    	ObjectMapper om = new ObjectMapper();
-    	Model mm;
-    	
-    	try {
-        	mm = om.readValue(model.getInputStream(), Model.class);
-    	}
-    	catch (Exception ex) {
-    		throw new Exception("Unable to parse model metadata file, invalid format.");
-    	}
-    	
-    	Entities<Entity> models = new Entities<Entity>(APP_MODELS, Entity.class);
-		Entity updated = models.Update(new Entity(UUID.fromString(uuid), mm.getTitle().get(0), mm.getDescription().get(0), mm.getCreated()));
-    	Folder folder = new Folder(APP_FOLDERS_MODELS, updated.getUuid());
-    	
+    	models.Remove(uuid);
     	models.Save();
-
-    	if (model != null) folder.copy(model, "model.json");
     }
 }

@@ -1,5 +1,6 @@
-package com.components;
+package com.lifecycle.components;
 
+import java.io.IOException;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -19,4 +20,13 @@ public class RestResponse {
     private int status;
     private String message;
     private String path;
+
+	public static RestResponse build(int status, String message, String path, Date timestamp) throws IOException {
+		return RestResponse.builder()
+						   .status(status)
+						   .message(message)
+						   .path(path)
+						   .timestamp(timestamp)
+						   .build();
+	}
 }

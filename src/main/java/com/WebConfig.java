@@ -50,7 +50,8 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
       if (!registry.hasMappingForPattern("/static/css/**")) {
-         registry.addResourceHandler("/static/css/**").addResourceLocations("classpath:/static/css/");
+          registry.addResourceHandler("/static/css/**").addResourceLocations("classpath:/static/css/");
+          registry.addResourceHandler("/static/js/**").addResourceLocations("classpath:/static/js/");
       }
     }
 }

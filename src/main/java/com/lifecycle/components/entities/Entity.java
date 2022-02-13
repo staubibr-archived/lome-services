@@ -56,9 +56,9 @@ public class Entity {
     }
 	
     public void update(Entity meta) {
-    	this.setName(name);
-    	this.setDescription(description);
-    	this.setCreated(created);
+    	if (meta.getName() != null) this.setName(meta.getName());
+    	if (meta.getDescription() != null) this.setDescription(meta.getDescription());
+    	if (meta.getCreated() != null) this.setCreated(meta.getCreated());
     }
     
 	public ObjectNode json() {

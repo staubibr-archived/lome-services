@@ -1,12 +1,14 @@
 package com.lifecycle.services.model;
 
 import java.io.File;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.components.FilesResponse;
-import com.components.RestResponse;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lifecycle.components.Controller;
 import com.lifecycle.components.Entities;
+import com.lifecycle.components.FilesResponse;
+import com.lifecycle.components.RestResponse;
 import com.lifecycle.components.entities.Entity;
 import com.lifecycle.components.entities.Model;
 
@@ -32,62 +34,78 @@ public class ModelController extends Controller {
     public ModelController(ModelService mService) {
         this.mService = mService;
     }
-        
-	@PostMapping(path="/api/model", consumes={ MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public ObjectNode post(@RequestPart("model") MultipartFile model) throws Exception {
-		
-		return this.mService.Publish(model).json();
-    }
+	
+	@GetMapping(path="/api/model/{uuid}", produces=MediaType.APPLICATION_JSON_VALUE)
+    public Entity getEntity(@PathVariable String uuid) throws Exception {
+    	return this.mService.Read(uuid);
+	}
+	
+	@GetMapping(path="/api/model/{uuid}/file", produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<byte[]> getFile(@PathVariable String uuid) throws Exception {
+    	File file = this.mService.ReadFile(uuid);
+    	
+    	return FilesResponse.build(file);
+	}
+	
+	@GetMapping(path="/api/model/list", produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<byte[]> get() throws Exception {
+    	File file = this.mService.List();
 
-	@DeleteMapping(path="/api/model")
-    public ResponseEntity<RestResponse> delete(@RequestPart("uuid") String uuid) throws Exception {
+    	return FilesResponse.build(file);
+	}
+	
+	@PostMapping(path="/api/model", consumes={ MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public ObjectNode post(@RequestPart MultipartFile model,
+						   @RequestParam(required = false) String name,
+						   @RequestParam(required = false) String description) throws Exception {
+		return this.mService.Create(name, description, model).json();
+    }
+	
+	@DeleteMapping(path="/api/model/{uuid}")
+    public ResponseEntity<RestResponse> delete(@PathVariable String uuid) throws Exception {
     	this.mService.Delete(uuid);
     	
     	return this.handleSuccess();
     }
 	
-	@GetMapping(path="/api/model", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<byte[]> get(@RequestParam("uuid") String uuid) throws Exception {
-    	File file = this.mService.GetFile(uuid);
-
-    	return FilesResponse.build(file);
+	@PutMapping(path="/api/model/{uuid}")
+    public ObjectNode put(@PathVariable String uuid, 
+						  @RequestParam(required = false) MultipartFile model,
+						  @RequestParam(required = false) String name,
+						  @RequestParam(required = false) String description,
+						  @RequestParam(required = false) Date created) throws Exception {
+    	return this.mService.Update(uuid, name, description, created, model).json();
 	}
 
+	/// HTML Endpoints
 	@GetMapping(path="/api/model", produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getHtml(@RequestParam("uuid") String uuid) throws Exception {
+    public ModelAndView getPublish() throws Exception {
 		ModelAndView mv = new ModelAndView();
-        Model model = this.mService.GetModel(uuid);
+
+        mv.setViewName("lifecycle/model-publish");
+        
+        return mv;
+	}
+
+	@GetMapping(path="/api/model/list", produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView getList() throws Exception {
+		ModelAndView mv = new ModelAndView();
+		Entities<Entity> entities = this.mService.Entities();
+		
+        mv.addObject("entities", entities.entities);
+        mv.setViewName("lifecycle/model-list");
+        
+        return mv;
+	}
+	
+	@GetMapping(path="/api/model/{uuid}", produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView getModel(@PathVariable(value="uuid") String uuid) throws Exception {
+		ModelAndView mv = new ModelAndView();
+        Model model = this.mService.ReadModel(uuid);
         
         mv.addObject("model", model);
         mv.setViewName("lifecycle/model");
         
         return mv;
     }
-	
-	@GetMapping(path="/api/model/list", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<byte[]> get() throws Exception {
-    	File file = this.mService.List();
-
-    	return FilesResponse.build(file);
-	}
-
-	@GetMapping(path="/api/model/list", produces = "text/html")
-    public ModelAndView getHtml() throws Exception {
-		ModelAndView mv = new ModelAndView();
-		Entities<Entity> entities = this.mService.Entities();
-		
-        mv.addObject("entities", entities.entities);
-        mv.addObject("title", "Models");
-        mv.addObject("link", "http://localhost:8080/api/model?uuid=");
-        mv.setViewName("lifecycle/list");
-        
-        return mv;
-	}
-	
-	@PutMapping(path="/api/model")
-    public ResponseEntity<RestResponse> put(@RequestPart(value = "uuid", required = true) String uuid, @RequestPart(value = "model", required = false) MultipartFile model) throws Exception {
-    	this.mService.Update(uuid, model);
-
-    	return this.handleSuccess();
-	}
 }

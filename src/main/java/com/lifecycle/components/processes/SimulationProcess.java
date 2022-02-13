@@ -17,18 +17,18 @@ public class SimulationProcess extends Process {
 	}
 
 	public List<File> execute(Folder scratch, InputStream config, Long iterations, Double duration) throws Exception {
-		Folder input = new Folder(scratch.path("input"), true);
-		Folder output = new Folder(scratch.path("output"), true);
+		Folder input = new Folder(scratch.path("input"));
+		Folder output = new Folder(scratch.path("output"));
 		
 		input.copy(config, "simulation.json");
 		
 		int exit;
 		
-		if (iterations != null) exit = this.execute(this.tool.toString(), input.file("simulation.json").toString(), output.folder.toString(), iterations.toString());
+		if (iterations != null) exit = this.execute(output, this.tool.toString(), input.file("simulation.json").toString(), output.path.toString(), iterations.toString());
 
-		else if (duration != null) exit = this.execute(this.tool.toString(), input.file("simulation.json").toString(), output.folder.toString(), duration.toString());
+		else if (duration != null) exit = this.execute(output, this.tool.toString(), input.file("simulation.json").toString(), output.path.toString(), duration.toString());
 		
-		else exit = this.execute(this.tool.toString(), input.file("simulation.json").toString(), output.folder.toString());
+		else exit = this.execute(output, this.tool.toString(), input.file("simulation.json").toString(), output.path.toString());
 
 		if (exit != 0) throw new Exception("Unable to execute the simulation.");
 				

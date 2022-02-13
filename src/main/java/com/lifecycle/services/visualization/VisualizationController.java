@@ -1,6 +1,7 @@
 package com.lifecycle.services.visualization;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,11 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.components.FilesResponse;
-import com.components.RestResponse;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lifecycle.components.Controller;
 import com.lifecycle.components.Entities;
+import com.lifecycle.components.FilesResponse;
+import com.lifecycle.components.RestResponse;
+import com.lifecycle.components.ZipFile;
 import com.lifecycle.components.entities.Entity;
 
 @RestController
@@ -31,31 +34,18 @@ public class VisualizationController extends Controller {
     @Autowired
     public VisualizationController(VisualizationService vService) {
 		this.vService = vService;
-
-    }
-    
-	@PostMapping(path="/api/visualization", consumes={ MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
-    public ObjectNode post(@RequestPart("visualization") MultipartFile visualization, 
-			    		   @RequestPart("structure") MultipartFile structure, 
-			    		   @RequestPart("messages") MultipartFile messages, 
-			    		   @RequestPart(value = "data", required = false) List<MultipartFile> data, 
-    					   @RequestPart("meta") String vMeta) throws Exception {
-				
-    	return this.vService.Publish(vMeta, visualization, structure, messages, data).json();
-    }
-
-	@DeleteMapping(path="/api/visualization")
-    public ResponseEntity<RestResponse> delete(@RequestPart("uuid") String uuid) throws Exception {
-    	this.vService.Delete(uuid);
-    	
-    	return this.handleSuccess();
     }
 	
-	@GetMapping(path="/api/visualization")
-    public ResponseEntity<byte[]> get(@RequestParam("uuid") String uuid) throws Exception {
-    	byte[] files = this.vService.Get(uuid).toByteArray();
+	@GetMapping(path="/api/visualization/{uuid}", produces=MediaType.APPLICATION_JSON_VALUE)
+    public Entity getEntity(@PathVariable String uuid) throws Exception {
+    	return this.vService.Read(uuid);
+	}
+
+	@GetMapping(path="/api/visualization/{uuid}/file", produces=MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<byte[]> getFile(@PathVariable String uuid) throws Exception {
+    	ZipFile zf = this.vService.ReadZipFile(uuid);
     	
-    	return FilesResponse.build("visualization.zip", files);
+    	return FilesResponse.build("visualization.zip", zf.toByteArray());
 	}
 	
 	@GetMapping(path="/api/visualization/list", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -64,29 +54,54 @@ public class VisualizationController extends Controller {
 
     	return FilesResponse.build(file);
 	}
+    
+	@PostMapping(path="/api/visualization", consumes={ MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE })
+    public ObjectNode post(@RequestPart MultipartFile visualization, 
+			    		   @RequestPart MultipartFile structure, 
+			    		   @RequestPart MultipartFile messages, 
+			    		   @RequestPart(required = false) List<MultipartFile> data,
+						   @RequestParam(required = false) String name,
+						   @RequestParam(required = false) String description) throws Exception {
+    	return this.vService.Create(name, description, visualization, structure, messages, data).json();
+    }
+
+	@DeleteMapping(path="/api/visualization/{uuid}")
+    public ResponseEntity<RestResponse> delete(@PathVariable String uuid) throws Exception {
+    	this.vService.Delete(uuid);
+    	
+    	return this.handleSuccess();
+    }
 	
-	@GetMapping(path="/api/visualization/list", produces = MediaType.TEXT_HTML_VALUE)
-    public ModelAndView getHtml() throws Exception {
+	@PutMapping(path="/api/visualization/{uuid}")
+    public ObjectNode put(@PathVariable String uuid, 
+			 		      @RequestPart(required = false) MultipartFile visualization, 
+			 		      @RequestPart(required = false) MultipartFile structure, 
+			 		      @RequestPart(required = false) MultipartFile messages, 
+			 		      @RequestPart(required = false) List<MultipartFile> data,
+						  @RequestParam(required = false) String name,
+						  @RequestParam(required = false) String description,
+						  @RequestParam(required = false) Date created) throws Exception {
+    	return this.vService.Update(uuid, name, description, created, visualization, structure, messages, data).json();
+	}
+
+	/// HTML Endpoints
+	@GetMapping(path="/api/visualization", produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView postHtml() throws Exception {
 		ModelAndView mv = new ModelAndView();
-		Entities<Entity> entities = this.vService.Entities();
-		
-        mv.addObject("entities", entities.entities);
-        mv.addObject("title", "Visualizations");
-        mv.addObject("link", "http://localhost:8080/api/visualization?uuid=");
-        mv.setViewName("lifecycle/list-visualization");
+
+        mv.setViewName("lifecycle/visualization-publish");
         
         return mv;
 	}
 	
-	@PutMapping(path="/api/visualization")
-    public ResponseEntity<RestResponse> put(@RequestPart("meta") String vMeta, 
-								 		    @RequestPart(value = "visualization", required = false) MultipartFile visualization, 
-								 		    @RequestPart(value = "structure", required = false) MultipartFile structure, 
-								 		    @RequestPart(value = "messages", required = false) MultipartFile messages, 
-								 		    @RequestPart(value = "data", required = false) List<MultipartFile> data) throws Exception {
-    	// TODO: UPDATE ALL CONTENTS FROM FOLDER
-    	this.vService.Update(vMeta, visualization, structure, messages, data);
-
-    	return this.handleSuccess();
+	@GetMapping(path="/api/visualization/list", produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView getList() throws Exception {
+		ModelAndView mv = new ModelAndView();
+		Entities<Entity> entities = this.vService.Entities();
+		
+        mv.addObject("entities", entities.entities);
+        mv.setViewName("lifecycle/visualization-list");
+        
+        return mv;
 	}
 }

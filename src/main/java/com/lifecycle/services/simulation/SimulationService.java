@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.components.ZipFile;
+import com.lifecycle.components.ZipFile;
 import com.lifecycle.components.folders.Folder;
-import com.lifecycle.components.folders.Scratch;
+import com.lifecycle.components.folders.UuidFolder;
 import com.lifecycle.components.processes.SimulationProcess;
 
 @Service
@@ -49,7 +49,7 @@ public class SimulationService {
 	}
 	
 	public ZipFile SimulateZip(MultipartFile f_config, Long iterations, Double duration) throws Exception {
-    	Scratch scratch = new Scratch(APP_FOLDERS_SCRATCH);
+    	UuidFolder scratch = new UuidFolder(APP_FOLDERS_SCRATCH);
     	List<File> files = this.Simulate(scratch, f_config, iterations, duration);
     	ZipFile zf = new ZipFile(files);
 		

@@ -32,20 +32,8 @@ public class Entities<T extends Entity> {
 		
     	this.entities = this.mapper.readValue(this.file, typeReference);    	 	
 	} 
-	
-	public T Make(String s_entity) throws Exception {
-    	T meta = this.mapper.readValue(s_entity, this.type);
-    	
-    	if (this.Contains(meta::compareName)) throw new Exception("Cannot create a new entity, the name is already in use.");
-
-    	meta.setCreated(new Date());
-    	
-    	return meta;
-	}
-	
-	public T Add(T entity) throws Exception {
-    	if (this.Contains(entity::compareName)) throw new Exception("Cannot create a new entity, the name is already in use.");
-    	
+		
+	public T Add(T entity) throws Exception {    	
 		this.entities.add(entity);
 
     	entity.setCreated(new Date());
@@ -59,9 +47,7 @@ public class Entities<T extends Entity> {
 
 	public void Remove(String uuid) throws Exception {
     	T meta = this.Get((e) -> e.getUuid().toString().equals(uuid));
-    	
-    	if (meta == null) throw new Exception("Cannot delete the entity, it does not exist.");
-    	
+    	    	
     	this.Remove(meta);
 	}
 
@@ -72,11 +58,7 @@ public class Entities<T extends Entity> {
 	public T Update(T curr) throws Exception {
     	T prev = this.Get(curr::compareUuid);
     	
-    	if (prev == null) throw new Exception("Cannot update the entity, it does not exist.");
-
-    	prev.setCreated(curr.getCreated());
-    	prev.setDescription(curr.getDescription());
-    	prev.setName(curr.getName());
+    	prev.update(curr);
     	
     	return prev;
 	}
@@ -85,14 +67,14 @@ public class Entities<T extends Entity> {
         this.mapper.writeValue(this.file, entities);
 	}
 	
-	public T Get(ICompare<T> fn) {
+	public T Get(ICompare<T> fn) throws Exception {
     	return this.entities.stream()
 				   .filter(w -> fn.IsEqual(w))
 				   .findAny()
-				   .orElse(null);
+				   .orElseThrow(() -> new Exception("Unable to find entity requested."));
 	}
 	
-	public Boolean Contains(ICompare<T> fn) {
+	public Boolean Contains(ICompare<T> fn) throws Exception {
 		T entity = this.Get(fn);
 		
 		return entity != null;

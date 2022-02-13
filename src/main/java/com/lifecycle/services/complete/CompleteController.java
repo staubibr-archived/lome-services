@@ -10,11 +10,12 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.lifecycle.components.Controller;
 import com.lifecycle.components.entities.Entity;
 import com.lifecycle.components.folders.Folder;
-import com.lifecycle.components.folders.Scratch;
+import com.lifecycle.components.folders.UuidFolder;
 import com.lifecycle.services.simulation.SimulationService;
 import com.lifecycle.services.visualization.VisualizationService;
 import com.lifecycle.services.workflow.WorkflowService;
@@ -37,22 +38,25 @@ public class CompleteController extends Controller {
     }
     
 	@PostMapping(path="/api/complete/execute", consumes={ MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ObjectNode post(@RequestPart("params") CompleteInput params,
+    public ObjectNode post(@RequestPart("params") String s_params,
 				  		   @RequestPart(value = "workflow_data") List<MultipartFile> data,
 				  		   @RequestPart("visualization_config") MultipartFile visualization) throws Exception {
 		
-		Scratch scratch = new Scratch(APP_FOLDERS_SCRATCH);
+		UuidFolder scratch = new UuidFolder(APP_FOLDERS_SCRATCH);
 
 		Folder wFolder = scratch.makeFolder("workflow");
 		Folder sFolder = scratch.makeFolder("simulation");
 		
-		this.wService.Execute(wFolder, params.workflow_uuid.toString(), data, params.workflow_params);
+		ObjectMapper om = new ObjectMapper();
+		CompleteInput params = om.readValue(s_params, CompleteInput.class);
+		
+		this.wService.Execute(wFolder, params.workflow_uuid.toString(), params.workflow_params);
 		
 		this.sService.Simulate(sFolder, wFolder.file("output", "auto_coupled.json"), params.simulation_iterations, params.simulation_duration);
 		
 		Entity meta = Entity.builder().name(params.visualization_name).description(params.visualization_description).build();
 		
-		meta = this.vService.Publish(meta, visualization, sFolder.file("output", "structure.json"), sFolder.file("output", "messages.log"), wFolder.files("output"));
+		meta = this.vService.Create(params.visualization_name, params.visualization_description, visualization, sFolder.file("output", "structure.json"), sFolder.file("output", "messages.log"), wFolder.files("output"));
 		
 		scratch.delete();
 		

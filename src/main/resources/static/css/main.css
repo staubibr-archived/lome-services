@@ -11,6 +11,11 @@ main {
 	margin: 0px 16px;
 }
 
+textarea {
+	min-width: 400px;
+	min-height: 200px;
+}
+
 .ribbon {
     background-color: #396a6f;
     padding: 0px 16px;
@@ -46,6 +51,14 @@ h1 {
     margin-bottom: 24px;
 }
 
+.row.inline > * {
+	display: inline-block;
+}
+
+.row.inline a {
+	margin-left: 12px;
+}
+
 label {
     margin-right: 6px;
 }
@@ -73,4 +86,26 @@ label {
 
 .link.back {
 	font-variant: all-petite-caps;
+}
+
+.link.delete:visited, .link.delete {
+	color: #d60101;
+}
+
+.link.delete:not(:first-child) {
+	margin-left: 12px;
+}
+
+.output {
+    padding: 8px;
+    border: solid thin #3a3a3a;
+    background: #f0f0f0;
+}
+
+.code {
+    font-family: courier;
+}
+
+.hidden {
+	display: none;
 }

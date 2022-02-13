@@ -17,44 +17,26 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class Folder {
 
-	protected String path;
-	public Path folder;
-	
-	public Folder(String path, Boolean create) throws IOException {
-		this.path = path;
-		this.folder = Paths.get(this.path);
-		
-		File directory = new File(folder.toString());
-		
-		if (directory.exists()) return;
-		
-		if (create) directory.mkdirs();
-		
-		else throw new IOException("Folder " + path + " does not exist.");
-	}
-	
-	public Folder(String path) throws IOException {
-		this(path, false);
-	}
-	
-	public Folder(Path path, Boolean create) throws IOException {
-		this(path.toString(), create);
-	}
+	public Path path;
 	
 	public Folder(Path path) throws IOException {
-		this(path, false);
+		this.path = path;
+		
+		File file = new File(path.toString());
+		
+		if (!file.exists()) file.mkdirs();
 	}
 	
 	public Folder(String first, String ...more) throws IOException {		
 		this(Paths.get(first, more));
 	}
 	
-	public Folder(String first, UUID uuid) throws IOException {		
-		this(Paths.get(first, uuid.toString()));
+	public Folder(String root, UUID uuid) throws IOException {		
+		this(root, uuid.toString());
 	}
-
+	
 	public void copy(InputStream f, String file_name) throws IOException {
-		Path copy_path = Paths.get(folder.toString(), file_name);
+		Path copy_path = Paths.get(path.toString(), file_name);
 
 		java.nio.file.Files.copy(f, copy_path, StandardCopyOption.REPLACE_EXISTING);
 		
@@ -86,21 +68,19 @@ public class Folder {
 	}
 	
 	public void delete() throws IOException {
-		File directory = new File(folder.toString());
+		File directory = new File(path.toString());
 		
-		if (!directory.exists()) throw new IOException("Cannot delete folder " + folder.toString() + ", it does not exist.");
-		
-		FileSystemUtils.deleteRecursively(directory);
+		if (!directory.exists()) throw new IOException("Cannot delete folder " + path.toString() + ", it does not exist.");
 
-		directory.delete();
+		FileSystemUtils.deleteRecursively(directory);
 	}
 	
 	public Path path(String... file_name) {
-		return Paths.get(folder.toString(), file_name);
+		return Paths.get(path.toString(), file_name);
 	}
 	
 	public List<File> files() {
-		File folder = new File(this.folder.toString());
+		File folder = new File(this.path.toString());
 		
 		return new ArrayList<>(Arrays.asList(folder.listFiles()));
 	}
@@ -111,11 +91,36 @@ public class Folder {
 		return new ArrayList<>(Arrays.asList(folder.listFiles()));
 	}
 	
-	public File file(String file_name) {
-		return new File(path(file_name).toString());
+	public File file(String file_name) throws Exception {
+		File file = new File(path(file_name).toString());
+		
+		if (!file.exists()) throw new Exception("File requested does not exist.");
+		
+		return file;
 	}
 	
-	public File file(String... file_name) {		
-		return new File(path(file_name).toString());
+	public File file(String... file_name) throws Exception {		
+		return this.file(path(file_name).toString());
+	}
+
+	
+	public static Folder withUUID(String root) throws IOException {
+		File file;
+		Path path;
+		
+		do {
+			UUID uuid = UUID.randomUUID();
+			
+			path = Paths.get(root, uuid.toString());
+			file = new File(path.toString());
+		} while (file.exists());
+
+		file.mkdirs();
+		
+		return new Folder(path);
+	}
+	
+	public static Folder withUUID(Path root) throws IOException {
+		return Folder.withUUID(root.toString());
 	}
 }

@@ -2,16 +2,19 @@ package com.lifecycle.services.simulation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
-import com.components.FilesResponse;
-import com.components.ZipFile;
 import com.lifecycle.components.Controller;
+import com.lifecycle.components.FilesResponse;
+import com.lifecycle.components.ZipFile;
 
 @RestController
 public class SimulationController extends Controller {
@@ -36,4 +39,13 @@ public class SimulationController extends Controller {
 		
     	return FilesResponse.build("simulation_results.zip", zf.toByteArray());
     }
+    
+	@GetMapping(path="/api/simulate", produces = MediaType.TEXT_HTML_VALUE)
+    public ModelAndView simulateHtml() throws Exception {
+		ModelAndView mv = new ModelAndView();
+		
+        mv.setViewName("lifecycle/simulate");
+        
+        return mv;
+	}
 }
