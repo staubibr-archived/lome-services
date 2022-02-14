@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lifecycle.components.folders.Folder;
+import com.lifecycle.components.io.Folder;
 
 public class PythonProcess extends Process {
 		

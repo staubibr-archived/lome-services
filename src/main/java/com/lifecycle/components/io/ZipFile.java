@@ -1,4 +1,4 @@
-package com.lifecycle.components;
+package com.lifecycle.components.io;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

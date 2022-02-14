@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.lifecycle.components.Controller;
-import com.lifecycle.components.FilesResponse;
-import com.lifecycle.components.ZipFile;
+import com.lifecycle.components.io.ZipFile;
+import com.lifecycle.components.rest.Controller;
+import com.lifecycle.components.rest.FilesResponse;
 
 @RestController
 public class SimulationController extends Controller {

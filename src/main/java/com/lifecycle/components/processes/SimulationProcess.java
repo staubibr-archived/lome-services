@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import com.lifecycle.components.folders.Folder;
+import com.lifecycle.components.io.Folder;
 
 public class SimulationProcess extends Process {
 

@@ -1,4 +1,4 @@
-package com.lifecycle.components;
+package com.lifecycle.components.rest;
 
 import java.util.Date;
 

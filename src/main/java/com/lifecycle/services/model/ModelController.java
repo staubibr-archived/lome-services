@@ -18,12 +18,12 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.lifecycle.components.Controller;
-import com.lifecycle.components.Entities;
-import com.lifecycle.components.FilesResponse;
-import com.lifecycle.components.RestResponse;
+import com.lifecycle.components.entities.Entities;
 import com.lifecycle.components.entities.Entity;
 import com.lifecycle.components.entities.Model;
+import com.lifecycle.components.rest.Controller;
+import com.lifecycle.components.rest.FilesResponse;
+import com.lifecycle.components.rest.RestResponse;
 
 @RestController
 public class ModelController extends Controller {

@@ -1,4 +1,4 @@
-package com.lifecycle.components;
+package com.lifecycle.components.rest;
 
 import java.io.IOException;
 import java.util.Date;

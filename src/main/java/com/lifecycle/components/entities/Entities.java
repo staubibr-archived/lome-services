@@ -1,4 +1,4 @@
-package com.lifecycle.components;
+package com.lifecycle.components.entities;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.lifecycle.components.entities.Entity;
 
 
 public class Entities<T extends Entity> {

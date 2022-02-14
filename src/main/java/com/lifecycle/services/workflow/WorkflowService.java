@@ -14,11 +14,11 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lifecycle.components.Entities;
-import com.lifecycle.components.ZipFile;
+import com.lifecycle.components.entities.Entities;
 import com.lifecycle.components.entities.Entity;
-import com.lifecycle.components.folders.Folder;
-import com.lifecycle.components.folders.UuidFolder;
+import com.lifecycle.components.io.Folder;
+import com.lifecycle.components.io.UuidFolder;
+import com.lifecycle.components.io.ZipFile;
 import com.lifecycle.components.processes.PythonProcess;
 
 @Service

@@ -1,4 +1,4 @@
-package com.lifecycle.components.folders;
+package com.lifecycle.components.io;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -91,16 +91,13 @@ public class Folder {
 		return new ArrayList<>(Arrays.asList(folder.listFiles()));
 	}
 	
-	public File file(String file_name) throws Exception {
-		File file = new File(path(file_name).toString());
+	public File file(String... file_name) throws Exception {
+		String path = path(file_name).toString();
+		File file = new File(path);
 		
 		if (!file.exists()) throw new Exception("File requested does not exist.");
 		
 		return file;
-	}
-	
-	public File file(String... file_name) throws Exception {		
-		return this.file(path(file_name).toString());
 	}
 
 	

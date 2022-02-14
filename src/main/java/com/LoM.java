@@ -12,5 +12,4 @@ public class LoM {
 
         SpringApplication.run(LoM.class, args);
     }
-
 }

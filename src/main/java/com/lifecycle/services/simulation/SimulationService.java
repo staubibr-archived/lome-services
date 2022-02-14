@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.lifecycle.components.ZipFile;
-import com.lifecycle.components.folders.Folder;
-import com.lifecycle.components.folders.UuidFolder;
+import com.lifecycle.components.io.Folder;
+import com.lifecycle.components.io.UuidFolder;
+import com.lifecycle.components.io.ZipFile;
 import com.lifecycle.components.processes.SimulationProcess;
 
 @Service
