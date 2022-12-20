@@ -2,19 +2,21 @@ package com.lifecycle.components.rest;
 
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class Controller {
 
 	
     @ExceptionHandler(Exception.class)
     public ResponseEntity<RestResponse> handleException(Exception e, HttpServletRequest r) {
+		System.err.println(e.getMessage());
+
     	RestResponse error = RestResponse.builder()
     							   .message(e.getMessage())
     							   .path(r.getRequestURI())

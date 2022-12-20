@@ -12,9 +12,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lifecycle.components.entities.Entities;
-import com.lifecycle.components.entities.Entity;
-import com.lifecycle.components.entities.Model;
+import com.lifecycle.entities.metadata.Entities;
+import com.lifecycle.entities.metadata.Entity;
+import com.lifecycle.entities.metadata.Model;
 import com.lifecycle.components.io.Folder;
 import com.lifecycle.components.io.UuidFolder;
 

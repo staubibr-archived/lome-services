@@ -18,9 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.lifecycle.components.entities.Entities;
-import com.lifecycle.components.entities.Entity;
-import com.lifecycle.components.entities.Model;
+import com.lifecycle.entities.metadata.Entities;
+import com.lifecycle.entities.metadata.Entity;
+import com.lifecycle.entities.metadata.Model;
 import com.lifecycle.components.rest.Controller;
 import com.lifecycle.components.rest.FilesResponse;
 import com.lifecycle.components.rest.RestResponse;

@@ -23,7 +23,7 @@ public class Folder {
 		this.path = path;
 		
 		File file = new File(path.toString());
-		
+
 		if (!file.exists()) file.mkdirs();
 	}
 	
@@ -66,7 +66,20 @@ public class Folder {
 		
 		return new Folder(path);
 	}
-	
+	/*
+	public Folder makeUuidFolder() throws IOException {
+		File file;
+
+		do {
+			UUID uuid = UUID.randomUUID();
+			Path path = this.path(uuid.toString());
+			file = new File(path.toString());
+		} while (file.exists());
+
+		return this.makeFolder(path.toString());
+	}
+	*/
+
 	public void delete() throws IOException {
 		File directory = new File(path.toString());
 		
@@ -81,16 +94,16 @@ public class Folder {
 	
 	public List<File> files() {
 		File folder = new File(this.path.toString());
-		
+
 		return new ArrayList<>(Arrays.asList(folder.listFiles()));
 	}
-	
+
 	public List<File> files(String ... file_names) {
 		File folder = path(file_names).toFile();
 
 		return new ArrayList<>(Arrays.asList(folder.listFiles()));
 	}
-	
+
 	public File file(String... file_name) throws Exception {
 		String path = path(file_name).toString();
 		File file = new File(path);
@@ -100,23 +113,23 @@ public class Folder {
 		return file;
 	}
 
-	
+
 	public static Folder withUUID(String root) throws IOException {
 		File file;
 		Path path;
-		
+
 		do {
 			UUID uuid = UUID.randomUUID();
-			
+
 			path = Paths.get(root, uuid.toString());
 			file = new File(path.toString());
 		} while (file.exists());
 
 		file.mkdirs();
-		
+
 		return new Folder(path);
 	}
-	
+
 	public static Folder withUUID(Path root) throws IOException {
 		return Folder.withUUID(root.toString());
 	}

@@ -14,8 +14,8 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lifecycle.components.entities.Entities;
-import com.lifecycle.components.entities.Entity;
+import com.lifecycle.entities.metadata.Entities;
+import com.lifecycle.entities.metadata.Entity;
 import com.lifecycle.components.io.Folder;
 import com.lifecycle.components.io.UuidFolder;
 import com.lifecycle.components.io.ZipFile;
@@ -35,7 +35,7 @@ public class WorkflowService {
 
 	@Value("${app.workflows}")
 	private String APP_WORKFLOWS;
-		
+
     @Autowired
 	public WorkflowService() {
 

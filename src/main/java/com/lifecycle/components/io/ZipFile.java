@@ -13,33 +13,23 @@ public class ZipFile {
 	private ZipOutputStream zos;
 	private ByteArrayOutputStream baos;
 
-	public ZipFile() {
-		
-	}
-
 	public ZipFile(List<File> files) throws IOException {
         this.Open();
-        
-        for (int i = 0; i < files.size(); i++) {
-        	File file = files.get(i);
-        	
-    		this.WriteFull(file.getName(), file);
-        }
+
+		for (File file : files) {
+			this.WriteFull(file.getName(), file);
+		}
        
         this.Close();
 	}
 	
-	public ZipFile Open() {
+	public void Open() {
 	    this.baos = new ByteArrayOutputStream();
 		this.zos = new ZipOutputStream(baos);
-		
-		return this;
 	}
 	
-	public ZipFile Close() throws IOException {
+	public void Close() throws IOException {
 		this.zos.close();
-		
-		return this;
 	}
 	
 	public void NewEntry(String name) throws IOException {
@@ -66,17 +56,11 @@ public class ZipFile {
 	
 	public void WriteFull(String name, File source) throws IOException {
 		FileInputStream fis = new FileInputStream(source);
-		this.WriteFull(name, fis.readAllBytes());				
+		this.WriteFull(name, fis.readAllBytes());
 		fis.close();        	
 	}
 	
 	public byte[] toByteArray() {
 		return this.baos.toByteArray();		
-	}
-	
-	public static byte[] AsByteArray(List<File> files) throws IOException {
-		ZipFile zf = new ZipFile(files);
-		
-		return zf.toByteArray();
 	}
 }
